@@ -11,13 +11,15 @@
 
 
   //FOR MODULAR
-  const openBtn = document.getElementById("openModal");
+  const openBtns = document.querySelectorAll(".openModal");
   const closeBtn = document.getElementById("closeModal");
   const modal = document.getElementById("modalOverlay");
 
-  openBtn.addEventListener("click", () => {
-    modal.classList.remove("hidden");
-    modal.classList.add("flex");
+  openBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    });
   });
 
   closeBtn.addEventListener("click", () => {
@@ -31,4 +33,5 @@
       modal.classList.remove("flex");
     }
   });
+
 
