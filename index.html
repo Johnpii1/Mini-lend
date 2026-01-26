@@ -56,13 +56,47 @@
 
             <p class="logo text-sm">Empowering Financial Inclusion Through Decentralized Lending
                 MiniLend is a decentralized app (dApp) that gives you the power to stake your digital assets and receive
-                instant stable coin loans—all while keeping your staking rewards. No credit checks. No middlemen. Just
+                instant stable coin loans—all while keeping your staking rewards.No credit checks. No middlemen. Just
                 freedom.</p>
 
             <!--HERO BUTTON-->
             <div class="flex flex-row gap-8  items-center mt-10">
-                <button class="logo text-[#6DD054] text-[12px] border-[1px] rounded-[14px] px-6 h-[27px]"><a
+                <button id="openModal" class="logo text-[#6DD054] text-[12px] border-[1px] rounded-[14px] px-6 h-[27px]"><a
                         href="#">GET STARTED</a></button>
+
+                        <!--MODULAR FOR GET STARTED-->
+<!-- MODAL OVERLAY -->
+<div id="modalOverlay"
+  class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
+
+  <!-- MODAL BOX -->
+  <div class="bg-[#F2E9D7] rounded-2xl p-6 w-[90%] max-w-sm text-[#331A1A] relative">
+
+    <!-- CLOSE BUTTON -->
+    <button id="closeModal"
+      class="absolute top-3 right-3 text-[#331A1A] text-lg">
+      ✕
+    </button>
+
+    <!-- CONTENT -->
+    <h2 class="logo text-xl font-bold text-center mb-2">Connect Your Wallet  </h2>
+    <p class="logo text-sm text-center text-[#331A1A] mb-6">
+      Link your digital wallet to start staking assets and accesssing stable coin loans on Minilend
+    </p>
+
+    <button class="logo w-full bg-[#6DD054] text-black py-2 rounded-lg font-semibold">
+      Connect Wallet
+    </button>
+
+    <p class="logo text-[11px] font-semibold mt-4">By connecting, you agree to our <a class="border-b-[1px] border-[#331A1A]" href="#">Terms of use</a> and  <a class="border-b-[1px] border-[#331A1A]" href="#">Privacy Policy.</a></p>
+
+  </div>
+</div>
+
+
+
+
+
                 <a class="logo border-b-[1px] border-[#FFFFFF] text-[#6DD054] text-[12px] border-t-[2px] border-t-[#331A1A]"
                     href="#">LEARN MORE</a>
             </div>
@@ -70,7 +104,7 @@
         </div>
 
         <!--IMAGE-->
-        <div class="h-[350px] w-[800px] bg-green-200 mt-6 rounded-full flex justify-center items-center">
+        <div class="h-[350px] w-[800px] bg-[#3a1515] mt-6 rounded-full flex justify-center items-center">
             <img class="object-contain h-[60vh]" src="./image/crypto.png" alt="crypto icon">
         </div>
 
