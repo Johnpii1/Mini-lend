@@ -19,8 +19,8 @@
         rel="stylesheet">
 
 
-        <!--BOOSTRAP LINK-->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!--BOOSTRAP LINK-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 
 </head>
@@ -32,20 +32,29 @@
             h-[55px] flex items-center justify-between px-6
             border-[6px] border-[#6DD054] rounded-[17px] w-[95%] z-50 ">
 
+            <!--LIST BUTTON FOR MOBILE ONLY-->
+            <div class="flex flex-row items-center gap-6">
+<div  class="text-[#FFFFFF] text-2xl font-bold md:hidden">
+    <i class="bi bi-list-task"></i>
+</div>
+
+
+
         <!--LOGO-->
         <div class="logo text-white font-semibold text-[16px]">
-           <a href="./index.html">MINI LEND</a> 
+            <a href="./index.html">MINI LEND</a>
         </div>
 
+        </div>
         <!--TEXT-->
-        <div class="logo flex text-[#6DD054] text-[15px] gap-8">
+        <div class="logo hidden md:flex md:text-[#6DD054] md:text-[15px] md:gap-8">
             <a href="#">FAQ</a>
             <a href="#">WHITE PAPER</a>
         </div>
 
         <!--CONNECT WALLET BUTTON-->
-        <div class="bg-[#D7CBB1] rounded-[14px] text-center flex justify-center items-center h-[36px] w-[219px]">
-            <button class="logo text-[#4E8141] font-semibold text-[15px]"><i>CONNECT WALLET</i></button>
+        <div class="bg-[#D7CBB1] rounded-[14px] text-center flex justify-center items-center w-[130px] h-[30px] md:h-[36px] md:w-[219px]">
+            <button class="logo text-[#4E8141] font-semibold text-sm md:text-[15px]"><i>CONNECT WALLET</i></button>
         </div>
 
     </div>
@@ -69,34 +78,36 @@
                 <button class="logo openModal text-[#6DD054] text-[12px] border-[1px] rounded-[14px] px-6 h-[27px]"><a
                         href="#">GET STARTED</a></button>
 
-                        <!--MODULAR FOR GET STARTED-->
-<!-- MODAL OVERLAY -->
-<div id="modalOverlay"
-  class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
+                <!--MODULAR FOR GET STARTED-->
+                <!-- MODAL OVERLAY -->
+                <div id="modalOverlay"
+                    class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
 
-  <!-- MODAL BOX -->
-  <div class="bg-[#F2E9D7] rounded-2xl p-6 w-[90%] max-w-sm text-[#331A1A] relative">
+                    <!-- MODAL BOX -->
+                    <div class="bg-[#F2E9D7] rounded-2xl p-6 w-[90%] max-w-sm text-[#331A1A] relative">
 
-    <!-- CLOSE BUTTON -->
-    <button id="closeModal"
-      class="absolute top-3 right-3 text-[#331A1A] text-lg">
-      ✕
-    </button>
+                        <!-- CLOSE BUTTON -->
+                        <button id="closeModal" class="absolute top-3 right-3 text-[#331A1A] text-lg">
+                            ✕
+                        </button>
 
-    <!-- CONTENT -->
-    <h2 class="logo text-xl font-bold text-center mb-2">Connect Your Wallet  </h2>
-    <p class="logo text-sm text-center text-[#331A1A] mb-6">
-      Link your digital wallet to start staking assets and accesssing stable coin loans on Minilend
-    </p>
+                        <!-- CONTENT -->
+                        <h2 class="logo text-xl font-bold text-center mb-2">Connect Your Wallet </h2>
+                        <p class="logo text-sm text-center text-[#331A1A] mb-6">
+                            Link your digital wallet to start staking assets and accesssing stable coin loans on
+                            Minilend
+                        </p>
 
-    <button class="logo w-full bg-[#6DD054] text-black py-2 rounded-lg font-semibold">
-      Connect Wallet
-    </button>
+                        <button class="logo w-full bg-[#6DD054] text-black py-2 rounded-lg font-semibold">
+                            Connect Wallet
+                        </button>
 
-    <p class="logo text-[11px] font-semibold mt-4">By connecting, you agree to our <a class="border-b-[1px] border-[#331A1A]" href="#">Terms of use</a> and  <a class="border-b-[1px] border-[#331A1A]" href="#">Privacy Policy.</a></p>
+                        <p class="logo text-[11px] font-semibold mt-4">By connecting, you agree to our <a
+                                class="border-b-[1px] border-[#331A1A]" href="#">Terms of use</a> and <a
+                                class="border-b-[1px] border-[#331A1A]" href="#">Privacy Policy.</a></p>
 
-  </div>
-</div>
+                    </div>
+                </div>
 
 
 
@@ -196,10 +207,10 @@
                         </h2>
 
                         <div class="flex mx-[100px]">
-                        <img class="w-[188px] h-[188px]" src="./image/crypto(4).png" class="w-56" />
+                            <img class="w-[188px] h-[188px]" src="./image/crypto(4).png" class="w-56" />
+                        </div>
+
                     </div>
-                    
-                </div>
 
                     <!-- RIGHT -->
                     <div class="max-w-lg text-white">
@@ -230,84 +241,87 @@
 
             <!--TEXT-->
             <div class="m-8">
-<h3 class="logo text-[#D7CBB1] text-md text-center">Join our community</h3>
+                <h3 class="logo text-[#D7CBB1] text-md text-center">Join our community</h3>
 
 
-<!--SOCIAL ICON-->
+                <!--SOCIAL ICON-->
 
-<!--MAIN DIV-->
-<div class="flex flex-row gap-4 mt-4 ">
+                <!--MAIN DIV-->
+                <div class="flex flex-row gap-4 mt-4 ">
 
-<!--BOX1-->
-<div class="flex items-center justify-center w-[47px] h-[38px] rounded-[14px] bg-[#D7CBB1]">
+                    <!--BOX1-->
+                    <div class="flex items-center justify-center w-[47px] h-[38px] rounded-[14px] bg-[#D7CBB1]">
 
-    <!--IMAGE-->
-<a href="http://" target="_blank" rel="noopener noreferrer"><img class="object-contain h-[34px] w-[34px]" src="./image/crypto(5).png" alt="Whatsapp icon"></a>
+                        <!--IMAGE-->
+                        <a href="http://" target="_blank" rel="noopener noreferrer"><img
+                                class="object-contain h-[34px] w-[34px]" src="./image/crypto(5).png"
+                                alt="Whatsapp icon"></a>
 
-</div>
-
-
-<!--BOX2-->
-<div class="flex items-center justify-center w-[47px] h-[38px] rounded-[14px] bg-[#D7CBB1]">
-
-    <!--IMAGE-->
-<a href="http://" target="_blank" rel="noopener noreferrer"><img class="object-contain h-[30px] w-[30px]" src="./image/crypto(8).png" alt="Twitter icon"></a>
-
-</div>
+                    </div>
 
 
-<!--BOX3-->
-<div class="flex items-center justify-center w-[47px] h-[38px] rounded-[14px] bg-[#D7CBB1]">
+                    <!--BOX2-->
+                    <div class="flex items-center justify-center w-[47px] h-[38px] rounded-[14px] bg-[#D7CBB1]">
 
-    <!--IMAGE-->
-<a href="http://" target="_blank" rel="noopener noreferrer"><img class="object-contain h-[34px] w-[34px]" src="./image/crypto(7).png" alt="Telegram icon"></a>
+                        <!--IMAGE-->
+                        <a href="http://" target="_blank" rel="noopener noreferrer"><img
+                                class="object-contain h-[30px] w-[30px]" src="./image/crypto(8).png"
+                                alt="Twitter icon"></a>
 
-</div>
-
-
-</div>
-</div>
+                    </div>
 
 
-<div>
-<!--EMAIL-->
+                    <!--BOX3-->
+                    <div class="flex items-center justify-center w-[47px] h-[38px] rounded-[14px] bg-[#D7CBB1]">
 
-<h3 class="logo text-[#D7CBB1] text-md text-center">Subscribe to our Newsletter</h3>
+                        <!--IMAGE-->
+                        <a href="http://" target="_blank" rel="noopener noreferrer"><img
+                                class="object-contain h-[34px] w-[34px]" src="./image/crypto(7).png"
+                                alt="Telegram icon"></a>
 
-<!--INPUT FORM-->
-
-<div class="flex flex-row items-center justify-center">
-<input 
-type="email" 
-
-id="form"
-
-placeholder="Enter your email" 
-
-class="w-[280px] h-[36px] rounded-[14px] border-[1px] border-[#FFFFFF] mt-4 px-4 text-[#FFFFFF] bg-[#331A1A] hover:bg-[#331A1A]">
-
-<!--BUTTOM-->
-<div class="flex items-center justify-center absolute w-[33px] h-[28px] rounded-full border-[1px] border-[#331A1A] mt-4 right-[6rem] "><a class="text-[#331A1A]" href="http://" target="_blank" rel="noopener noreferrer"><i class="bi bi-arrow-right"></i></a></div>
-</div>
+                    </div>
 
 
-</div>
-</div>
+                </div>
+            </div>
 
 
-<!--COPYRIGHT-->
-<div class="flex justify-between items-center px-20 py-4">
+            <div>
+                <!--EMAIL-->
 
-    <p class="logo text-sm text-[#D7CBB1]">©2026 Copyright by MiniLend.eth</p>
+                <h3 class="logo text-[#D7CBB1] text-md text-center">Subscribe to our Newsletter</h3>
 
-<div class="flex flex-row gap-6">
+                <!--INPUT FORM-->
 
-    <p class="logo text-sm text-[#D7CBB1]">Privacy Policy</p>
+                <div class="flex flex-row items-center justify-center">
+                    <input type="email" id="form" placeholder="Enter your email"
+                        class="w-[280px] h-[36px] rounded-[14px] border-[1px] border-[#FFFFFF] mt-4 px-4 text-[#FFFFFF] bg-[#331A1A] hover:bg-[#331A1A]">
 
-    <p class="logo text-sm text-[#D7CBB1]">Terms of use</p>
-</div>
+                    <!--BUTTOM-->
+                    <div
+                        class="flex items-center justify-center absolute w-[33px] h-[28px] rounded-full border-[1px] border-[#331A1A] mt-4 right-[6rem] ">
+                        <a class="text-[#331A1A]" href="http://" target="_blank" rel="noopener noreferrer"><i
+                                class="bi bi-arrow-right"></i></a></div>
+                </div>
 
-</div>
+
+            </div>
+        </div>
+
+
+        <!--COPYRIGHT-->
+        <div class="flex justify-between items-center px-20 py-4">
+
+            <p class="logo text-sm text-[#D7CBB1]">©2026 Copyright by MiniLend.eth</p>
+
+            <div class="flex flex-row gap-6">
+
+                <p class="logo text-sm text-[#D7CBB1]">Privacy Policy</p>
+
+                <p class="logo text-sm text-[#D7CBB1]">Terms of use</p>
+            </div>
+
+        </div>
 
         <!-- JavaScript -->
         <script src="./script.js"></script>
