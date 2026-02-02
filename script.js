@@ -35,26 +35,21 @@
   });
 
 
-const connectBtn = document.getElementById("connetbtn");
-const modals = document.getElementById("walletModal");
-const closeBtns = document.getElementById("closeModal1");
+//FOR MOBILE FQ AND WHITE PAPER
+const headerBtn = document.getElementById("headers");
+const headermenus = document.querySelector(".menus");
+const closeBtns = document.getElementById("closebtn");
 
-// open modal
-connectBtn.addEventListener("click", () => {
-  modals.classList.remove("hidden");
-});
+headerBtn.addEventListener("click", () => {
+  headermenus.classList.toggle("hidden");
 
-// close modal (X button)
 closeBtns.addEventListener("click", () => {
-  modals.classList.add("hidden");
+    headermenus.classList.toggle("hidden");
+
+  });
 });
 
-// close modal when clicking outside
-modals.addEventListener("click", (e) => {
-  if (e.target === modal) {
-    modals.classList.add("hidden");
-  }
-});
+
 
 
 

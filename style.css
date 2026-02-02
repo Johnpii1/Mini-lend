@@ -3,7 +3,7 @@
 ;
 }
 
-#walletModal.show {
+.menus.show {
     display: flex;
 }
 
