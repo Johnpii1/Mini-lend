@@ -3,3 +3,7 @@
 ;
 }
 
+#walletModal.show {
+    display: flex;
+}
+

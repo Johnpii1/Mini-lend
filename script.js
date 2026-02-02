@@ -35,3 +35,27 @@
   });
 
 
+const connectBtn = document.getElementById("connetbtn");
+const modals = document.getElementById("walletModal");
+const closeBtns = document.getElementById("closeModal1");
+
+// open modal
+connectBtn.addEventListener("click", () => {
+  modals.classList.remove("hidden");
+});
+
+// close modal (X button)
+closeBtns.addEventListener("click", () => {
+  modals.classList.add("hidden");
+});
+
+// close modal when clicking outside
+modals.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    modals.classList.add("hidden");
+  }
+});
+
+
+
+
