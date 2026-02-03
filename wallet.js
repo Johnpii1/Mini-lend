@@ -4,7 +4,9 @@ import {
   custom,
   http,
 } from "https://esm.sh/viem";
+import { setModalState, MODAL_STATE, closeModal } from "./modalController.js";
 
+const modal = document.getElementById("modalOverlay");
 const connectBtn = document.getElementById("connectWalletBtn");
 const connectHeaderBtn = document.getElementById("headerConnect");
 let walletClient;
@@ -32,78 +34,66 @@ function shortenAddress(addr) {
 // testing mode: always reset
 localStorage.setItem("hideMetaMaskWarning", "false");
 
-// ========\wallet Detection and connection ============
-function detectWallet() {
-  const hideWarning = localStorage.getItem("hideMetaMaskWarning");
-  if (hideWarning === "true") return;
-
-  if (!window.ethereum) {
-    const modal = document.getElementById("walletModal");
-    const message = document.getElementById("walletMessage");
-    const installBtn = document.getElementById("installBtn");
-
-    // detect mobile
-    const isMobile = /android|iphone|ipad|mobile/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      message.textContent = "MetaMask Mobile is required to use this DApp.";
-      installBtn.onclick = () =>
-        window.open("https://metamask.app.link/", "_blank");
-    } else {
-      message.textContent =
-        "MetaMask browser extension is required to use this DApp.";
-      installBtn.onclick = () =>
-        window.open(
-          "https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn",
-          "_blank",
-        );
-    }
-
-    modal.style.display = "flex";
-
-    document.getElementById("closeBtn").onclick = () => {
-      modal.style.display = "none";
-
-      if (document.getElementById("dontShow").checked) {
-        localStorage.setItem("hideMetaMaskWarning", "true");
-      }
-    };
-  }
-}
-
 // =========== WALLET CLIENT & PUBLIC CLIENT ============
 async function connectWallet() {
   if (!window.ethereum) {
-    detectWallet();
+    throw new Error("NO_WALLET");
   }
 
-  try {
-    walletClient = createWalletClient({
-      chain: anvil,
-      transport: custom(window.ethereum),
-    });
+  walletClient = createWalletClient({
+    chain: anvil,
+    transport: custom(window.ethereum),
+  });
 
-    publicClient = createPublicClient({
-      chain: anvil,
-      transport: http(rpcUrl),
-    });
+  publicClient = createPublicClient({
+    chain: anvil,
+    transport: http(rpcUrl),
+  });
 
-    const addresses = await walletClient.requestAddresses();
-    account = addresses[0];
-    connectHeaderBtn.innerText = shortenAddress(account);
-    return account;
-  } catch (error) {
-    console.error("Error connecting wallet:", error);
-    alert("Failed to connect wallet.");
-  }
+  const addresses = await walletClient.requestAddresses();
+  account = addresses[0];
+  connectHeaderBtn.innerText = shortenAddress(account);
+  return account;
 }
 
 function disconnectWallet() {
   account = null;
+  localStorage.removeItem("connected");
 }
 
-connectBtn.addEventListener("click", async () => {
-  if (account) {
-    // if account is connedcted, show disconnect option
-  } else await connectWallet();
+document.querySelectorAll(".openModal").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    // CASE 3: No wallet detected
+    if (!window.ethereum) {
+      setModalState(MODAL_STATE.NO_WALLET);
+      return;
+    }
+
+    // CASE 2: Wallet already connected
+    if (account) {
+      setModalState(MODAL_STATE.DISCONNECT, {
+        account,
+        onAction: () => {
+          disconnectWallet();
+          location.reload(); // optional
+        },
+      });
+      return;
+    }
+
+    // CASE 1: Not connected
+    setModalState(MODAL_STATE.CONNECT, {
+      onAction: async () => {
+        try {
+          await connectWallet();
+          // location.href = "dashboard.html";
+          closeModal();
+        } catch (err) {
+          setModalState(MODAL_STATE.ERROR, {
+            message: err.message,
+          });
+        }
+      },
+    });
+  });
 });
