@@ -10,6 +10,7 @@ export const MODAL_STATE = {
   CONNECT: "CONNECT",
   DISCONNECT: "DISCONNECT",
   NO_WALLET: "NO_WALLET",
+  WRONG_NETWORK: "WRONG_NETWORK",
   ERROR: "ERROR",
 };
 
@@ -58,6 +59,14 @@ export function setModalState(state, payload = {}) {
       currentAction = () => {
         window.open("https://metamask.io/download/", "_blank");
       };
+      break;
+
+    case MODAL_STATE.WRONG_NETWORK:
+      modalTitle.textContent = "Wrong Network";
+      modalMessage.textContent = `Please switch to ${payload.expectedName}.`;
+      modalActionBtn.textContent = "Switch Network";
+
+      currentAction = payload.onAction;
       break;
 
     case MODAL_STATE.ERROR:

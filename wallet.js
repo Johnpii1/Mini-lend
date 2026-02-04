@@ -5,26 +5,12 @@ import {
   http,
 } from "https://esm.sh/viem";
 import { setModalState, MODAL_STATE, closeModal } from "./modalController.js";
+import { EXPECTED_CHAIN } from "./config.js";
 
-const modal = document.getElementById("modalOverlay");
-const connectBtn = document.getElementById("connectWalletBtn");
 const connectHeaderBtn = document.getElementById("headerConnect");
 let walletClient;
 let publicClient;
 let account = null;
-
-// ============ Anvil Local Blockchain ============
-const anvil = {
-  id: 31337,
-  name: "Anvil Local",
-  network: "anvil",
-  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
-  rpcUrls: {
-    default: { http: ["http://127.0.0.1:8545"] },
-  },
-};
-
-const rpcUrl = anvil.rpcUrls.default.http[0];
 
 // shorten address
 function shortenAddress(addr) {
@@ -34,6 +20,37 @@ function shortenAddress(addr) {
 // testing mode: always reset
 localStorage.setItem("hideMetaMaskWarning", "false");
 
+// =========== SWITCH NETWORK ============
+async function switchNetwork() {
+  try {
+    await window.ethereum.request({
+      method: "wallet_switchEthereumChain",
+      params: [{ chainId: `0x${EXPECTED_CHAIN.id.toString(16)}` }], //"0x7a69"
+    });
+  } catch (err) {
+    // chain not added yet
+    if (err.code === 4902) {
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: `0x${EXPECTED_CHAIN.id.toString(16)}`,
+            chainName: EXPECTED_CHAIN.name,
+            rpcUrls: [EXPECTED_CHAIN.rpcUrl],
+            nativeCurrency: {
+              name: "Ether",
+              symbol: "ETH",
+              decimals: 18,
+            },
+          },
+        ],
+      });
+    } else {
+      throw err;
+    }
+  }
+}
+
 // =========== WALLET CLIENT & PUBLIC CLIENT ============
 async function connectWallet() {
   if (!window.ethereum) {
@@ -41,14 +58,22 @@ async function connectWallet() {
   }
 
   walletClient = createWalletClient({
-    chain: anvil,
+    chain: EXPECTED_CHAIN,
     transport: custom(window.ethereum),
   });
 
   publicClient = createPublicClient({
-    chain: anvil,
-    transport: http(rpcUrl),
+    chain: EXPECTED_CHAIN,
+    transport: http(EXPECTED_CHAIN.rpcUrl),
   });
+
+  // 🔍 Check network FIRST
+  // "I COMMENTED BECAUSE THI IMPLEMENTATION I NOT NEEDED NOW"
+  // const chainId = await walletClient.getChainId();
+
+  // if (chainId !== EXPECTED_CHAIN.id) {
+  //   throw new Error("WRONG_NETWORK");
+  // }
 
   const addresses = await walletClient.requestAddresses();
   account = addresses[0];
@@ -86,9 +111,27 @@ document.querySelectorAll(".openModal").forEach((btn) => {
       onAction: async () => {
         try {
           await connectWallet();
-          // location.href = "dashboard.html";
+          location.href = "page1.html";
           closeModal();
         } catch (err) {
+          // WRONG NETWORK TRANSITION
+          if (err.message === "WRONG_NETWORK") {
+            setModalState(MODAL_STATE.WRONG_NETWORK, {
+              expectedName: EXPECTED_CHAIN.name,
+              onAction: async () => {
+                try {
+                  await switchNetwork();
+                  location.reload();
+                } catch {
+                  setModalState(MODAL_STATE.ERROR, {
+                    message: "Network switch failed.",
+                  });
+                }
+              },
+            });
+            return;
+          }
+
           setModalState(MODAL_STATE.ERROR, {
             message: err.message,
           });
