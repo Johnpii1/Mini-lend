@@ -1,3 +1,24 @@
+import { handleDisconnect, shortenAddress } from "./wallet.js";
+const userAddressBtn = document.getElementById("userAddress");
+
+// Load connected account from localStorage on page load
+document.addEventListener("DOMContentLoaded", () => {
+  updateAccount();
+});
+
+function updateAccount(account) {
+  const storedAccount = localStorage.getItem("account");
+  if (storedAccount) {
+    account = storedAccount;
+    userAddressBtn.textContent = shortenAddress(account);
+  }
+}
+
+userAddressBtn.addEventListener("click", () => {
+  handleDisconnect();
+  location.href = "index.html"; // redirect to home after disconnect
+});
+
 //FOR MODULAR2
 const openBtn1 = document.querySelectorAll(".Modaled1");
 const closeBnt1 = document.getElementById("closeModal1");
@@ -21,7 +42,6 @@ modals1.addEventListener("click", (e) => {
     modals1.classList.remove("flex");
   }
 });
-
 
 //FOR MODULAR2
 const openBtn2 = document.querySelectorAll(".Modaled2");
@@ -47,7 +67,6 @@ modals2.addEventListener("click", (e) => {
   }
 });
 
-
 //FOR MODULAR3
 const openBtn3 = document.querySelectorAll(".Modaled3");
 const closeBnt3 = document.getElementById("closeModal3");
@@ -71,7 +90,6 @@ modals3.addEventListener("click", (e) => {
     modals3.classList.remove("flex");
   }
 });
-
 
 //FOR MODULAR4
 const openBtn4 = document.querySelectorAll(".Modaled4");

@@ -13,8 +13,22 @@ let publicClient;
 let account = null;
 
 // shorten address
-function shortenAddress(addr) {
+export function shortenAddress(addr) {
   return addr.slice(0, 6) + "..." + addr.slice(-4);
+}
+
+export function getAccount() {
+  const savedAccount = localStorage.getItem("account");
+  if (savedAccount) {
+    account = savedAccount;
+  }
+  return account;
+}
+
+function updateAccount(newAccount) {
+  account = newAccount;
+  localStorage.setItem("account", newAccount);
+  localStorage.setItem("connected", "true");
 }
 
 // testing mode: always reset
@@ -78,12 +92,15 @@ async function connectWallet() {
   const addresses = await walletClient.requestAddresses();
   account = addresses[0];
   connectHeaderBtn.innerText = shortenAddress(account);
+  updateAccount(account);
   return account;
 }
 
 function disconnectWallet() {
   account = null;
   localStorage.removeItem("connected");
+  localStorage.removeItem("account");
+  localStorage.clear();
 }
 
 document.querySelectorAll(".openModal").forEach((btn) => {
@@ -99,7 +116,7 @@ document.querySelectorAll(".openModal").forEach((btn) => {
       setModalState(MODAL_STATE.DISCONNECT, {
         account,
         onAction: () => {
-          disconnectWallet();
+          handleDisconnect();
           location.reload(); // optional
         },
       });
@@ -140,3 +157,8 @@ document.querySelectorAll(".openModal").forEach((btn) => {
     });
   });
 });
+
+export function handleDisconnect() {
+  disconnectWallet(); // clear app state
+  location.href = "index.html"; // go back to home
+}

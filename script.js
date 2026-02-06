@@ -21,7 +21,7 @@ openBtns.forEach((btn) => {
   });
 });
 
-closeBtn.addEventListener("click", () => {
+closeBtn?.addEventListener("click", () => {
   modal.classList.add("hidden");
   modal.classList.remove("flex");
 });
