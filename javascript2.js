@@ -114,3 +114,90 @@ modals4.addEventListener("click", (e) => {
     modals4.classList.remove("flex");
   }
 });
+
+
+
+// =========== WALLET CLIENT & PUBLIC CLIENT ============
+async function connectWallet() {
+  if (!window.ethereum) {
+    throw new Error("NO_WALLET");
+  }
+
+  walletClient = createWalletClient({
+    chain: EXPECTED_CHAIN,
+    transport: custom(window.ethereum),
+  });
+
+  publicClient = createPublicClient({
+    chain: EXPECTED_CHAIN,
+    transport: http(EXPECTED_CHAIN.rpcUrl),
+  });
+
+  
+
+  const addresses = await walletClient.requestAddresses();
+  account = addresses[0];
+  connectHeaderBtn.innerText = shortenAddress(account);
+  return account;
+}
+
+function disconnectWallet() {
+  account = null;
+  localStorage.removeItem("connected");
+}
+
+document.querySelectorAll(".openModal").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    // CASE 3: No wallet detected
+    if (!window.ethereum) {
+      setModalState(MODAL_STATE.NO_WALLET);
+      return;
+    }
+
+    // CASE 2: Wallet already connected
+    if (account) {
+      setModalState(MODAL_STATE.DISCONNECT, {
+        account,
+        onAction: () => {
+          disconnectWallet();
+          location.reload(); // optional
+        },
+      });
+      return;
+    }
+
+    // CASE 1: Not connected
+    setModalState(MODAL_STATE.CONNECT, {
+      onAction: async () => {
+        try {
+          await connectWallet();
+          location.href = "page1.html";
+          closeModal();
+        } catch (err) {
+          // WRONG NETWORK TRANSITION
+          if (err.message === "WRONG_NETWORK") {
+            setModalState(MODAL_STATE.WRONG_NETWORK, {
+              expectedName: EXPECTED_CHAIN.name,
+              onAction: async () => {
+                try {
+                  await switchNetwork();
+                  location.reload();
+                } catch {
+                  setModalState(MODAL_STATE.ERROR, {
+                    message: "Network switch failed.",
+                  });
+                }
+              },
+            });
+            return;
+          }
+
+          setModalState(MODAL_STATE.ERROR, {
+            message: err.message,
+          });
+        }
+      },
+    });
+  });
+});
+
