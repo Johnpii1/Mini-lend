@@ -1,24 +1,3 @@
-import { handleDisconnect, shortenAddress } from "./wallet.js";
-const userAddressBtn = document.getElementById("userAddress");
-
-// Load connected account from localStorage on page load
-document.addEventListener("DOMContentLoaded", () => {
-  updateAccount();
-});
-
-function updateAccount(account) {
-  const storedAccount = localStorage.getItem("account");
-  if (storedAccount) {
-    account = storedAccount;
-    userAddressBtn.textContent = shortenAddress(account);
-  }
-}
-
-userAddressBtn.addEventListener("click", () => {
-  handleDisconnect();
-  location.href = "index.html"; // redirect to home after disconnect
-});
-
 //FOR MODULAR2
 const openBtn1 = document.querySelectorAll(".Modaled1");
 const closeBnt1 = document.getElementById("closeModal1");
@@ -42,6 +21,7 @@ modals1.addEventListener("click", (e) => {
     modals1.classList.remove("flex");
   }
 });
+
 
 //FOR MODULAR2
 const openBtn2 = document.querySelectorAll(".Modaled2");
@@ -67,6 +47,7 @@ modals2.addEventListener("click", (e) => {
   }
 });
 
+
 //FOR MODULAR3
 const openBtn3 = document.querySelectorAll(".Modaled3");
 const closeBnt3 = document.getElementById("closeModal3");
@@ -90,6 +71,7 @@ modals3.addEventListener("click", (e) => {
     modals3.classList.remove("flex");
   }
 });
+
 
 //FOR MODULAR4
 const openBtn4 = document.querySelectorAll(".Modaled4");
@@ -116,88 +98,19 @@ modals4.addEventListener("click", (e) => {
 });
 
 
+const ETH_PRICE = 3200; // example ETH price
 
-// =========== WALLET CLIENT & PUBLIC CLIENT ============
-async function connectWallet() {
-  if (!window.ethereum) {
-    throw new Error("NO_WALLET");
+const ethInput = document.getElementById("ethInput");
+const usdOutput = document.getElementById("usdOutput");
+
+ethInput.addEventListener("input", () => {
+  const eth = Number(ethInput.value);
+
+  if (!eth) {
+    usdOutput.textContent = "$0";
+    return;
   }
 
-  walletClient = createWalletClient({
-    chain: EXPECTED_CHAIN,
-    transport: custom(window.ethereum),
-  });
-
-  publicClient = createPublicClient({
-    chain: EXPECTED_CHAIN,
-    transport: http(EXPECTED_CHAIN.rpcUrl),
-  });
-
-  
-
-  const addresses = await walletClient.requestAddresses();
-  account = addresses[0];
-  connectHeaderBtn.innerText = shortenAddress(account);
-  return account;
-}
-
-function disconnectWallet() {
-  account = null;
-  localStorage.removeItem("connected");
-}
-
-document.querySelectorAll(".openModal").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    // CASE 3: No wallet detected
-    if (!window.ethereum) {
-      setModalState(MODAL_STATE.NO_WALLET);
-      return;
-    }
-
-    // CASE 2: Wallet already connected
-    if (account) {
-      setModalState(MODAL_STATE.DISCONNECT, {
-        account,
-        onAction: () => {
-          disconnectWallet();
-          location.reload(); // optional
-        },
-      });
-      return;
-    }
-
-    // CASE 1: Not connected
-    setModalState(MODAL_STATE.CONNECT, {
-      onAction: async () => {
-        try {
-          await connectWallet();
-          location.href = "page1.html";
-          closeModal();
-        } catch (err) {
-          // WRONG NETWORK TRANSITION
-          if (err.message === "WRONG_NETWORK") {
-            setModalState(MODAL_STATE.WRONG_NETWORK, {
-              expectedName: EXPECTED_CHAIN.name,
-              onAction: async () => {
-                try {
-                  await switchNetwork();
-                  location.reload();
-                } catch {
-                  setModalState(MODAL_STATE.ERROR, {
-                    message: "Network switch failed.",
-                  });
-                }
-              },
-            });
-            return;
-          }
-
-          setModalState(MODAL_STATE.ERROR, {
-            message: err.message,
-          });
-        }
-      },
-    });
-  });
+  const usd = eth * ETH_PRICE;
+  usdOutput.textContent = "$" + usd.toFixed(2);
 });
-
