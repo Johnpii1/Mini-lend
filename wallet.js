@@ -1,3 +1,33 @@
+//FOR HEADER BACKGROUND
+const header = document.getElementById("header");
+
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 50) {
+    header.classList.add("bg-[#2b0f0f]", "shadow-lg");
+  } else {
+    header.classList.remove("bg-[#2b0f0f]", "shadow-lg");
+  }
+});
+
+
+
+//FOR MOBILE FQ AND WHITE PAPER
+const headerBtn = document.getElementById("headers");
+const headermenus = document.querySelector(".menus");
+const closeBtns = document.getElementById("closebtn");
+
+headerBtn.addEventListener("click", () => {
+  headermenus.classList.toggle("hidden");
+});
+
+ closeBtns.addEventListener("click", () => {
+    headermenus.classList.toggle("hidden");
+  });
+
+
+
+
+
 import {
   createWalletClient,
   createPublicClient,
