@@ -98,19 +98,21 @@ modals4.addEventListener("click", (e) => {
 });
 
 
-const ETH_PRICE = 3200; // example ETH price
+const ETH_PRICE = 3200;
 
-const ethInput = document.getElementById("ethInput");
-const usdOutput = document.getElementById("usdOutput");
+const ethInputs = document.querySelectorAll(".ethInput");
+const usdOutputs = document.querySelectorAll(".usdOutput");
 
-ethInput.addEventListener("input", () => {
-  const eth = Number(ethInput.value);
+ethInputs.forEach((input, index) => {
+  input.addEventListener("input", () => {
+    const eth = Number(input.value);
 
-  if (!eth) {
-    usdOutput.textContent = "$0";
-    return;
-  }
+    if (!eth) {
+      usdOutputs[index].textContent = "$0";
+      return;
+    }
 
-  const usd = eth * ETH_PRICE;
-  usdOutput.textContent = "$" + usd.toFixed(2);
+    const usd = eth * ETH_PRICE;
+    usdOutputs[index].textContent = "$" + usd.toFixed(2);
+  });
 });
