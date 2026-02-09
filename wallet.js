@@ -5,6 +5,13 @@ import {
   http,
 } from "https://esm.sh/viem";
 import { setModalState, MODAL_STATE, closeModal } from "./modalController.js";
+// import {
+//   renderModal,
+//   setModalState,
+//   getModalConfig,
+//   MODAL_STATE,
+//   closeModal,
+// } from "./dummy.js";
 import { EXPECTED_CHAIN } from "./config.js";
 
 const connectHeaderBtn = document.getElementById("headerConnect");
@@ -139,7 +146,7 @@ document.querySelectorAll(".openModal").forEach((btn) => {
                 try {
                   await switchNetwork();
                   location.reload();
-                } catch {
+                } catch (err) {
                   setModalState(MODAL_STATE.ERROR, {
                     message: "Network switch failed.",
                   });

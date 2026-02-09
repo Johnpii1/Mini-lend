@@ -27,6 +27,8 @@ export function closeModal() {
   modal.classList.remove("flex");
 }
 
+export function disconnectModal() {}
+
 // ---- RENDER MODAL STATE ----
 export function setModalState(state, payload = {}) {
   modalActionBtn.onclick = null; // reset old actions
