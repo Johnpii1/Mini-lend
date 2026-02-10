@@ -45,8 +45,11 @@
         <div class="hidden md:flex md:items-center border-[1px] border-[#D7CBB1] w-[20vw] h-[35px] rounded-[14px]">
 
             <!--USER ADDRESS-->
-            <div class="absolute  border-[1px] border-[#D7CBB1] w-[10vw] h-[30px] rounded-[14px] right-8">
-                <p class="text-white">Address</p>
+            <div class="absolute  border-[#D7CBB1] w-[10vw] h-[30px] rounded-[14px] right-8 flex items-center justify-center">
+                <div class="bg-[#D7CBB1] rounded-[14px] text-center flex justify-center items-center w-[130px] h-[30px] md:h-[36px] md:w-[219px]">
+            <button id="headerConnect" class="logo  text-[#4E8141] font-semibold text-sm md:text-[15px]"><i>CONNECT WALLET</i></button>
+
+</div>
             </div>
         </div>
 
@@ -80,8 +83,9 @@
                 <h2 id="modalTitle1" class="logo text-xl font-bold text-center mb-2">Stake ETH</h2>
                 <p class="logo flex items-center justify-between text-sm  text-[#331A1A] py-2">
                     Amount <span> <input
+  id="stakeInput"                      
   type="number"
-  value="0"
+  placeholder="(e.g. 0.1)"
   class="ethInput no-spinner bg-transparent text-right outline-none w-[100px]"
 /></span>
                 </p>
@@ -324,11 +328,9 @@
       <p>ETH Staked</p>
 
       <!--change this to input -->
-      <input
-  type="number"
-  value="0"
-  class="ethInput no-spinner bg-transparent text-right outline-none w-[100px]"
-/>
+
+        <p id="stakedEth" class="ethInput no-spinner bg-transparent text-right outline-none w-[100px]">0</p>
+
 
     </div>
 
@@ -398,5 +400,6 @@
 
 </body>
 <script src="./javascript2.js"></script>
+<script type="module" src="./wallet.js"></script>
 
 </html>

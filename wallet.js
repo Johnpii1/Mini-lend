@@ -1,38 +1,37 @@
 //FOR HEADER BACKGROUND
-const header = document.getElementById("header");
+// const header = document.getElementById("header");
 
-window.addEventListener("scroll", () => {
-  if (window.scrollY > 50) {
-    header.classList.add("bg-[#2b0f0f]", "shadow-lg");
-  } else {
-    header.classList.remove("bg-[#2b0f0f]", "shadow-lg");
-  }
-});
-
-
+// window.addEventListener("scroll", () => {
+//   if (window.scrollY > 50) {
+//     header.classList.add("bg-[#2b0f0f]", "shadow-lg");
+//   } else {
+//     header.classList.remove("bg-[#2b0f0f]", "shadow-lg");
+//   }
+// });
 
 //FOR MOBILE FQ AND WHITE PAPER
-const headerBtn = document.getElementById("headers");
-const headermenus = document.querySelector(".menus");
-const closeBtns = document.getElementById("closebtn");
+// const headerBtn = document.getElementById("headers");
+// const headermenus = document.querySelector(".menus");
+// const closeBtns = document.getElementById("closebtn");
 
-headerBtn.addEventListener("click", () => {
-  headermenus.classList.toggle("hidden");
-});
+// headerBtn.addEventListener("click", () => {
+//   headermenus.classList.toggle("hidden");
+// });
 
- closeBtns.addEventListener("click", () => {
-    headermenus.classList.toggle("hidden");
-  });
-
-
-
-
+// closeBtns.addEventListener("click", () => {
+//   headermenus.classList.toggle("hidden");
+// });
 
 import {
   createWalletClient,
   createPublicClient,
   custom,
   http,
+  parseEther,
+  parseUnits,
+  formatEther,
+  formatUnits,
+  getContract,
 } from "https://esm.sh/viem";
 import { setModalState, MODAL_STATE, closeModal } from "./modalController.js";
 // import {
@@ -43,33 +42,39 @@ import { setModalState, MODAL_STATE, closeModal } from "./modalController.js";
 //   closeModal,
 // } from "./dummy.js";
 import { EXPECTED_CHAIN } from "./config.js";
+import { CONTRACTS } from "./minilendContract.js";
 
 const connectHeaderBtn = document.getElementById("headerConnect");
 let walletClient;
 let publicClient;
-let account = null;
+let userAddress = null;
+let miniLend;
 
 // shorten address
 export function shortenAddress(addr) {
   return addr.slice(0, 6) + "..." + addr.slice(-4);
 }
 
-export function getAccount() {
-  const savedAccount = localStorage.getItem("account");
-  if (savedAccount) {
-    account = savedAccount;
+export function getuserAddress() {
+  const saveduserAddress = localStorage.getItem("userAddress");
+  if (saveduserAddress) {
+    userAddress = saveduserAddress;
   }
-  return account;
+  return userAddress;
 }
 
-function updateAccount(newAccount) {
-  account = newAccount;
-  localStorage.setItem("account", newAccount);
+function updateuserAddress(newuserAddress) {
+  userAddress = newuserAddress;
+  localStorage.setItem("userAddress", newuserAddress);
   localStorage.setItem("connected", "true");
 }
 
 // testing mode: always reset
 localStorage.setItem("hideMetaMaskWarning", "false");
+
+/*//////////////////////////////////////////////////////////////
+        CORE CONTRACT INTERACTIONS & WALLET CONNECTION
+//////////////////////////////////////////////////////////////*/
 
 // =========== SWITCH NETWORK ============
 async function switchNetwork() {
@@ -104,39 +109,190 @@ async function switchNetwork() {
 
 // =========== WALLET CLIENT & PUBLIC CLIENT ============
 async function connectWallet() {
-  if (!window.ethereum) {
-    throw new Error("NO_WALLET");
+  try {
+    if (!window.ethereum) {
+      throw new Error("NO_WALLET");
+    }
+
+    walletClient = createWalletClient({
+      chain: EXPECTED_CHAIN,
+      transport: custom(window.ethereum),
+    });
+
+    publicClient = createPublicClient({
+      chain: EXPECTED_CHAIN,
+      transport: http(EXPECTED_CHAIN.rpcUrl),
+    });
+
+    // 🔍 Check network FIRST
+    // "I COMMENTED BECAUSE THI IMPLEMENTATION I NOT NEEDED NOW"
+    const chainId = await walletClient.getChainId();
+
+    if (chainId !== EXPECTED_CHAIN.id) {
+      throw new Error("WRONG_NETWORK");
+    }
+
+    const addresses = await walletClient.requestAddresses();
+    userAddress = addresses[0];
+
+    // create contract AFTER wallet connection
+    miniLend = getContract({
+      address: CONTRACTS.sepolia.myContract.address,
+      abi: CONTRACTS.sepolia.myContract.abi,
+      publicClient,
+      walletClient,
+    });
+
+    connectHeaderBtn.innerText = shortenAddress(userAddress);
+    updateuserAddress(userAddress);
+    return { miniLend, walletClient, userAddress };
+  } catch (err) {
+    console.error("Connection error:", err);
+    throw err;
   }
+}
 
-  walletClient = createWalletClient({
-    chain: EXPECTED_CHAIN,
-    transport: custom(window.ethereum),
+// ========== LOAD MINILEND-CONTRACT ============
+
+export function getMiniLendContract(walletClient) {
+  return getContract({
+    address: CONTRACTS.sepolia.myContract.address,
+    abi: CONTRACTS.sepolia.myContract.abi,
+    publicClient,
+    walletClient,
   });
+}
 
-  publicClient = createPublicClient({
-    chain: EXPECTED_CHAIN,
-    transport: http(EXPECTED_CHAIN.rpcUrl),
-  });
+// =========== Error Handler ============
+// function extractRevertMessage(error) {
+//   // viem structured error
+//   if (error.shortMessage) return error.shortMessage;
 
-  // 🔍 Check network FIRST
-  // "I COMMENTED BECAUSE THI IMPLEMENTATION I NOT NEEDED NOW"
-  // const chainId = await walletClient.getChainId();
+//   if (error.cause && error.cause.reason) return error.cause.reason;
 
-  // if (chainId !== EXPECTED_CHAIN.id) {
-  //   throw new Error("WRONG_NETWORK");
-  // }
+//   // raw JSON-RPC revert data
+//   const match = /"message":"([^"]+)"/.exec(error.message);
+//   if (match) return match[1];
 
-  const addresses = await walletClient.requestAddresses();
-  account = addresses[0];
-  connectHeaderBtn.innerText = shortenAddress(account);
-  updateAccount(account);
-  return account;
+//   return "Transaction reverted";
+// }
+
+// ============ txHandler ============
+async function handleTx(sendTxFn, successMessage) {
+  try {
+    // 1. Send transaction
+    const hash = await sendTxFn();
+
+    // 2. Wait for mining
+    const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+    if (receipt.status !== "success") {
+      throw new Error("Transaction reverted");
+    }
+
+    return receipt;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// ============ Stake ETH function ============
+async function stakeETH(amountInETH) {
+  try {
+    // Check if initialized
+    if (!userAddress) {
+      await connectWallet();
+    }
+
+    if (!miniLend) {
+      console.log("Initializing contract...");
+      miniLend = getMiniLendContract(walletClient);
+      console.log("Contract initialized:", miniLend);
+    }
+
+    // Convert to wei
+    const amountWei = parseEther(amountInETH.toString());
+
+    // Send transaction
+    console.log("Sending stake transaction...");
+
+    const hash = await walletClient.writeContract({
+      address: CONTRACTS.sepolia.myContract.address,
+      abi: CONTRACTS.sepolia.myContract.abi,
+      functionName: "stakeEth",
+      args: [],
+      account: userAddress,
+      value: amountWei,
+    });
+
+    console.log("Transaction sent! Hash:", hash);
+
+    // Wait for confirmation
+    const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+    if (receipt.status === "success") {
+      console.log("Staking successful!", receipt);
+      // updateUI("success", receipt);
+      const user = await publicClient.readContract({
+        address: CONTRACTS.sepolia.myContract.address,
+        abi: CONTRACTS.sepolia.myContract.abi,
+        functionName: "getUser",
+        args: [userAddress],
+      });
+      // destructure tuple
+      const [, stakedAmount, ,] = user;
+      document.getElementById("stakedEth").textContent =
+        formatEther(stakedAmount);
+      return receipt;
+    } else {
+      throw new Error("Transaction failed");
+    }
+  } catch (error) {
+    console.error("Staking error:", error);
+
+    // Handle specific errors
+    if (error.message.includes("insufficient funds")) {
+      // alert("Insufficient ETH balance!");
+      console.log("Insufficient funds - check your wallet balance.");
+    } else if (error.message.includes("user rejected")) {
+      // alert("Transaction rejected by user");
+      console.log("User rejected transaction.");
+    } else if (error.message.includes("execution reverted")) {
+      // alert("Contract execution failed - check conditions");
+      console.log("Contract execution reverted - check conditions.");
+    }
+
+    // updateUI("error", error.message);
+    throw error;
+  }
+}
+
+const stake = document.getElementById("connectWalletBtn1");
+
+if (stake) {
+  document.getElementById("connectWalletBtn1").onclick = async () => {
+    const eth = document.getElementById("stakeInput").value;
+    // console.log(getuserAddress());
+    if (!eth || isNaN(eth)) {
+      alert("Please enter a valid amount of ETH to stake.");
+      return;
+    }
+    document.getElementById("connectWalletBtn1").disabled = true; // Disable button to prevent multiple clicks
+    try {
+      await stakeETH(eth);
+      alert("Staking successful!");
+    } catch (err) {
+      alert("Staking failed: " + err.message);
+    } finally {
+      document.getElementById("connectWalletBtn1").disabled = false; // Re-enable button
+    }
+  };
 }
 
 function disconnectWallet() {
-  account = null;
+  userAddress = null;
   localStorage.removeItem("connected");
-  localStorage.removeItem("account");
+  localStorage.removeItem("userAddress");
   localStorage.clear();
 }
 
@@ -149,9 +305,9 @@ document.querySelectorAll(".openModal").forEach((btn) => {
     }
 
     // CASE 2: Wallet already connected
-    if (account) {
+    if (userAddress) {
       setModalState(MODAL_STATE.DISCONNECT, {
-        account,
+        userAddress,
         onAction: () => {
           handleDisconnect();
           location.reload(); // optional
@@ -187,7 +343,7 @@ document.querySelectorAll(".openModal").forEach((btn) => {
           }
 
           setModalState(MODAL_STATE.ERROR, {
-            message: err.message,
+            message: err.shortMessage,
           });
         }
       },
@@ -198,4 +354,27 @@ document.querySelectorAll(".openModal").forEach((btn) => {
 export function handleDisconnect() {
   disconnectWallet(); // clear app state
   location.href = "index.html"; // go back to home
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  console.log("Initializing DApp...");
+
+  // 1. Check if wallet is already connected
+  await checkExistingConnection();
+});
+
+async function checkExistingConnection() {
+  if (window.ethereum && window.ethereum.selectedAddress) {
+    window.ethereum.on("accountsChanged", (userAddress) => {
+      if (userAddress.length === 0) {
+        // Wallet disconnected
+        console.log("Wallet disconnected, reloading...");
+        // setTimeout(() => window.location.reload(), 100);
+      }
+    });
+    console.log("Wallet already connected:", window.ethereum.selectedAddress);
+    connectHeaderBtn.innerText = shortenAddress(
+      window.ethereum.selectedAddress,
+    );
+  }
 }
