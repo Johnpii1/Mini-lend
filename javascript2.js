@@ -116,3 +116,20 @@ ethInputs.forEach((input, index) => {
     usdOutputs[index].textContent = "$" + usd.toFixed(2);
   });
 });
+
+
+const input = document.querySelector(".ethInput");
+
+input.addEventListener("input", () => {
+  let value = input.value;
+
+  if (value.includes(".")) {
+    let parts = value.split(".");
+    parts[1] = parts[1].slice(0, 8);
+    input.value = parts.join(".");
+  }
+});
+
+
+
+

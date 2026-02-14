@@ -42,31 +42,32 @@
 
 
         <!--BOX FOR WALLET NAME FOR DESKTOP ONLY-->
-<!-- WALLET INFO CONTAINER -->
-<div class="hidden md:flex md:items-center border border-[#D7CBB1] rounded-[14px] px-3 h-[36px] gap-3 w-auto">
+        <!-- WALLET INFO CONTAINER -->
+        <div class="hidden md:flex md:items-center border border-[#D7CBB1] rounded-[14px] px-3 h-[36px] gap-3 w-auto">
 
-    <!-- BALANCE -->
-    <div id="walletBalanceBox" class="flex items-center gap-2 text-white font-semibold">
+            <!-- BALANCE -->
+            <div id="walletBalanceBox" class="flex items-center gap-2 text-white font-semibold">
 
-        <!-- ETH LOGO -->
-        <img src="./image/ethereum-eth-logo-colored.svg" alt="ETH" class="w-4 h-4">
+                <!-- ETH LOGO -->
+                <img src="./image/ethereum-eth-logo-colored.svg" alt="ETH" class="w-4 h-4">
 
-        <!-- BALANCE TEXT -->
-        <p id="walletEthBalance" class="logo text-[15px] text-[#D7CBB1]">
-            0.000 ETH
-        </p>
-    </div>
+                <!-- BALANCE TEXT -->
+                <p id="walletEthBalance" class="logo text-[15px] text-[#D7CBB1]">
+                    0.000 ETH
+                </p>
+            </div>
 
-    <!-- CONNECT BUTTON -->
-    <div class="border-[#D7CBB1] flex items-center justify-center">
-        <div class="bg-[#D7CBB1] rounded-[14px] text-center flex justify-center items-center px-4 h-[30px] md:h-[36px]">
-            <button id="headerConnect" class="logo text-[#4E8141] font-semibold text-sm md:text-[15px]">
-                <i>CONNECT WALLET</i>
-            </button>
+            <!-- CONNECT BUTTON -->
+            <div class="border-[#D7CBB1] flex items-center justify-center">
+                <div
+                    class="bg-[#D7CBB1] rounded-[14px] text-center flex justify-center items-center px-4 h-[30px] md:h-[36px]">
+                    <button id="headerConnect" class="logo text-[#4E8141] font-semibold text-sm md:text-[15px]">
+                        <i>CONNECT WALLET</i>
+                    </button>
+                </div>
+            </div>
+
         </div>
-    </div>
-
-</div>
 
 
     </div>
@@ -98,10 +99,12 @@
                 <!-- CONTENT -->
                 <h2 id="modalTitle1" class="logo text-xl font-bold text-center mb-2">Stake ETH</h2>
                 <p class="logo flex items-center justify-between text-sm  text-[#331A1A] py-2">
-                    Amount <input id="stakeInput" class="bg-transparent text-right outline-none w-[100px]" type="number" placeholder="0.0">
+                    Amount <input id="stakeInput" class="bg-transparent text-right outline-none w-[100px]" type="number"
+                        placeholder="0.0">
                 </p>
 
-                <p id="ethUsdValue" class="logo text-center py-2 text-[14px]">USD value: <span class="usdOutput">$0</span></p>
+                <p id="ethUsdValue" class="logo text-center py-2 text-[14px]">USD value: <span
+                        class="usdOutput">$0</span></p>
 
                 <div class="flex justify-center items-center">
                     <button id="connectWalletBtn1"
@@ -152,7 +155,8 @@
 
 
                 <p class="logo flex items-center justify-between text-sm  text-[#0D7328] py-2">
-                    Amount <input id="borrowInput" class="bg-transparent text-right outline-none w-[100px]" type="number" placeholder="0.0">
+                    Amount <input id="borrowInput" class="bg-transparent text-right outline-none w-[100px]"
+                        type="number" placeholder="0.0">
                 </p>
 
 
@@ -200,8 +204,9 @@
 
                 <!-- CONTENT -->
                 <h2 id="modalTitle3" class="logo text-xl font-bold text-center mb-2">Repay</h2>
-                <p class="logo flex items-center justify-between text-sm  text-[#331A1A] py-2">
-                    Amount <input id="repayInput" class="bg-transparent text-right outline-none w-[100px]" type="number" placeholder="0.0">
+                <p class="logo flex justify-between items-center text-sm  text-[#331A1A] py-2">
+                    Amount <input type="number" placeholder="eg.(0.0)" min="0" step="0.00000001"
+                        class="ethInput no-spinner bg-transparent outline-none flex-1 text-right">
                 </p>
 
                 <p id="repayUsdValue" class="logo text-center py-2 text-[14px]">USD value: $0</p>
@@ -209,7 +214,7 @@
                 <div class="flex justify-center items-center">
                     <button id="connectWalletBtn3"
                         class="logo  w-[140px] h-[20px] bg-[#6DD054] text-black text-[12px] rounded-[14px] font-semibold">
-                       Repay
+                        Repay
                     </button>
                 </div>
 
@@ -249,12 +254,14 @@
                 <!-- CONTENT -->
                 <h2 id="modalTitle4" class="logo text-xl font-bold text-center mb-2">Withdraw</h2>
                 <p class="logo flex items-center justify-between text-sm  text-[#331A1A] py-2">
-                    Amount <input id="withdrawInput" class="bg-transparent text-right outline-none w-[100px]" type="number" placeholder="0.0">
+                    Amount <span> <input type="number" placeholder="eg.(0.0)" min="0" step="0.00000001"
+                            class="ethInput no-spinner bg-transparent outline-none flex-1 text-right" />
+                    </span>
                 </p>
 
                 <p class="logo text-center py-2 text-[14px]">USD value: $0</p>
 
-                <p  class="logo text-center py-2 text-[12px]">Bonus: 5%</p>
+                <p class="logo text-center py-2 text-[12px]">Bonus: 5%</p>
 
                 <div class="flex justify-center items-center">
                     <button id="connectWalletBtn4"
@@ -285,7 +292,7 @@
             <!--HEADER-->
             <h2 class="logo font-semibold text-[#331A1A] text-center text-[16px] py-2">Position Health </h2>
 
-<div class="flex flex-col md:gap-2">
+            <div class="flex flex-col md:gap-2">
                 <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
                     <p>Borrow Limit</p>
                     <p id="borrowLimit">$0</p>
@@ -301,7 +308,15 @@
                 <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
                     <p>Health</p>
                     <p id="healthWarning">Warning </p>
-<div class="w-[18px] h-[17px] rounded-full bg-[#D79A17]"></div>
+                    <div class="w-[18px] h-[17px] rounded-full bg-[#D79A17]"></div>
+
+                    <!-- <p id="healthWarning">Safe </p>
+                    <div class="w-[18px] h-[17px] rounded-full bg-[#4E8141]"></div>
+
+
+                    <p id="healthWarning">Liquidatable</p>
+                    <div class="w-[18px] h-[17px] rounded-full bg-[#FF0000]"></div> -->
+                
                 </div>
 
 
@@ -316,7 +331,7 @@
                     <p>Liquidation at</p>
                     <p id="liquidation">$0</p>
                 </div>
-</div>
+            </div>
 
 
 
@@ -325,45 +340,47 @@
 
 
         <!--MAIN DIV 2-->
-      <div class="w-[99%] h-fit bg-[#D7CBB1] rounded-[14px] py-2 md:w-[99.5%] md:py-4">
+        <div class="w-[99%] h-fit bg-[#D7CBB1] rounded-[14px] py-2 md:w-[99.5%] md:py-4">
 
-  <!-- HEADER -->
-  <h2 class="logo font-semibold text-[#331A1A] text-center text-[16px] py-2">
-    Collateral
-  </h2>
+            <!-- HEADER -->
+            <h2 class="logo font-semibold text-[#331A1A] text-center text-[16px] py-2">
+                Collateral
+            </h2>
 
-  <div class="flex flex-col md:gap-2">
+            <div class="flex flex-col md:gap-2">
 
-    <!-- ETH STAKED -->
-    <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-      <p>ETH Staked</p>
+                <!-- ETH STAKED -->
+                <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
+                    <p>ETH Staked</p>
 
-      <!--change this to input -->
+                    <!--change this to input -->
 
-        <p  id="stakedEth" class="ethInput no-spinner bg-transparent text-right outline-none w-[100px]">0</p>
+                    <p id="stakedEth" class="ethInput no-spinner bg-transparent text-right outline-none w-[100px]">0</p>
 
 
-    </div>
+                </div>
 
-    <!-- USD VALUE -->
-    <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-      <p>USD Value</p>
+                <!-- USD VALUE -->
+                <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
+                    <p>USD Value</p>
 
-      <!--JS will update this -->
-      <p id="usdOutput" class="usdOutput">$0</p>
-    </div>
+                    <!--JS will update this -->
+                    <p id="usdOutput" class="usdOutput">$0</p>
+                </div>
 
-  </div>
-
-   <!--BUTTON-->
-            <div class="flex items-center justify-center">
-                <button id="addEthBtn" class="logo bg-[#6DD054]  w-[200px] md:w-[500px] h-[22.57px] border-[1px] rounded-[14px] text-[12px]">Add ETH</button>
             </div>
-</div>
 
-          
+            <!--BUTTON-->
+            <div class="flex items-center justify-center">
+                <button id="addEthBtn"
+                    class="logo bg-[#6DD054]  w-[200px] md:w-[500px] h-[22.57px] border-[1px] rounded-[14px] text-[12px]">Add
+                    ETH</button>
+            </div>
+        </div>
 
-        
+
+
+
 
 
 
@@ -399,7 +416,8 @@
 
             <!--BUTTON-->
             <div class="flex items-center justify-center">
-                <button class="logo bg-[#6DD054]  w-[200px] md:w-[500px] h-[22.57px] border-[1px] rounded-[14px] text-[12px]">Repay</button>
+                <button
+                    class="logo bg-[#6DD054]  w-[200px] md:w-[500px] h-[22.57px] border-[1px] rounded-[14px] text-[12px]">Repay</button>
             </div>
 
         </div>
