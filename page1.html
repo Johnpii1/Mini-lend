@@ -31,22 +31,24 @@
 
         <!--LOGO-->
         <div class="logo text-white font-semibold text-[16px]">
-            <a href="./index.html">MINI LEND</a>
+            <p>MINI LEND</p>
         </div>
 
 
         <!--USER ADDRESS FOR MOBILE-->
-        <div class="absolute  border-[1px] border-[#D7CBB1] w-[25vw] h-[30px] rounded-[14px] right-8 md:hidden">
+        <div
+            class="absolute  border-[1px] border-[#D7CBB1] w-[25vw] h-[30px] rounded-[14px] cursor-pointer right-8 md:hidden">
 
         </div>
 
 
         <!--BOX FOR WALLET NAME FOR DESKTOP ONLY-->
         <!-- WALLET INFO CONTAINER -->
-        <div class="hidden md:flex md:items-center border border-[#D7CBB1] rounded-[14px] px-3 h-[36px] gap-3 w-auto">
+        <div
+            class="hidden md:flex md:items-center border border-[#D7CBB1] rounded-[14px] px-3 h-[36px] gap-3 w-auto cursor-pointer">
 
             <!-- BALANCE -->
-            <div id="walletBalanceBox" class="flex items-center gap-2 text-white font-semibold">
+            <div id="walletBalanceBox" class="Modaled5 flex items-center gap-2 text-white font-semibold">
 
                 <!-- ETH LOGO -->
                 <img src="./image/ethereum-eth-logo-colored.svg" alt="ETH" class="w-4 h-4">
@@ -60,17 +62,54 @@
             <!-- CONNECT BUTTON -->
             <div class="border-[#D7CBB1] flex items-center justify-center">
                 <div
-                    class="bg-[#D7CBB1] rounded-[14px] text-center flex justify-center items-center px-4 h-[30px] md:h-[36px]">
+                    class=" bg-[#D7CBB1] rounded-[14px] text-center flex justify-center items-center px-4 h-[30px] md:h-[36px]">
                     <button id="headerConnect" class="logo text-[#4E8141] font-semibold text-sm md:text-[15px]">
                         <i>CONNECT WALLET</i>
                     </button>
                 </div>
+
+
+                <!-- MODAL OVERLAY 1 -->
+                <div id="modalOverlay5"
+                    class="menu1 fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
+
+                    <!-- MODAL BOX -->
+                    <div class="bg-[#F2E9D7] rounded-2xl p-6 w-[80%] md:w-[24%] h-fit max-w-sm text-[#331A1A] relative">
+
+                        <!-- CLOSE BUTTON -->
+                        <button id="closeModal5" class="absolute top-3 right-3 text-[#331A1A] text-lg">
+                            ✕
+                        </button>
+
+                        <div
+                            class="flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px] mt-6">
+                            <div class="logo">
+                                <button class="h-[30px] w-[30px] rounded-full bg-[#3a1515]/50 m-2"><i
+                                        class="bi bi-send-fill"></i></button> Send
+                            </div>
+
+                            <div>
+                                <i class="bi bi-caret-right-fill"></i>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
             </div>
-
         </div>
-
-
     </div>
+
+
 
 
     <!--MAIN DIV 1-->
@@ -276,160 +315,175 @@
     </div>
 
 
-<div class="flex flex-col  gap-[100px]">
-    <!--BALANCE PAGE-->
-    <div class="flex flex-col m-4  gap-[25px] md:gap-8 md:m-8">
-        <!--MAIN DIV 1-->
-        <div class="w-[99%] h-[150px] bg-[#D7CBB1] rounded-[14px] md:w-[99.5%] md:h-[200px] ">
+    <div class="flex flex-col  gap-[100px]">
+        <!--BALANCE PAGE-->
+        <div class="flex flex-col m-4  gap-[25px] md:gap-8 md:m-8">
+            <!--MAIN DIV 1-->
+            <div class="w-[99%] h-[150px] bg-[#D7CBB1] rounded-[14px] md:w-[99.5%] md:h-[200px] ">
 
-            <!--HEADER-->
-            <h2 class="logo font-semibold text-[#331A1A] text-center text-[16px] py-2">Position Health </h2>
+                <!--HEADER-->
+                <h2 class="logo font-semibold text-[#331A1A] text-center text-[16px] py-2">Position Health </h2>
 
-            <div class="flex flex-col md:gap-2">
-                <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-                    <p>Borrow Limit</p>
-                    <p id="borrowLimit">$0</p>
-                </div>
-
-
-                <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-                    <p>Borrowed</p>
-                    <p id="borrowed">$0</p>
-                </div>
+                <div class="flex flex-col md:gap-2">
+                    <div
+                        class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
+                        <p>Borrow Limit</p>
+                        <p id="borrowLimit">$0</p>
+                    </div>
 
 
-                <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-                    <p>Health</p>
-                    <p id="healthWarning">Warning </p>
-                    <div class="w-[18px] h-[17px] rounded-full bg-[#D79A17]"></div>
+                    <div
+                        class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
+                        <p>Borrowed</p>
+                        <p id="borrowed">$0</p>
+                    </div>
 
-                    <!-- <p id="healthsafe">Safe </p>
+
+                    <div
+                        class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
+                        <p>Health</p>
+                        <p id="healthWarning">Warning </p>
+                        <div class="w-[18px] h-[17px] rounded-full bg-[#D79A17]"></div>
+
+                        <!-- <p id="healthsafe">Safe </p>
                     <div class="w-[18px] h-[17px] rounded-full bg-[#4E8141]"></div>
 
 
                     <p id="healthLiquidateable">Liquidatable</p>
                     <div class="w-[18px] h-[17px] rounded-full bg-[#FF0000]"></div> -->
 
+                    </div>
+
+
+
+                    <div
+                        class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
+                        <p>Utilization</p>
+                        <p id="Utilization">0%</p>
+                    </div>
+
+
+                    <div
+                        class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
+                        <p>Liquidation at</p>
+                        <p id="liquidation">$0</p>
+                    </div>
                 </div>
 
 
 
-                <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-                    <p>Utilization</p>
-                    <p id="Utilization">0%</p>
+
+            </div>
+
+
+            <!--MAIN DIV 2-->
+            <div class="w-[99%] h-fit bg-[#D7CBB1] rounded-[14px] py-2 md:w-[99.5%] md:py-4">
+
+                <!-- HEADER -->
+                <h2 class="logo font-semibold text-[#331A1A] text-center text-[16px] py-2">
+                    Collateral
+                </h2>
+
+                <div class="flex flex-col md:gap-2">
+
+                    <!-- ETH STAKED -->
+                    <div
+                        class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
+                        <p>ETH Staked</p>
+
+                        <!--change this to input -->
+
+                        <p id="stakedEth" class="ethInput no-spinner bg-transparent text-right outline-none w-[100px]">0
+                        </p>
+
+
+                    </div>
+
+                    <!-- USD VALUE -->
+                    <div
+                        class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
+                        <p>USD Value</p>
+
+                        <!--JS will update this -->
+                        <p id="usdOutput" class="usdOutput">$0</p>
+                    </div>
+
                 </div>
 
-
-                <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-                    <p>Liquidation at</p>
-                    <p id="liquidation">$0</p>
+                <!--BUTTON-->
+                <div class="flex items-center justify-center">
+                    <button id="addEthBtn"
+                        class="logo  w-[140px] h-[25px] bg-[#6DD054] text-black text-[12px] rounded-[14px] font-semibold md:h-[28px]">Add
+                        ETH</button>
                 </div>
             </div>
 
 
 
 
+
+
+
+            <!--MAIN DIV 3-->
+            <div class="w-[99%] h-fit bg-[#D7CBB1] py-2 rounded-[14px] md:w-[99.5%]  md:py-4">
+
+                <!--HEADER-->
+                <h2 class="logo font-semibold text-[#331A1A] text-center text-[16px] py-2">Debt</h2>
+
+                <div class="flex flex-col md:gap-2">
+                    <div
+                        class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
+                        <p>Asset</p>
+                        <p>USDC</p>
+
+
+                    </div>
+
+
+
+                    <div
+                        class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
+                        <p>Borrowed</p>
+                        <p>0 USDC</p>
+                    </div>
+
+
+                    <div
+                        class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
+                        <p>USD Value</p>
+                        <p>$0</p>
+                    </div>
+
+                </div>
+
+
+                <!--BUTTON-->
+                <div class="flex items-center justify-center">
+                    <button
+                        class="logo  w-[140px] h-[25px] bg-[#6DD054] text-black text-[12px] rounded-[14px] font-semibold md:h-[28px]">Repay</button>
+                </div>
+
+            </div>
         </div>
 
 
-        <!--MAIN DIV 2-->
-        <div class="w-[99%] h-fit bg-[#D7CBB1] rounded-[14px] py-2 md:w-[99.5%] md:py-4">
-
-            <!-- HEADER -->
-            <h2 class="logo font-semibold text-[#331A1A] text-center text-[16px] py-2">
-                Collateral
-            </h2>
-
-            <div class="flex flex-col md:gap-2">
-
-                <!-- ETH STAKED -->
-                <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-                    <p>ETH Staked</p>
-
-                    <!--change this to input -->
-
-                    <p id="stakedEth" class="ethInput no-spinner bg-transparent text-right outline-none w-[100px]">0</p>
 
 
-                </div>
+        <!--COPYRIGHT-->
 
-                <!-- USD VALUE -->
-                <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-                    <p>USD Value</p>
-
-                    <!--JS will update this -->
-                    <p id="usdOutput" class="usdOutput">$0</p>
-                </div>
-
-            </div>
-
-            <!--BUTTON-->
-            <div class="flex items-center justify-center">
-                <button id="addEthBtn"
-                    class="logo  w-[140px] h-[25px] bg-[#6DD054] text-black text-[12px] rounded-[14px] font-semibold md:h-[28px]">Add
-                    ETH</button>
-            </div>
-        </div>
-
-
-
-
-
-
-
-        <!--MAIN DIV 3-->
-        <div class="w-[99%] h-fit bg-[#D7CBB1] py-2 rounded-[14px] md:w-[99.5%]  md:py-4">
-
-            <!--HEADER-->
-            <h2 class="logo font-semibold text-[#331A1A] text-center text-[16px] py-2">Debt</h2>
-
-            <div class="flex flex-col md:gap-2">
-                <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-                    <p>Asset</p>
-                    <p>USDC</p>
-
-
-                </div>
-
-
-
-                <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-                    <p>Borrowed</p>
-                    <p>0 USDC</p>
-                </div>
-
-
-                <div class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-                    <p>USD Value</p>
-                    <p>$0</p>
-                </div>
-
-            </div>
-
-
-            <!--BUTTON-->
-            <div class="flex items-center justify-center">
-                <button
-                    class="logo  w-[140px] h-[25px] bg-[#6DD054] text-black text-[12px] rounded-[14px] font-semibold md:h-[28px]">Repay</button>
-            </div>
-
-        </div>
-</div>
-
-
-
-
-<!--COPYRIGHT-->
-
-        <div class="flex justify-between  mt-[4rem] py-4 px-8">
+        <div class="flex justify-between  mt-[4rem] py-4 px-8 md:mt-[-3rem]">
 
             <p class="logo text-[9.8px] md:text-sm text-[#D7CBB1]">©2026 Copyright by MiniLend.eth</p>
 
             <div class="flex flex-row gap-6">
 
-               <a href="#"><p class="logo text-[9.8px] md:text-sm text-[#D7CBB1]">Privacy Policy</p></a> 
+                <a href="#">
+                    <p class="logo text-[9.8px] md:text-sm text-[#D7CBB1]">Privacy Policy</p>
+                </a>
 
-                <a href="#"><p class="logo text-[9.8px] md:text-sm text-[#D7CBB1]">Terms of use</p></a>
+                <a href="#">
+                    <p class="logo text-[9.8px] md:text-sm text-[#D7CBB1]">Terms of use</p>
+                </a>
             </div>
 
         </div>
@@ -437,7 +491,7 @@
 
 
 
-        </div>
+    </div>
 
 </body>
 <script src="./javascript2.js"></script>

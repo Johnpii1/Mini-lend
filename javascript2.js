@@ -1,4 +1,5 @@
-//FOR MODULAR2
+
+//FOR MODULAR1
 const openBtn1 = document.querySelectorAll(".Modaled1");
 const closeBnt1 = document.getElementById("closeModal1");
 const modals1 = document.getElementById("modalOverlay1");
@@ -96,6 +97,43 @@ modals4.addEventListener("click", (e) => {
     modals4.classList.remove("flex");
   }
 });
+
+
+
+
+
+
+
+//FOR MODULAR5
+// SELECT ELEMENTS
+const openBtn5 = document.querySelectorAll(".Modaled5");
+const modal5 = document.getElementById("modalOverlay5");
+const closeBtn5 = document.getElementById("closeModal5");
+
+// OPEN MODAL
+openBtn5.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    modal5.classList.remove("hidden");
+    modal5.classList.add("flex"); // needed for center alignment
+  });
+});
+
+// CLOSE MODAL
+closeBtn5.addEventListener("click", () => {
+  modal5.classList.add("hidden");
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 const ETH_PRICE = 3200;
