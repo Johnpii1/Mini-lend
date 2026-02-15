@@ -20,6 +20,21 @@ let userAddress = null;
 let miniLend;
 let chainId = null;
 
+const USDC = CONTRACTS.sepolia.myContract.usdcAddress;
+const LINK = CONTRACTS.sepolia.myContract.linkAddress;
+const ETH = CONTRACTS.sepolia.myContract.ethAddress;
+
+const TOKENS = {
+  LINK: LINK,
+  USDC: USDC,
+  ETH: ETH,
+};
+
+const tokenSelect = document.getElementById("tokenSelect");
+// const tokenSymbol = tokenSelect.value;
+
+// const selectedTokenAddress = TOKENS[tokenSelect.value];
+
 // shorten address
 export function shortenAddress(addr) {
   return addr.slice(0, 6) + "..." + addr.slice(-4);
