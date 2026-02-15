@@ -159,7 +159,7 @@ async function getTokenDecimals(tokenAddress) {
 
   const decimals = await publicClient.readContract({
     address: tokenAddress,
-    abi: erc20Abi,
+    abi: linkinfo.linkSepolia.abi, // standard ERC20 ABI with decimals function
     functionName: "decimals",
   });
 
@@ -200,21 +200,45 @@ async function userApprove({
 }
 
 // ============ txHandler ============
-async function handleTx(sendTxFn, successMessage) {
+async function executeMiniLendTx({
+  functionName,
+  args = [],
+  value = undefined,
+}) {
   try {
-    // 1. Send transaction
-    const hash = await sendTxFn();
+    if (!miniLend) {
+      miniLend = loadContract();
+    }
 
-    // 2. Wait for mining
+    // await checkNetworkLimits();
+    console.log("Preparing transaction with params:", {
+      functionName,
+      args,
+      value: value ? formatEther(value) + " ETH" : "N/A",
+    });
+
+    const hash = await walletClient.writeContract({
+      address: CONTRACTS.sepolia.myContract.address,
+      abi: CONTRACTS.sepolia.myContract.abi,
+      functionName,
+      args,
+      account: userAddress,
+      ...(value !== undefined ? { value } : {}),
+    });
+
+    console.log("Transaction sent:", hash);
+
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
     if (receipt.status !== "success") {
-      throw new Error("Transaction reverted");
+      throw new Error("Transaction failed");
     }
 
+    // await refreshUserState();
     return receipt;
   } catch (error) {
-    console.error(error);
+    console.error("Transaction error:", error);
+    throw error;
   }
 }
 
@@ -255,16 +279,7 @@ async function stakeETH(amountInETH) {
     if (receipt.status === "success") {
       console.log("Staking successful!", receipt);
       // updateUI("success", receipt);
-      const user = await publicClient.readContract({
-        address: CONTRACTS.sepolia.myContract.address,
-        abi: CONTRACTS.sepolia.myContract.abi,
-        functionName: "getUser",
-        args: [userAddress],
-      });
-      // destructure tuple
-      const [, stakedAmount, ,] = user;
-      document.getElementById("stakedEth").textContent =
-        formatEther(stakedAmount);
+
       return receipt;
     } else {
       throw new Error("Transaction failed");
@@ -321,11 +336,58 @@ export async function borrowAsset(tokenSymbol, amount) {
   const decimals = await getTokenDecimals(tokenAddress);
 
   const amountUnits = parseUnits(amount.toString(), decimals);
+  console.log("Borrowing with params:", {
+    tokenSymbol: tokenSymbol,
+    tokenAddress: tokenAddress,
+    amount: amount.toString(),
+    amountUnits: amountUnits.toString(),
+    decimals: decimals,
+    token: token,
+  });
 
+  updateUI(tokenSymbol);
   return executeMiniLendTx({
     functionName: "borrowAsset",
     args: [tokenAddress, amountUnits],
   });
+}
+
+// =========== Get price ============
+
+// tokenDecimals must be passed (18 for ETH)
+async function getUsdPrice(token, amount) {
+  // convert input amount → token base units
+  const amountWei = parseUnits(amount.toString());
+
+  // call contract
+  const usdValue = await publicClient.readContract({
+    address: CONTRACTS.sepolia.myContract.address,
+    abi: CONTRACTS.sepolia.myContract.abi,
+    functionName: "getUsdValue",
+    args: [token, amountWei],
+  });
+
+  // convert from 18-decimal USD
+  const usdNumber = Number(formatUnits(usdValue, 18));
+
+  // format with commas
+  const formattedUsd = usdNumber.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  return formattedUsd;
+}
+
+async function availableToBorrow(user, token) {
+  const available = await publicClient.readContract({
+    address: CONTRACTS.sepolia.myContract.address,
+    abi: CONTRACTS.sepolia.myContract.abi,
+    functionName: "_borrowableAmount",
+    args: [user, token],
+  });
+
+  return Number(formatUnits(available, 18));
 }
 
 export async function disconnectWallet() {
@@ -453,4 +515,59 @@ async function checkExistingConnection() {
   // if (window.location.pathname.endsWith("page1.html")) {
   //   location.href = "index.html";
   // }
+}
+
+async function updateUI(tokenSymbol) {
+  const selectedToken = TOKENS[tokenSymbol];
+  const selectedTokenAddress = selectedToken.address;
+
+  const accounts = await window.ethereum.request({
+    method: "eth_accounts",
+  });
+
+  userAddress = accounts.length > 0 ? accounts[0] : null;
+  console.log("Current user address:", userAddress);
+
+  if (!userAddress || !publicClient) {
+    await connectWallet();
+    console.log("Public client:", publicClient);
+    console.log("User address after connection:", userAddress);
+  }
+
+  try {
+    const user = await publicClient.readContract({
+      address: CONTRACTS.sepolia.myContract.address,
+      abi: CONTRACTS.sepolia.myContract.abi,
+      functionName: "getUser",
+      args: [userAddress],
+    });
+    // destructure tuple
+    const [, stakedAmount, ,] = user;
+
+    document.getElementById("stakedEth").textContent =
+      formatEther(stakedAmount);
+
+    // Getting available borrow amount in USD
+    const availableBorrowUsd = await availableToBorrow(
+      userAddress,
+      selectedTokenAddress,
+    );
+    const avail = parseEther(availableBorrowUsd.toString());
+
+    const availableBorrowUsdPrice = await getUsdPrice(
+      selectedTokenAddress,
+      avail,
+    );
+
+    console.log("Available to borrow (LINK):", availableBorrowUsd);
+
+    if (availableBorrowUsd === 0) {
+      document.getElementById("connectWalletBtn2").disabled = true; // Disable borrow button if nothing is available to borrow
+    }
+
+    document.getElementById("borrowLimit").textContent =
+      `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol}___${availableBorrowUsdPrice} USD`;
+  } catch (err) {
+    console.error("Error updating UI:", err);
+  }
 }

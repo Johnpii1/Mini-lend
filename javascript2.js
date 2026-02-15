@@ -153,6 +153,7 @@ document
 document.getElementById("connectWalletBtn2").onclick = async () => {
   const amt = document.getElementById("borrowInput").value;
   const selectedSymbol = document.getElementById("tokenSelect").value;
+  console.log("Borrowing", amt, selectedSymbol);
 
   if (!amt || isNaN(amt)) {
     alert("Enter valid amount");
