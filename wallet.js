@@ -369,10 +369,15 @@ async function checkExistingConnection() {
       address: userAddress,
     });
 
-    console.log("User balance:", formatEther(userBalance), "ETH");
+    // console.log("User balance:", formatEther(userBalance), "ETH");
+
     document.getElementById("userAddress").textContent =
       shortenAddress(userAddress);
+
     document.getElementById("userBalance").textContent =
+      `${Number(formatEther(userBalance)).toFixed(3)} ETH`;
+
+    document.getElementById("walletEthBalance").textContent =
       `${Number(formatEther(userBalance)).toFixed(3)} ETH`;
   }
 
