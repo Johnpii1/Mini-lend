@@ -113,6 +113,9 @@ async function connectWallet() {
     });
 
     connectHeaderBtn.innerText = shortenAddress(userAddress);
+    if (window.location.pathname.endsWith("index.html")) {
+      location.href = "page1.html";
+    }
     updateuserAddress(userAddress);
     return { miniLend, walletClient, userAddress };
   } catch (err) {
@@ -324,9 +327,12 @@ async function checkExistingConnection() {
       if (userAddress.length === 0) {
         // Wallet disconnected
         console.log("Wallet disconnected, reloading...");
-        // setTimeout(() => window.location.reload(), 100);
+        setTimeout(() => window.location.reload(), 100);
       }
     });
+    if (window.location.pathname.endsWith("index.html")) {
+      location.href = "page1.html";
+    }
     console.log("Wallet already connected:", window.ethereum.selectedAddress);
     connectHeaderBtn.innerText = shortenAddress(
       window.ethereum.selectedAddress,
