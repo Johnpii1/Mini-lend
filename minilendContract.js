@@ -1,4 +1,4 @@
-export const CONTRACTS = {
+const CONTRACTS = {
   sepolia: {
     myContract: {
       address: "0x751B8eC585Ba3bdc38690e663151a7ceb4861a72",
@@ -1000,3 +1000,22 @@ export const CONTRACTS = {
     },
   },
 };
+
+const TOKENS = {
+  USDC: {
+    address: CONTRACTS.sepolia.myContract.usdcAddress,
+  },
+  ETH: {
+    address: CONTRACTS.sepolia.myContract.ethAddress,
+  },
+  LINK: {
+    address: CONTRACTS.sepolia.myContract.linkAddress,
+  },
+};
+
+// const tokenSymbol = document.getElementById("tokenSelect").value;
+// // const tokenSymbol = tokenSelect.value;
+
+// const selectedTokenAddress = TOKENS[tokenSymbol];
+
+export { CONTRACTS, TOKENS };

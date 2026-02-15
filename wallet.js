@@ -11,29 +11,16 @@ import {
 } from "https://esm.sh/viem";
 import { setModalState, MODAL_STATE, closeModal } from "./modalController.js";
 import { EXPECTED_CHAIN } from "./config.js";
-import { CONTRACTS } from "./minilendContract.js";
+import { CONTRACTS, TOKENS } from "./minilendContract.js";
+import { linkinfo } from "./linkAbi.js";
 
 const connectHeaderBtn = document.getElementById("headerConnect");
+const tokenMetaCache = {}; // simple in-memory cache for token metadata
 let walletClient;
 let publicClient;
 let userAddress = null;
 let miniLend;
 let chainId = null;
-
-const USDC = CONTRACTS.sepolia.myContract.usdcAddress;
-const LINK = CONTRACTS.sepolia.myContract.linkAddress;
-const ETH = CONTRACTS.sepolia.myContract.ethAddress;
-
-const TOKENS = {
-  LINK: LINK,
-  USDC: USDC,
-  ETH: ETH,
-};
-
-const tokenSelect = document.getElementById("tokenSelect");
-// const tokenSymbol = tokenSelect.value;
-
-// const selectedTokenAddress = TOKENS[tokenSelect.value];
 
 // shorten address
 export function shortenAddress(addr) {
@@ -164,6 +151,54 @@ export function loadContract() {
   });
 }
 
+// =========== TOKEN DECIMAL FETCHING WITH CACHING ============
+async function getTokenDecimals(tokenAddress) {
+  if (tokenMetaCache[tokenAddress]?.decimals) {
+    return tokenMetaCache[tokenAddress].decimals;
+  }
+
+  const decimals = await publicClient.readContract({
+    address: tokenAddress,
+    abi: erc20Abi,
+    functionName: "decimals",
+  });
+
+  tokenMetaCache[tokenAddress] = { decimals };
+
+  return decimals;
+}
+
+// =========== Erc20 Approve function ============
+async function userApprove({
+  tokenAddress, // ERC20 token address
+  owner, // token holder address eg msg.sender
+  spender, // address allowed to spend tokens (eg miniLend contract)
+  amount, //human-readable amount (eg "1.5" for 1.5 LINK) - will be converted to base units
+}) {
+  const amountWei = parseUnits(amount.toString());
+
+  // check allowance
+  const allowance = await publicClient.readContract({
+    address: tokenAddress,
+    abi: linkinfo.linkSepolia.abi, // standard ERC20 ABI with allowance function
+    functionName: "allowance",
+    args: [owner, spender],
+  });
+
+  if (allowance >= amountWei) return; // already approved
+
+  // prompt wallet approval
+  const hash = await walletClient.writeContract({
+    address: tokenAddress,
+    abi: linkinfo.linkSepolia.abi,
+    functionName: "approve",
+    args: [spender, maxUint256], // approve max to avoid repeated approvals
+    account: owner,
+  });
+
+  await publicClient.waitForTransactionReceipt({ hash });
+}
+
 // ============ txHandler ============
 async function handleTx(sendTxFn, successMessage) {
   try {
@@ -274,6 +309,23 @@ if (stake) {
       document.getElementById("connectWalletBtn1").disabled = false; // Re-enable button
     }
   };
+}
+
+export async function borrowAsset(tokenSymbol, amount) {
+  const token = TOKENS[tokenSymbol];
+  if (!token) throw new Error("Unsupported token");
+
+  const tokenAddress = token.address;
+
+  // Get cached decimals
+  const decimals = await getTokenDecimals(tokenAddress);
+
+  const amountUnits = parseUnits(amount.toString(), decimals);
+
+  return executeMiniLendTx({
+    functionName: "borrowAsset",
+    args: [tokenAddress, amountUnits],
+  });
 }
 
 export async function disconnectWallet() {
