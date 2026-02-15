@@ -261,20 +261,22 @@ if (stake) {
   };
 }
 
-function disconnectWallet() {
-  //   if (window.ethereum) {
-  //   try {
-  //     await window.ethereum.request({
-  //       method: 'wallet_revokePermissions',
-  //       params: [{
-  //         eth_accounts: {}
-  //       }]
-  //     });
-  //     console.log('Permissions revoked');
-  //   } catch (error) {
-  //     console.error('Failed to revoke:', error);
-  //   }
-  // }
+export async function disconnectWallet() {
+  if (window.ethereum) {
+    try {
+      await window.ethereum.request({
+        method: "wallet_revokePermissions",
+        params: [
+          {
+            eth_accounts: {},
+          },
+        ],
+      });
+      console.log("Permissions revoked");
+    } catch (error) {
+      console.error("Failed to revoke:", error);
+    }
+  }
   userAddress = null;
   localStorage.removeItem("connected");
   localStorage.removeItem("userAddress");
@@ -293,8 +295,8 @@ document.querySelectorAll(".openModal").forEach((btn) => {
     if (userAddress) {
       setModalState(MODAL_STATE.DISCONNECT, {
         userAddress,
-        onAction: () => {
-          disconnectWallet();
+        onAction: async () => {
+          await disconnectWallet();
           location.href = "index.html"; // optional
         },
       });

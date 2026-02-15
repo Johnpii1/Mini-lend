@@ -1,3 +1,4 @@
+import { disconnectWallet } from "./wallet.js";
 
 //FOR MODULAR1
 const openBtn1 = document.querySelectorAll(".Modaled1");
@@ -23,7 +24,6 @@ modals1.addEventListener("click", (e) => {
   }
 });
 
-
 //FOR MODULAR2
 const openBtn2 = document.querySelectorAll(".Modaled2");
 const closeBnt2 = document.getElementById("closeModal2");
@@ -47,7 +47,6 @@ modals2.addEventListener("click", (e) => {
     modals2.classList.remove("flex");
   }
 });
-
 
 //FOR MODULAR3
 const openBtn3 = document.querySelectorAll(".Modaled3");
@@ -73,7 +72,6 @@ modals3.addEventListener("click", (e) => {
   }
 });
 
-
 //FOR MODULAR4
 const openBtn4 = document.querySelectorAll(".Modaled4");
 const closeBnt4 = document.getElementById("closeModal4");
@@ -98,12 +96,6 @@ modals4.addEventListener("click", (e) => {
   }
 });
 
-
-
-
-
-
-
 //FOR MODULAR5
 // SELECT ELEMENTS
 const openBtn5 = document.querySelectorAll(".Modaled5");
@@ -122,9 +114,6 @@ openBtn5.forEach((btn) => {
 closeBtn5.addEventListener("click", () => {
   modal5.classList.add("hidden");
 });
-
-
-
 
 //FOR MODULAR5
 // SELECT ELEMENTS
@@ -145,13 +134,13 @@ closeBtn6.addEventListener("click", () => {
   modal6.classList.add("hidden");
 });
 
-
-
-
-
-
-
-
+// WALLET DISCONNECT
+document
+  .getElementById("disconnectWalletBtn")
+  .addEventListener("click", async () => {
+    await disconnectWallet();
+    location.href = "index.html"; // optional: redirect to home after disconnect
+  });
 
 const ETH_PRICE = 3200;
 
@@ -171,8 +160,3 @@ ethInputs.forEach((input, index) => {
     usdOutputs[index].textContent = "$" + usd.toFixed(2);
   });
 });
-
-
-
-
-
