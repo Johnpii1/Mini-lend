@@ -36,12 +36,27 @@ import {
 import { setModalState, MODAL_STATE, closeModal } from "./modalController.js";
 import { EXPECTED_CHAIN } from "./config.js";
 import { CONTRACTS } from "./minilendContract.js";
+import { Link } from "./minilendContract.js";
 
 const connectHeaderBtn = document.getElementById("headerConnect");
 let walletClient;
 let publicClient;
 let userAddress = null;
 let miniLend;
+
+const USDC = CONTRACTS.sepolia.myContract.usdcAddress;
+const LINK = CONTRACTS.sepolia.myContract.linkAddress;
+const ETH = CONTRACTS.sepolia.myContract.ethAddress;
+
+const TOKENS = {
+  LINK: LINK,
+  USDC: USDC,
+};
+
+const tokenSelect = document.getElementById("tokenSelect");
+const tokenSymbol = tokenSelect.value;
+
+const selectedTokenAddress = TOKENS[tokenSelect.value];
 
 // shorten address
 export function shortenAddress(addr) {
@@ -155,125 +170,180 @@ export function getMiniLendContract(walletClient) {
   });
 }
 
-// ============ Stake ETH function ============
-async function stakeETH(amountInETH) {
+// Add this to see current network limits
+async function checkNetworkLimits() {
+  const block = await publicClient.getBlock();
+  console.log("Network gas limit per block:", block.gasLimit);
+  console.log("Safe transaction gas limit:", Number(block.gasLimit) / 2);
+
+  // Sepolia usually has ~30M block limit, but 16.7M per tx
+  console.log("Max tx gas on Sepolia: 16,777,216");
+}
+
+// ============ Handle tranactions ===========
+async function executeMiniLendTx({
+  functionName,
+  args = [],
+  value = undefined,
+}) {
   try {
-    // Check if initialized
     if (!userAddress) {
       await connectWallet();
     }
 
     if (!miniLend) {
-      console.log("Initializing contract...");
       miniLend = getMiniLendContract(walletClient);
     }
 
-    // Convert to wei
-    const amountWei = parseEther(amountInETH.toString());
-
-    // Send transaction
-    console.log("Sending stake transaction...");
+    await checkNetworkLimits();
 
     const hash = await walletClient.writeContract({
       address: CONTRACTS.sepolia.myContract.address,
       abi: CONTRACTS.sepolia.myContract.abi,
-      functionName: "stakeEth",
-      args: [],
+      functionName,
+      args,
       account: userAddress,
-      value: amountWei,
+      ...(value !== undefined ? { value } : {}),
     });
 
-    console.log("Transaction sent! Hash:", hash);
+    console.log("Transaction sent:", hash);
 
-    // Wait for confirmation
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
-    if (receipt.status === "success") {
-      console.log("Staking successful!", receipt);
-      // updateUI("success", receipt);
-      await refreshUserState(); // Refresh user state after staking
-      return receipt;
-    } else {
+    if (receipt.status !== "success") {
       throw new Error("Transaction failed");
     }
+
+    await refreshUserState();
+    return receipt;
   } catch (error) {
-    console.error("Staking error:", error);
-
-    // Handle specific errors
-    if (error.message.includes("insufficient funds")) {
-      // alert("Insufficient ETH balance!");
-      console.log("Insufficient funds - check your wallet balance.");
-    } else if (error.message.includes("user rejected")) {
-      // alert("Transaction rejected by user");
-      console.log("User rejected transaction.");
-    } else if (error.message.includes("execution reverted")) {
-      // alert("Contract execution failed - check conditions");
-      console.log("Contract execution reverted - check conditions.");
-    }
-
-    // updateUI("error", error.message);
+    console.error("Transaction error:", error);
     throw error;
   }
 }
 
+// =========== Approve ERC20 function ============
+
+async function approveIfNeeded({
+  tokenAddress, // ERC20 token address
+  owner, // token holder address eg msg.sender
+  spender, // address allowed to spend tokens (eg miniLend contract)
+  amount, //human-readable amount (eg "1.5" for 1.5 LINK) - will be converted to base units
+}) {
+  const amountWei = parseUnits(amount.toString());
+
+  // check allowance
+  const allowance = await publicClient.readContract({
+    address: tokenAddress,
+    abi: Link.linkSepolia.abi, // standard ERC20 ABI with allowance function
+    functionName: "allowance",
+    args: [owner, spender],
+  });
+
+  if (allowance >= amountWei) return; // already approved
+
+  // prompt wallet approval
+  const hash = await walletClient.writeContract({
+    address: tokenAddress,
+    abi: Link.linkSepolia.abi,
+    functionName: "approve",
+    args: [spender, amountWei],
+    account: owner,
+  });
+
+  await publicClient.waitForTransactionReceipt({ hash });
+}
+
+// ============ Stake ETH function ============
+async function stakeETH(amountInETH) {
+  const amountWei = parseEther(amountInETH.toString());
+
+  return executeMiniLendTx({
+    functionName: "stakeEth",
+    args: [],
+    value: amountWei,
+  });
+}
+
 // ============ Withdraw ETH function ============
 async function withdrawETH(amountInETH) {
-  try {
-    // Check if initialized
-    if (!userAddress) {
-      await connectWallet();
+  const amountWei = parseEther(amountInETH.toString());
+
+  return executeMiniLendTx({
+    functionName: "withdrawCollateralEth",
+    args: [amountWei],
+  });
+}
+
+// ============ Repay ETH function ============
+async function repayAsset(tokenAddress, amount, user) {
+  const amountWei = parseEther(amount.toString());
+
+  return executeMiniLendTx({
+    functionName: "repayAsset",
+    args: [tokenAddress, amountWei],
+    account: user,
+  });
+}
+
+// ============ Borrow function ============
+async function borrowAsset(selectedTokenAddress, amount) {
+  const amountWei = parseEther(amount.toString());
+  const tokenString = selectedTokenAddress;
+
+  return executeMiniLendTx({
+    functionName: "borrowAsset",
+    args: [tokenString, amountWei],
+  });
+}
+
+const borrow = document.getElementById("connectWalletBtn2");
+if (borrow) {
+  document.getElementById("connectWalletBtn2").onclick = async () => {
+    const amt = document.getElementById("borrowInput").value;
+    // console.log(getuserAddress());
+    if (!amt || isNaN(amt)) {
+      alert("Please enter a valid amount of ETH to borrow.");
+      return;
     }
-
-    if (!miniLend) {
-      console.log("Initializing contract...");
-      miniLend = getMiniLendContract(walletClient);
+    document.getElementById("connectWalletBtn2").disabled = true; // Disable button to prevent multiple clicks
+    try {
+      await borrowAsset(selectedTokenAddress, amt);
+      alert("Borrowing successful!");
+    } catch (err) {
+      alert("Borrowing failed: " + err.message);
+    } finally {
+      document.getElementById("connectWalletBtn2").disabled = false; // Re-enable button
     }
+  };
+}
 
-    // Convert to wei
-    const amountWei = parseEther(amountInETH.toString());
-
-    // Send transaction
-    console.log("Sending Withdrawal transaction...");
-
-    const hash = await walletClient.writeContract({
-      address: CONTRACTS.sepolia.myContract.address,
-      abi: CONTRACTS.sepolia.myContract.abi,
-      functionName: "withdrawCollateralEth",
-      args: [amountWei],
-      account: userAddress,
-    });
-
-    console.log("Transaction sent! Hash:", hash);
-
-    // Wait for confirmation
-    const receipt = await publicClient.waitForTransactionReceipt({ hash });
-
-    if (receipt.status === "success") {
-      console.log("Staking successful!", receipt);
-      // updateUI("success", receipt);
-      await refreshUserState(); // Refresh user state after staking
-      return receipt;
-    } else {
-      throw new Error("Transaction failed");
+const repay = document.getElementById("connectWalletBtn3");
+if (repay) {
+  document.getElementById("connectWalletBtn3").onclick = async () => {
+    const amt = document.getElementById("repayInput").value;
+    // console.log(getuserAddress());
+    if (!amt || isNaN(amt)) {
+      alert("Please enter a valid amount of ETH to repay.");
+      return;
     }
-  } catch (error) {
-    console.error("Staking error:", error);
-
-    // Handle specific errors
-    if (error.message.includes("insufficient funds")) {
-      // alert("Insufficient ETH balance!");
-      console.log("Insufficient funds - check your wallet balance.");
-    } else if (error.message.includes("user rejected")) {
-      // alert("Transaction rejected by user");
-      console.log("User rejected transaction.");
-    } else if (error.message.includes("execution reverted")) {
-      // alert("Contract execution failed - check conditions");
-      console.log("Contract execution reverted - check conditions.");
+    document.getElementById("connectWalletBtn3").disabled = true; // Disable button to prevent multiple clicks
+    try {
+      const user = userAddress || getuserAddress();
+      await approveIfNeeded({
+        tokenAddress: selectedTokenAddress,
+        owner: user,
+        spender: CONTRACTS.sepolia.myContract.address,
+        amount: amt,
+      });
+      await repayAsset(selectedTokenAddress, amt, user);
+      alert("Repayment successful!");
+    } catch (err) {
+      alert("Repayment failed: " + err.message);
+    } finally {
+      document.getElementById("connectWalletBtn3").disabled = false; // Re-enable button
     }
-
-    // updateUI("error", error.message);
-    throw error;
-  }
+  };
 }
 
 const withdraw = document.getElementById("connectWalletBtn4");
@@ -318,6 +388,44 @@ if (stake) {
       document.getElementById("connectWalletBtn1").disabled = false; // Re-enable button
     }
   };
+}
+
+// =========== Get price ============
+
+// tokenDecimals must be passed (18 for ETH)
+async function getUsdPrice(token, amount) {
+  // convert input amount → token base units
+  const amountWei = parseUnits(amount.toString());
+
+  // call contract
+  const usdValue = await publicClient.readContract({
+    address: CONTRACTS.sepolia.myContract.address,
+    abi: CONTRACTS.sepolia.myContract.abi,
+    functionName: "getUsdValue",
+    args: [token, amountWei],
+  });
+
+  // convert from 18-decimal USD
+  const usdNumber = Number(formatUnits(usdValue, 18));
+
+  // format with commas
+  const formattedUsd = usdNumber.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  return formattedUsd;
+}
+
+async function availableToBorrow(user, token) {
+  const available = await publicClient.readContract({
+    address: CONTRACTS.sepolia.myContract.address,
+    abi: CONTRACTS.sepolia.myContract.abi,
+    functionName: "_borrowableAmount",
+    args: [user, token],
+  });
+
+  return Number(formatUnits(available, 18));
 }
 
 function disconnectWallet() {
@@ -466,38 +574,73 @@ async function refreshUserState() {
 
   try {
     console.log("Fetching user state from contract...");
+    // Getting user state from contract
     const user = await publicClient.readContract({
       address: CONTRACTS.sepolia.myContract.address,
       abi: CONTRACTS.sepolia.myContract.abi,
       functionName: "getUser",
       args: [userAddress],
     });
-    console.log("Fetched user state:", user);
-    const [, stakedAmount] = user;
 
-    console.log("Updating UI with staked amount:", stakedAmount);
-    document.getElementById("stakedEth").textContent =
-      formatEther(stakedAmount);
-    refreshWalletBalance();
-    console.log("User state refreshed successfully.");
-  } catch (err) {
-    console.error("Failed to refresh user state:", err);
-  }
-}
+    const [, stakedAmount, debtAsset, debtAmount] = user;
 
-async function refreshWalletBalance() {
-  if (!userAddress || !publicClient) return;
-
-  try {
+    // Getting wallet balance
     const balanceWei = await publicClient.getBalance({
       address: userAddress,
     });
 
+    // Getting USD price of staked ETH
+    const usdPriceEth = await getUsdPrice(ETH, stakedAmount);
+    // Getting USD price of debt asset
+    // const usdPriceDebt = await getUsdPrice(selectedTokenAddress, debtAmount);
+
+    // Getting available borrow amount in USD
+    const availableBorrowUsd = await availableToBorrow(
+      userAddress,
+      selectedTokenAddress,
+    );
+    const avail = parseEther(availableBorrowUsd.toString());
+    const availableBorrowUsdPrice = await getUsdPrice(
+      selectedTokenAddress,
+      avail,
+    );
+
+    console.log("Available to borrow (LINK):", availableBorrowUsd);
+
+    if (availableBorrowUsd === 0) {
+      document.getElementById("connectWalletBtn2").disabled = true; // Disable borrow button if nothing is available to borrow
+    }
+
+    if (debtAmount) {
+      const usdPrice = await getUsdPrice(debtAsset, debtAmount);
+      document.getElementById("borrowedUsdValue").textContent =
+        `${usdPrice} USD`;
+    }
+
+    // Refresh UI with fetched data
+    document.getElementById("usdOutput").textContent = `${usdPriceEth} USD`;
+
+    document.getElementById("borrowLimit1").textContent =
+      `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol}____${availableBorrowUsdPrice} USD`;
+
+    // `$${availableBorrowUsd}`;
+
+    document.getElementById("stakedEth").textContent =
+      formatEther(stakedAmount);
+
+    document.getElementById("debt").textContent = tokenSymbol;
+
     document.getElementById("walletEthBalance").textContent =
       Number(formatEther(balanceWei)).toFixed(3) + " ETH";
 
-    // document.getElementById("walletEthBalance").textContent = balanceEth;
+    document.getElementById("borrowed1").textContent =
+      Number(formatEther(debtAmount)).toFixed(3) + " " + tokenSymbol;
+
+    document.getElementById("borrowed2").textContent =
+      Number(formatEther(debtAmount)).toFixed(3) + " " + tokenSymbol;
+
+    console.log("User state refreshed successfully.");
   } catch (err) {
-    console.error("Failed to fetch wallet balance:", err);
+    console.error("Failed to refresh user state:", err);
   }
 }
