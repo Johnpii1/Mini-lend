@@ -621,7 +621,7 @@ async function refreshUserState() {
     document.getElementById("usdOutput").textContent = `${usdPriceEth} USD`;
 
     document.getElementById("borrowLimit1").textContent =
-      `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol}____${availableBorrowUsdPrice} USD`;
+      `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol}${availableBorrowUsdPrice} USD`;
 
     // `$${availableBorrowUsd}`;
 
