@@ -10,13 +10,6 @@ import {
   getContract,
 } from "https://esm.sh/viem";
 import { setModalState, MODAL_STATE, closeModal } from "./modalController.js";
-// import {
-//   renderModal,
-//   setModalState,
-//   getModalConfig,
-//   MODAL_STATE,
-//   closeModal,
-// } from "./dummy.js";
 import { EXPECTED_CHAIN } from "./config.js";
 import { CONTRACTS } from "./minilendContract.js";
 
@@ -138,20 +131,6 @@ export function getMiniLendContract(walletClient) {
     walletClient,
   });
 }
-
-// =========== Error Handler ============
-// function extractRevertMessage(error) {
-//   // viem structured error
-//   if (error.shortMessage) return error.shortMessage;
-
-//   if (error.cause && error.cause.reason) return error.cause.reason;
-
-//   // raw JSON-RPC revert data
-//   const match = /"message":"([^"]+)"/.exec(error.message);
-//   if (match) return match[1];
-
-//   return "Transaction reverted";
-// }
 
 // ============ txHandler ============
 async function handleTx(sendTxFn, successMessage) {
