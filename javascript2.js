@@ -126,7 +126,24 @@ closeBtn5.addEventListener("click", () => {
 
 
 
+//FOR MODULAR5
+// SELECT ELEMENTS
+const openBtn6 = document.querySelectorAll(".Modaled6");
+const modal6 = document.getElementById("modalOverlay6");
+const closeBtn6 = document.getElementById("closeModal6");
 
+// OPEN MODAL
+openBtn6.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    modal6.classList.remove("hidden");
+    modal6.classList.add("flex"); // needed for center alignment
+  });
+});
+
+// CLOSE MODAL
+closeBtn6.addEventListener("click", () => {
+  modal6.classList.add("hidden");
+});
 
 
 
