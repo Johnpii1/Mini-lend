@@ -472,6 +472,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log("Initializing DApp...");
 
   // 1. Check if wallet is already connected
+  // console.log(formatEther(16968000000000000000n));
+
   await checkExistingConnection();
 });
 
