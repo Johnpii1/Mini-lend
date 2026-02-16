@@ -204,6 +204,7 @@ async function executeMiniLendTx({
   functionName,
   args = [],
   value = undefined,
+  tokenSymbol = null,
 }) {
   try {
     if (!miniLend) {
@@ -234,7 +235,7 @@ async function executeMiniLendTx({
       throw new Error("Transaction failed");
     }
 
-    // await refreshUserState();
+    updateUI(tokenSymbol);
     return receipt;
   } catch (error) {
     console.error("Transaction error:", error);
@@ -345,10 +346,11 @@ export async function borrowAsset(tokenSymbol, amount) {
     token: token,
   });
 
-  updateUI(tokenSymbol);
+  // updateUI(tokenSymbol);
   return executeMiniLendTx({
     functionName: "borrowAsset",
     args: [tokenAddress, amountUnits],
+    tokenSymbol: tokenSymbol,
   });
 }
 
@@ -472,7 +474,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log("Initializing DApp...");
 
   // 1. Check if wallet is already connected
-  // console.log(formatEther(16968000000000000000n));
+  // console.log(formatEther(39509093059434674n));
 
   await checkExistingConnection();
 });
