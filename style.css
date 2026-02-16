@@ -1,13 +1,10 @@
 .logo {
-    font-family: "Irish Grover", system-ui;
-;
+  font-family: "Irish Grover", system-ui;
 }
 
 .menus.show {
-    display: flex;
+  display: flex;
 }
-
-
 
 /* Remove arrows */
 .no-spinner::-webkit-inner-spin-button,
@@ -15,7 +12,6 @@
   -webkit-appearance: none;
   margin: 0;
 }
-
 
 /* Remove arrows in Firefox */
 /* .no-spinner {

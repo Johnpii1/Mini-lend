@@ -26,7 +26,7 @@
 <body class="bg-[#331A1A] h-screen">
 
 
-       <!-- HEADER -->
+    <!-- HEADER -->
     <div class="flex justify-between items-center px-6 py-10">
 
         <!-- LOGO -->
@@ -35,8 +35,7 @@
         </div>
 
         <!-- MOBILE WALLET -->
-        <div
-            class="Modaled6 border border-[#D7CBB1] w-[25vw] h-[30px] rounded-[14px] cursor-pointer md:hidden">
+        <div class="Modaled6 border border-[#D7CBB1] w-[25vw] h-[30px] rounded-[14px] cursor-pointer md:hidden">
         </div>
 
         <!-- DESKTOP WALLET -->
@@ -51,90 +50,88 @@
             </div>
 
             <div class="bg-[#D7CBB1] rounded-[14px] flex items-center justify-center px-4 h-[30px] md:h-[36px]">
-                <button id="headerConnect"
-                    class="logo text-[#4E8141] font-semibold text-sm md:text-[15px]">
+                <button id="headerConnect" class="logo text-[#4E8141] font-semibold text-sm md:text-[15px]">
                     <i>CONNECT WALLET</i>
                 </button>
             </div>
         </div>
     </div>
 
- 
-    
-        <!--MODAL FOR 6 MOBILE-->
-        <div id="modalOverlay6"
-            class="menu1 fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
-
-            <!-- MODAL BOX -->
-            <div
-                class="bg-[#F2E9D7] rounded-2xl p-6 w-[65%] md:w-[24%] h-fit max-w-sm text-[#331A1A] relative mb-[10rem]">
-
-                <!-- CLOSE BUTTON -->
-                <button id="closeModal6" class="absolute top-3 right-3 text-[#331A1A] text-lg">
-                    ✕
-                </button>
 
 
-                <!--FOR ADDRESS-->
-                <div class="flex flex-col gap-4 justify-center items-center">
+    <!--MODAL FOR 6 MOBILE-->
+    <div id="modalOverlay6"
+        class="menu1 fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
 
-                    <div class="flex items-center justify-center h-[100px] w-[100px] rounded-full bg-[#331A1A]/10">
-                        <div class="h-[80px] w-[80px] rounded-full bg-[#3a1515]/70"></div>
+        <!-- MODAL BOX -->
+        <div class="bg-[#F2E9D7] rounded-2xl p-6 w-[65%] md:w-[24%] h-fit max-w-sm text-[#331A1A] relative mb-[10rem]">
+
+            <!-- CLOSE BUTTON -->
+            <button id="closeModal6" class="absolute top-3 right-3 text-[#331A1A] text-lg">
+                ✕
+            </button>
+
+
+            <!--FOR ADDRESS-->
+            <div class="flex flex-col gap-4 justify-center items-center">
+
+                <div class="flex items-center justify-center h-[100px] w-[100px] rounded-full bg-[#331A1A]/10">
+                    <div class="h-[80px] w-[80px] rounded-full bg-[#3a1515]/70"></div>
+                </div>
+
+                <h4>THE USER ADDRESS</h4>
+
+                <p class="logo">0.00 ETH</p>
+
+            </div>
+
+
+
+            <div class="block space-y-2 mt-4">
+                <div
+                    class="flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px]  px-2 cursor-pointer hover:bg-[#331A1A]/30">
+                    <div class="logo flex items-center flex-row gap-2">
+                        <button class="flex flex-row items-center gap-2 "><i
+                                class="bi bi-send-fill flex items-center justify-center text-[#4E8141] h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"></i>Send</button> 
                     </div>
 
-                    <h4>THE USER ADDRESS</h4>
-
-                    <p class="logo">0.00 ETH</p>
+                    <div>
+                        <i class="bi bi-caret-right-fill"></i>
+                    </div>
 
                 </div>
 
 
 
-                <div class="block space-y-2 mt-4">
-                    <div
-                        class="flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px]  px-2 cursor-pointer hover:bg-[#331A1A]/30">
-                        <div class="logo flex items-center flex-row gap-2">
-                            <button class="h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"><i
-                                    class="bi bi-send-fill text-[#4E8141]"></i></button> Send
-                        </div>
-
-                        <div>
-                            <i class="bi bi-caret-right-fill"></i>
-                        </div>
-
+                <div
+                    class="flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px] px-2 cursor-pointer hover:bg-[#331A1A]/30">
+                    <div class="logo flex items-center flex-row gap-2">
+                        <button class="flex flex-row items-center gap-2 "><i
+                                class="bi bi-activity flex items-center justify-center text-[#4E8141] h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"></i></i>Activity</button> 
                     </div>
 
-
-
-                    <div
-                        class="flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px] px-2 cursor-pointer hover:bg-[#331A1A]/30">
-                        <div class="logo flex items-center flex-row gap-2">
-                            <button class="h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"><i
-                                    class="bi bi-activity text-[#4E8141]"></i></i></button> Activity
-                        </div>
-
-                        <div>
-                            <i class="bi bi-caret-right-fill"></i>
-                        </div>
-
+                    <div>
+                        <i class="bi bi-caret-right-fill"></i>
                     </div>
 
+                </div>
 
-                    <!--FOR DISCONNET WALLET FOR MOBILE-->
-                    <div id="USER_DISCONNET"
-                        class="logo flex items-center flex-row gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px]  px-2 cursor-pointer hover:bg-[#331A1A]/30">
-                        <button class="h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"><i
-                                class="bi bi-box-arrow-right text-[#4E8141]"></i></button> Disconnet
-                    </div>
+
+                <!--FOR DISCONNET WALLET FOR MOBILE-->
+                <div id="USER_DISCONNET"
+                    class="logo flex items-center  bg-[#331A1A]/20 rounded-lg h-[40px]  px-2 cursor-pointer hover:bg-[#331A1A]/30">
+                    <button class="flex flex-row items-center gap-2"><i
+                            class="bi bi-box-arrow-right flex items-center justify-center text-[#4E8141] h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"></i>Disconnet</button> 
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
 
 
 
-   
+
 
 
 
@@ -168,11 +165,11 @@
             <div class="block space-y-2">
 
                 <!--SEND-->
-               <div
+                <div
                     class="flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px] px-2 cursor-pointer hover:bg-[#331A1A]/30">
                     <div class="logo flex items-center flex-row gap-2">
-                        <button class="h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"><i
-                                    class="bi bi-send-fill text-[#4E8141]"></i></button>Send
+                        <button class="flex items-center gap-2"><i
+                                class="bi bi-send-fill flex items-center justify-center h-[30px] w-[30px] rounded-full bg-[#3a1515]/90 text-[#4E8141]"></i>Send</button>
                     </div>
 
                     <div>
@@ -181,13 +178,13 @@
 
                 </div>
 
-                
-<!--ACTIVITY FOR DESKTOP-->
+
+                <!--ACTIVITY FOR DESKTOP-->
                 <div
                     class="flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px] px-2 cursor-pointer hover:bg-[#331A1A]/30">
                     <div class="logo flex items-center flex-row gap-2">
-                        <button class="h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"><i
-                                class="bi bi-activity text-[#4E8141]"></i></i></button> Activity
+                        <button class="flex items-center gap-2"><i
+                                class="bi bi-activity flex items-center justify-center h-[30px] w-[30px] rounded-full bg-[#3a1515]/90 text-[#4E8141]"></i></i>Activity</button> 
                     </div>
 
                     <div>
@@ -198,12 +195,12 @@
 
                 <!--USER DISCONNET WALLET FOR DESKTOP-->
                 <div id="USER_DISCONNET"
-                        class="logo flex items-center flex-row gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px]  px-2 cursor-pointer hover:bg-[#331A1A]/30">
-                        <button class="h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"><i
-                                class="bi bi-box-arrow-right text-[#4E8141]"></i></button> Disconnet
-                    </div>
+                    class="logo flex items-center flex-row gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px]  px-2 cursor-pointer hover:bg-[#331A1A]/30">
+                    <button class="flex items-center gap-2"><i
+                            class="bi bi-box-arrow-right flex items-center justify-center h-[30px] w-[30px] rounded-full bg-[#3a1515]/90 text-[#4E8141]"></i>Disconnet</button> 
+                </div>
 
-                    </div>
+            </div>
 
 
 

@@ -1,4 +1,3 @@
-
 //FOR MODULAR1
 const openBtn1 = document.querySelectorAll(".Modaled1");
 const closeBnt1 = document.getElementById("closeModal1");
@@ -22,7 +21,6 @@ modals1.addEventListener("click", (e) => {
     modals1.classList.remove("flex");
   }
 });
-
 
 //FOR MODULAR2
 const openBtn2 = document.querySelectorAll(".Modaled2");
@@ -48,7 +46,6 @@ modals2.addEventListener("click", (e) => {
   }
 });
 
-
 //FOR MODULAR3
 const openBtn3 = document.querySelectorAll(".Modaled3");
 const closeBnt3 = document.getElementById("closeModal3");
@@ -72,7 +69,6 @@ modals3.addEventListener("click", (e) => {
     modals3.classList.remove("flex");
   }
 });
-
 
 //FOR MODULAR4
 const openBtn4 = document.querySelectorAll(".Modaled4");
@@ -98,12 +94,6 @@ modals4.addEventListener("click", (e) => {
   }
 });
 
-
-
-
-
-
-
 //FOR MODULAR5
 // SELECT ELEMENTS
 const openBtn5 = document.querySelectorAll(".Modaled5");
@@ -123,9 +113,6 @@ closeBtn5.addEventListener("click", () => {
   modal5.classList.add("hidden");
 });
 
-
-
-
 //FOR MODULAR5
 // SELECT ELEMENTS
 const openBtn6 = document.querySelectorAll(".Modaled6");
@@ -136,7 +123,7 @@ const closeBtn6 = document.getElementById("closeModal6");
 openBtn6.forEach((btn) => {
   btn.addEventListener("click", () => {
     modal6.classList.remove("hidden");
-    modal6.classList.add("flex"); // needed for center alignment
+    modal6.classList.add("flex");
   });
 });
 
@@ -144,14 +131,6 @@ openBtn6.forEach((btn) => {
 closeBtn6.addEventListener("click", () => {
   modal6.classList.add("hidden");
 });
-
-
-
-
-
-
-
-
 
 const ETH_PRICE = 3200;
 
@@ -171,8 +150,3 @@ ethInputs.forEach((input, index) => {
     usdOutputs[index].textContent = "$" + usd.toFixed(2);
   });
 });
-
-
-
-
-
