@@ -13,6 +13,10 @@
   margin: 0;
 }
 
+.send_menus.show {
+  display: flex;
+}
+
 /* Remove arrows in Firefox */
 /* .no-spinner {
   -moz-appearance: textfield;

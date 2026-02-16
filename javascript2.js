@@ -140,6 +140,17 @@ closeBtn6.addEventListener("click", () => {
   modal6.classList.add("hidden");
 });
 
+
+//SEND DROP DOWN MENU
+const sendbtn = document.querySelectorAll(".send_btns");
+const menus = document.querySelectorAll(".send_menus");
+
+sendbtn.addEventListener("click", () => {
+menus.classList.add("hidden");
+});
+
+
+
 // WALLET DISCONNECT
 document
   .getElementById("USER_DISCONNET")
