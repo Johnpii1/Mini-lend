@@ -22,6 +22,7 @@ let publicClient;
 let userAddress = null;
 let miniLend;
 let chainId = null;
+let currentDebtWei = 0n;
 
 // shorten address
 export function shortenAddress(addr) {
@@ -543,6 +544,8 @@ async function checkExistingConnection() {
     );
 
     loadContract(); // initialize clients and contract
+    console.log(userAddress);
+    console.log(getUserDebt(userAddress));
 
     const userBalance = await publicClient.getBalance({
       address: userAddress,
@@ -574,7 +577,7 @@ async function updateUI(tokenSymbol) {
   });
 
   userAddress = accounts.length > 0 ? accounts[0] : null;
-  console.log("Current user address:", userAddress);
+  console.log("UI user address:", userAddress);
 
   if (!userAddress || !publicClient) {
     await loadContract();
@@ -619,3 +622,73 @@ async function updateUI(tokenSymbol) {
     console.error("Error updating UI:", err);
   }
 }
+
+export async function getUserDebt(userAddress) {
+  const accounts = await window.ethereum.request({
+    method: "eth_accounts",
+  });
+
+  userAddress = accounts.length > 0 ? accounts[0] : null;
+  console.log("Current user address:", userAddress);
+
+  if (!userAddress || !publicClient) {
+    await loadContract();
+    console.log("Public client:", publicClient);
+    console.log("User address after connection:", userAddress);
+  }
+  try {
+    console.log("Fetching user state from contract...");
+    // Getting user state from contract
+    const user = await publicClient.readContract({
+      address: CONTRACTS.sepolia.myContract.address,
+      abi: CONTRACTS.sepolia.myContract.abi,
+      functionName: "getUser",
+      args: [userAddress],
+    });
+
+    const [, , , debtAmount] = user;
+    console.log(debtAmount);
+
+    return debtAmount; // bigint
+  } catch (err) {
+    console.error("unable to get user info:", err);
+  }
+}
+
+export async function loadRepayMax(user, whichToken) {
+  try {
+    currentDebtWei = await getUserDebt(user);
+
+    const token = TOKENS[whichToken];
+    if (!token) throw new Error("Unsupported token");
+
+    const tokenAddress = token.address;
+
+    const decimals = await getTokenDecimals(tokenAddress);
+    console.log("rapay details", {
+      userDept: currentDebtWei,
+      token: token,
+      tokenAddress: tokenAddress,
+      tokenDecimal: decimals,
+    });
+
+    const formatted = formatUnits(currentDebtWei, decimals);
+    return formatted;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+document.getElementById("repayMaxBtn").onclick = async () => {
+  const selectedSymbol = document.getElementById("tokenSelect2").value;
+  const accounts = await window.ethereum.request({
+    method: "eth_accounts",
+  });
+
+  userAddress = accounts.length > 0 ? accounts[0] : null;
+  console.log("Current user address:", userAddress);
+  const formatted = await loadRepayMax(userAddress, selectedSymbol);
+  document.getElementById("repayInput").value = formatted;
+  document.getElementById("repayMaxDisplay").textContent =
+    "Debt: " + Number(formatted).toFixed(4);
+};

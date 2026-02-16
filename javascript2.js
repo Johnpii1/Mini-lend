@@ -177,7 +177,7 @@ document.getElementById("connectWalletBtn3").onclick = async () => {
   const selectedSymbol = document.getElementById("tokenSelect2").value;
   console.log("Repaying", amt, selectedSymbol);
 
-  if (!amt || isNaN(amt)) {
+  if (!amt || isNaN(amt) || amt == 0) {
     alert("Enter valid amount");
     return;
   }
@@ -193,6 +193,14 @@ document.getElementById("connectWalletBtn3").onclick = async () => {
     // this.disabled = false;
   }
 };
+
+// document.getElementById("repayMaxBtn").onclick = () => {
+//   const selectedSymbol = document.getElementById("tokenSelect2").value;
+//   console.log("Repaying", amt, selectedSymbol);
+
+//   const formatted = loadRepayMax(UserActivation, selectedSymbol);
+//   document.getElementById("repayInput").value = formatted;
+// };
 
 const ETH_PRICE = 3200;
 
