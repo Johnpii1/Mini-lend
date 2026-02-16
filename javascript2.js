@@ -1,6 +1,4 @@
-
 import { disconnectWallet, borrowAsset } from "./wallet.js";
-
 
 //FOR MODULAR1
 const openBtn1 = document.querySelectorAll(".Modaled1");
@@ -136,10 +134,9 @@ closeBtn6.addEventListener("click", () => {
   modal6.classList.add("hidden");
 });
 
-
 // WALLET DISCONNECT
 document
-  .getElementById("disconnectWalletBtn")
+  .getElementById("USER_DISCONNET")
   .addEventListener("click", async () => {
     await disconnectWallet();
     location.href = "index.html"; // optional: redirect to home after disconnect
