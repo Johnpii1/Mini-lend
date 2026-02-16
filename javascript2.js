@@ -1,4 +1,9 @@
-import { disconnectWallet, borrowAsset, repayAsset } from "./wallet.js";
+import {
+  disconnectWallet,
+  borrowAsset,
+  repayAsset,
+  withdrawETH,
+} from "./wallet.js";
 
 //FOR MODULAR1
 const openBtn1 = document.querySelectorAll(".Modaled1");
@@ -149,13 +154,18 @@ document
     location.href = "index.html"; // optional: redirect to home after disconnect
   });
 
-// Borrow and Repay
-document.getElementById("connectWalletBtn2").onclick = async () => {
+// Borrow and Repay and withdraw
+const borrow = document.getElementById("connectWalletBtn2");
+
+borrow.onclick = async () => {
+  borrow.textContent = "loading...";
+  borrow.disabled = true;
+
   const amt = document.getElementById("borrowInput").value;
   const selectedSymbol = document.getElementById("tokenSelect").value;
   console.log("Borrowing", amt, selectedSymbol);
 
-  if (!amt || isNaN(amt)) {
+  if (!amt || isNaN(amt) || amt == 0) {
     alert("Enter valid amount");
     return;
   }
@@ -164,10 +174,17 @@ document.getElementById("connectWalletBtn2").onclick = async () => {
 
   try {
     await borrowAsset(selectedSymbol, amt);
-    alert("Borrow successful!");
+
+    borrow.disabled = false;
+    borrow.textContent = "Sucess";
+    modals2.classList.add("hidden");
+    modals2.classList.remove("flex");
   } catch (err) {
+    borrow.disabled = false;
+    borrow.textContent = "Failed";
     alert("Borrow failed: " + (err.shortMessage || err.message));
   } finally {
+    borrow.disabled = false;
     // this.disabled = false;
   }
 };
@@ -186,7 +203,6 @@ document.getElementById("connectWalletBtn3").onclick = async () => {
 
   try {
     await repayAsset(selectedSymbol, amt);
-    alert("Repay successful!");
   } catch (err) {
     alert("Repay failed: " + (err.shortMessage || err.message));
   } finally {
@@ -194,13 +210,28 @@ document.getElementById("connectWalletBtn3").onclick = async () => {
   }
 };
 
-// document.getElementById("repayMaxBtn").onclick = () => {
-//   const selectedSymbol = document.getElementById("tokenSelect2").value;
-//   console.log("Repaying", amt, selectedSymbol);
+const withdraw = document.getElementById("connectWalletBtn4");
 
-//   const formatted = loadRepayMax(UserActivation, selectedSymbol);
-//   document.getElementById("repayInput").value = formatted;
-// };
+if (withdraw) {
+  document.getElementById("connectWalletBtn4").onclick = async () => {
+    const eth = document.getElementById("withdrawInput").value;
+    // console.log(getuserAddress());
+    if (!eth || isNaN(eth) || eth == 0) {
+      withdraw.textContent = "Invalid";
+      return;
+    }
+    withdraw.disabled = true; // Disable button to prevent multiple clicks
+    try {
+      await withdrawETH(eth);
+      withdraw.textContent = "Sucess";
+    } catch (err) {
+      withdraw.textContent = "Failed";
+      // alert("Withdrawal failed: " + err.message);
+    } finally {
+      withdraw.disabled = false; // Re-enable button
+    }
+  };
+}
 
 const ETH_PRICE = 3200;
 

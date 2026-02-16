@@ -399,6 +399,15 @@ export async function repayAsset(tokenSymbol, amount) {
   });
 }
 
+// ============ Withdraw ETH function ============
+export async function withdrawETH(amountInETH) {
+  const amountWei = parseEther(amountInETH.toString());
+
+  return executeMiniLendTx({
+    functionName: "withdrawCollateralEth",
+    args: [amountWei],
+  });
+}
 // =========== Get price ============
 
 // tokenDecimals must be passed (18 for ETH)
@@ -545,7 +554,8 @@ async function checkExistingConnection() {
 
     loadContract(); // initialize clients and contract
     console.log(userAddress);
-    console.log(getUserDebt(userAddress));
+    console.log("Detting user debt", getUserDebt(userAddress));
+    updateUI();
 
     const userBalance = await publicClient.getBalance({
       address: userAddress,
@@ -568,10 +578,7 @@ async function checkExistingConnection() {
   // }
 }
 
-async function updateUI(tokenSymbol) {
-  const selectedToken = TOKENS[tokenSymbol];
-  const selectedTokenAddress = selectedToken.address;
-
+async function updateUI(tokenSymbol = null) {
   const accounts = await window.ethereum.request({
     method: "eth_accounts",
   });
@@ -599,30 +606,36 @@ async function updateUI(tokenSymbol) {
       formatEther(stakedAmount);
 
     // Getting available borrow amount in USD
-    const availableBorrowUsd = await availableToBorrow(
-      userAddress,
-      selectedTokenAddress,
-    );
-    const avail = parseEther(availableBorrowUsd.toString());
+    if (tokenSymbol) {
+      const selectedToken = TOKENS[tokenSymbol];
+      const selectedTokenAddress = selectedToken.address;
 
-    const availableBorrowUsdPrice = await getUsdPrice(
-      selectedTokenAddress,
-      avail,
-    );
+      const availableBorrowUsd = await availableToBorrow(
+        userAddress,
+        selectedTokenAddress,
+      );
+      const avail = parseEther(availableBorrowUsd.toString());
 
-    console.log("Available to borrow (LINK):", availableBorrowUsd);
+      const availableBorrowUsdPrice = await getUsdPrice(
+        selectedTokenAddress,
+        avail,
+      );
 
-    if (availableBorrowUsd === 0) {
-      document.getElementById("connectWalletBtn2").disabled = true; // Disable borrow button if nothing is available to borrow
+      console.log("Available to borrow (LINK):", availableBorrowUsd);
+
+      if (availableBorrowUsd === 0) {
+        document.getElementById("connectWalletBtn2").disabled = true; // Disable borrow button if nothing is available to borrow
+      }
+
+      document.getElementById("borrowLimit").textContent =
+        `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol}___${availableBorrowUsdPrice} USD`;
     }
-
-    document.getElementById("borrowLimit").textContent =
-      `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol}___${availableBorrowUsdPrice} USD`;
   } catch (err) {
     console.error("Error updating UI:", err);
   }
 }
 
+// ========== Get USER DEBT ========
 export async function getUserDebt(userAddress) {
   const accounts = await window.ethereum.request({
     method: "eth_accounts",
@@ -679,6 +692,7 @@ export async function loadRepayMax(user, whichToken) {
   }
 }
 
+// ============= MAX REPAY GETTER =========
 document.getElementById("repayMaxBtn").onclick = async () => {
   const selectedSymbol = document.getElementById("tokenSelect2").value;
   const accounts = await window.ethereum.request({
