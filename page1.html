@@ -348,9 +348,22 @@
 
                 <!-- CONTENT -->
                 <h2 id="modalTitle3" class="logo text-xl font-bold text-center mb-2">Repay</h2>
-                <p class="logo flex justify-between items-center text-sm  text-[#331A1A] py-2">
-                    Amount <input type="number" placeholder="eg.(0.0)" min="0" step="0.00000001"
-                        class="ethInput no-spinner bg-transparent outline-none flex-1 text-right">
+
+                                <!-- TOKEN SELECTOR -->
+                <div class="logo flex items-center justify-between text-sm text-[#0D7328] py-2">
+                    <label for="tokenSelect">Token</label>
+
+                    <select id="tokenSelect2"
+                        class="bg-transparent border border-[#331A1A] rounded-[14px] text-[12px] px-2 py-[2px] outline-none">
+                        <option value="LINK" selected>LINK</option>
+                        <option value="USDC">USDC</option>
+                    </select>
+                </div>
+
+                <p class="logo flex items-center justify-between text-sm text-[#0D7328] py-2">
+                    Amount
+                    <input id="repayInput" class="bg-transparent text-right outline-none w-[100px]" type="number"
+                        placeholder="0.0">
                 </p>
 
                 <p id="repayUsdValue" class="logo text-center py-2 text-[14px]">USD value: $0</p>

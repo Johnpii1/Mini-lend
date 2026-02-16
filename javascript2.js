@@ -1,4 +1,4 @@
-import { disconnectWallet, borrowAsset } from "./wallet.js";
+import { disconnectWallet, borrowAsset, repayAsset } from "./wallet.js";
 
 //FOR MODULAR1
 const openBtn1 = document.querySelectorAll(".Modaled1");
@@ -149,7 +149,7 @@ document
     location.href = "index.html"; // optional: redirect to home after disconnect
   });
 
-// Borrow and Repay Calculator
+// Borrow and Repay
 document.getElementById("connectWalletBtn2").onclick = async () => {
   const amt = document.getElementById("borrowInput").value;
   const selectedSymbol = document.getElementById("tokenSelect").value;
@@ -167,6 +167,28 @@ document.getElementById("connectWalletBtn2").onclick = async () => {
     alert("Borrow successful!");
   } catch (err) {
     alert("Borrow failed: " + (err.shortMessage || err.message));
+  } finally {
+    // this.disabled = false;
+  }
+};
+
+document.getElementById("connectWalletBtn3").onclick = async () => {
+  const amt = document.getElementById("repayInput").value;
+  const selectedSymbol = document.getElementById("tokenSelect2").value;
+  console.log("Repaying", amt, selectedSymbol);
+
+  if (!amt || isNaN(amt)) {
+    alert("Enter valid amount");
+    return;
+  }
+
+  // this.disabled = true;
+
+  try {
+    await repayAsset(selectedSymbol, amt);
+    alert("Repay successful!");
+  } catch (err) {
+    alert("Repay failed: " + (err.shortMessage || err.message));
   } finally {
     // this.disabled = false;
   }

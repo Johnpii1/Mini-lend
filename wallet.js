@@ -354,6 +354,49 @@ export async function borrowAsset(tokenSymbol, amount) {
   });
 }
 
+// =========== Repay function ============
+export async function repayAsset(tokenSymbol, amount) {
+  const token = TOKENS[tokenSymbol];
+  if (!token) throw new Error("Unsupported token");
+
+  const tokenAddress = token.address;
+
+  // Get cached decimals
+  const decimals = await getTokenDecimals(tokenAddress);
+
+  const amountUnits = parseUnits(amount.toString(), decimals);
+  console.log("Repaying with params:", {
+    tokenSymbol: tokenSymbol,
+    tokenAddress: tokenAddress,
+    amount: amount.toString(),
+    amountUnits: amountUnits.toString(),
+    decimals: decimals,
+    token: token,
+  });
+
+  // ensure userAddress and publicClient are initialized
+  const accounts = await window.ethereum.request({
+    method: "eth_accounts",
+  });
+
+  userAddress = accounts.length > 0 ? accounts[0] : null;
+  console.log("Current user address:", userAddress);
+
+  // Approve tokens first
+  await userApprove({
+    tokenAddress,
+    owner: userAddress,
+    spender: CONTRACTS.sepolia.myContract.address,
+    amount: amount.toString(),
+  });
+
+  return executeMiniLendTx({
+    functionName: "repayAsset",
+    args: [tokenAddress, amountUnits],
+    tokenSymbol: tokenSymbol, // for UI update after tx
+  });
+}
+
 // =========== Get price ============
 
 // tokenDecimals must be passed (18 for ETH)
@@ -474,7 +517,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log("Initializing DApp...");
 
   // 1. Check if wallet is already connected
-  // console.log(formatEther(39509093059434674n));
+  console.log(formatEther(16830000000000000000n));
 
   await checkExistingConnection();
 });
@@ -533,7 +576,7 @@ async function updateUI(tokenSymbol) {
   console.log("Current user address:", userAddress);
 
   if (!userAddress || !publicClient) {
-    await connectWallet();
+    await loadContract();
     console.log("Public client:", publicClient);
     console.log("User address after connection:", userAddress);
   }
