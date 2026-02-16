@@ -10,21 +10,17 @@ import {
   getContract,
 } from "https://esm.sh/viem";
 import { setModalState, MODAL_STATE, closeModal } from "./modalController.js";
-// import {
-//   renderModal,
-//   setModalState,
-//   getModalConfig,
-//   MODAL_STATE,
-//   closeModal,
-// } from "./dummy.js";
 import { EXPECTED_CHAIN } from "./config.js";
-import { CONTRACTS } from "./minilendContract.js";
+import { CONTRACTS, TOKENS } from "./minilendContract.js";
+import { linkinfo } from "./linkAbi.js";
 
 const connectHeaderBtn = document.getElementById("headerConnect");
+const tokenMetaCache = {}; // simple in-memory cache for token metadata
 let walletClient;
 let publicClient;
 let userAddress = null;
 let miniLend;
+let chainId = null;
 
 // shorten address
 export function shortenAddress(addr) {
@@ -39,10 +35,24 @@ export function getuserAddress() {
   return userAddress;
 }
 
-function updateuserAddress(newuserAddress) {
+function updateInfo(
+  newuserAddress,
+  _walletClient,
+  _publicClient,
+  _chainId,
+  _minilend,
+) {
   userAddress = newuserAddress;
+  walletClient = _walletClient;
+  publicClient = _publicClient;
+  chainId = _chainId;
+  miniLend = _minilend;
   localStorage.setItem("userAddress", newuserAddress);
   localStorage.setItem("connected", "true");
+  localStorage.setItem("walletClient", walletClient);
+  localStorage.setItem("publicClient", publicClient);
+  localStorage.setItem("chainId", chainId);
+  localStorage.setItem("miniLend", miniLend);
 }
 
 // testing mode: always reset
@@ -90,18 +100,9 @@ async function connectWallet() {
       throw new Error("NO_WALLET");
     }
 
-    walletClient = createWalletClient({
-      chain: EXPECTED_CHAIN,
-      transport: custom(window.ethereum),
-    });
-
-    publicClient = createPublicClient({
-      chain: EXPECTED_CHAIN,
-      transport: http(EXPECTED_CHAIN.rpcUrl),
-    });
+    miniLend = loadContract(); // initialize clients and contract
 
     // 🔍 Check network FIRST
-    // "I COMMENTED BECAUSE THI IMPLEMENTATION I NOT NEEDED NOW"
     const chainId = await walletClient.getChainId();
 
     if (chainId !== EXPECTED_CHAIN.id) {
@@ -111,16 +112,15 @@ async function connectWallet() {
     const addresses = await walletClient.requestAddresses();
     userAddress = addresses[0];
 
-    // create contract AFTER wallet connection
-    miniLend = getContract({
-      address: CONTRACTS.sepolia.myContract.address,
-      abi: CONTRACTS.sepolia.myContract.abi,
-      publicClient,
-      walletClient,
-    });
-
     connectHeaderBtn.innerText = shortenAddress(userAddress);
-    updateuserAddress(userAddress);
+
+    console.log("Checking existing wallet connection...");
+    console.log("walletClient:", walletClient);
+    console.log("publicClient:", publicClient);
+    console.log("userAddress:", userAddress);
+    console.log("chainId:", chainId);
+
+    updateInfo(userAddress, walletClient, publicClient, chainId, miniLend);
     return { miniLend, walletClient, userAddress };
   } catch (err) {
     console.error("Connection error:", err);
@@ -130,45 +130,115 @@ async function connectWallet() {
 
 // ========== LOAD MINILEND-CONTRACT ============
 
-export function getMiniLendContract(walletClient) {
+export function loadContract() {
+  walletClient = createWalletClient({
+    chain: EXPECTED_CHAIN,
+    transport: custom(window.ethereum),
+  });
+
+  publicClient = createPublicClient({
+    chain: EXPECTED_CHAIN,
+    transport: http(EXPECTED_CHAIN.rpcUrl),
+  });
+
   return getContract({
     address: CONTRACTS.sepolia.myContract.address,
     abi: CONTRACTS.sepolia.myContract.abi,
-    publicClient,
-    walletClient,
+    client: {
+      public: publicClient,
+      wallet: walletClient,
+    },
   });
 }
 
-// =========== Error Handler ============
-// function extractRevertMessage(error) {
-//   // viem structured error
-//   if (error.shortMessage) return error.shortMessage;
+// =========== TOKEN DECIMAL FETCHING WITH CACHING ============
+async function getTokenDecimals(tokenAddress) {
+  if (tokenMetaCache[tokenAddress]?.decimals) {
+    return tokenMetaCache[tokenAddress].decimals;
+  }
 
-//   if (error.cause && error.cause.reason) return error.cause.reason;
+  const decimals = await publicClient.readContract({
+    address: tokenAddress,
+    abi: linkinfo.linkSepolia.abi, // standard ERC20 ABI with decimals function
+    functionName: "decimals",
+  });
 
-//   // raw JSON-RPC revert data
-//   const match = /"message":"([^"]+)"/.exec(error.message);
-//   if (match) return match[1];
+  tokenMetaCache[tokenAddress] = { decimals };
 
-//   return "Transaction reverted";
-// }
+  return decimals;
+}
+
+// =========== Erc20 Approve function ============
+async function userApprove({
+  tokenAddress, // ERC20 token address
+  owner, // token holder address eg msg.sender
+  spender, // address allowed to spend tokens (eg miniLend contract)
+  amount, //human-readable amount (eg "1.5" for 1.5 LINK) - will be converted to base units
+}) {
+  const amountWei = parseUnits(amount.toString());
+
+  // check allowance
+  const allowance = await publicClient.readContract({
+    address: tokenAddress,
+    abi: linkinfo.linkSepolia.abi, // standard ERC20 ABI with allowance function
+    functionName: "allowance",
+    args: [owner, spender],
+  });
+
+  if (allowance >= amountWei) return; // already approved
+
+  // prompt wallet approval
+  const hash = await walletClient.writeContract({
+    address: tokenAddress,
+    abi: linkinfo.linkSepolia.abi,
+    functionName: "approve",
+    args: [spender, maxUint256], // approve max to avoid repeated approvals
+    account: owner,
+  });
+
+  await publicClient.waitForTransactionReceipt({ hash });
+}
 
 // ============ txHandler ============
-async function handleTx(sendTxFn, successMessage) {
+async function executeMiniLendTx({
+  functionName,
+  args = [],
+  value = undefined,
+}) {
   try {
-    // 1. Send transaction
-    const hash = await sendTxFn();
+    if (!miniLend) {
+      miniLend = loadContract();
+    }
 
-    // 2. Wait for mining
+    // await checkNetworkLimits();
+    console.log("Preparing transaction with params:", {
+      functionName,
+      args,
+      value: value ? formatEther(value) + " ETH" : "N/A",
+    });
+
+    const hash = await walletClient.writeContract({
+      address: CONTRACTS.sepolia.myContract.address,
+      abi: CONTRACTS.sepolia.myContract.abi,
+      functionName,
+      args,
+      account: userAddress,
+      ...(value !== undefined ? { value } : {}),
+    });
+
+    console.log("Transaction sent:", hash);
+
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
     if (receipt.status !== "success") {
-      throw new Error("Transaction reverted");
+      throw new Error("Transaction failed");
     }
 
+    // await refreshUserState();
     return receipt;
   } catch (error) {
-    console.error(error);
+    console.error("Transaction error:", error);
+    throw error;
   }
 }
 
@@ -182,7 +252,7 @@ async function stakeETH(amountInETH) {
 
     if (!miniLend) {
       console.log("Initializing contract...");
-      miniLend = getMiniLendContract(walletClient);
+      miniLend = loadContract(walletClient);
       console.log("Contract initialized:", miniLend);
     }
 
@@ -209,16 +279,7 @@ async function stakeETH(amountInETH) {
     if (receipt.status === "success") {
       console.log("Staking successful!", receipt);
       // updateUI("success", receipt);
-      const user = await publicClient.readContract({
-        address: CONTRACTS.sepolia.myContract.address,
-        abi: CONTRACTS.sepolia.myContract.abi,
-        functionName: "getUser",
-        args: [userAddress],
-      });
-      // destructure tuple
-      const [, stakedAmount, ,] = user;
-      document.getElementById("stakedEth").textContent =
-        formatEther(stakedAmount);
+
       return receipt;
     } else {
       throw new Error("Transaction failed");
@@ -265,7 +326,86 @@ if (stake) {
   };
 }
 
-function disconnectWallet() {
+export async function borrowAsset(tokenSymbol, amount) {
+  const token = TOKENS[tokenSymbol];
+  if (!token) throw new Error("Unsupported token");
+
+  const tokenAddress = token.address;
+
+  // Get cached decimals
+  const decimals = await getTokenDecimals(tokenAddress);
+
+  const amountUnits = parseUnits(amount.toString(), decimals);
+  console.log("Borrowing with params:", {
+    tokenSymbol: tokenSymbol,
+    tokenAddress: tokenAddress,
+    amount: amount.toString(),
+    amountUnits: amountUnits.toString(),
+    decimals: decimals,
+    token: token,
+  });
+
+  updateUI(tokenSymbol);
+  return executeMiniLendTx({
+    functionName: "borrowAsset",
+    args: [tokenAddress, amountUnits],
+  });
+}
+
+// =========== Get price ============
+
+// tokenDecimals must be passed (18 for ETH)
+async function getUsdPrice(token, amount) {
+  // convert input amount → token base units
+  const amountWei = parseUnits(amount.toString());
+
+  // call contract
+  const usdValue = await publicClient.readContract({
+    address: CONTRACTS.sepolia.myContract.address,
+    abi: CONTRACTS.sepolia.myContract.abi,
+    functionName: "getUsdValue",
+    args: [token, amountWei],
+  });
+
+  // convert from 18-decimal USD
+  const usdNumber = Number(formatUnits(usdValue, 18));
+
+  // format with commas
+  const formattedUsd = usdNumber.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  return formattedUsd;
+}
+
+async function availableToBorrow(user, token) {
+  const available = await publicClient.readContract({
+    address: CONTRACTS.sepolia.myContract.address,
+    abi: CONTRACTS.sepolia.myContract.abi,
+    functionName: "_borrowableAmount",
+    args: [user, token],
+  });
+
+  return Number(formatUnits(available, 18));
+}
+
+export async function disconnectWallet() {
+  if (window.ethereum) {
+    try {
+      await window.ethereum.request({
+        method: "wallet_revokePermissions",
+        params: [
+          {
+            eth_accounts: {},
+          },
+        ],
+      });
+      console.log("Permissions revoked");
+    } catch (error) {
+      console.error("Failed to revoke:", error);
+    }
+  }
   userAddress = null;
   localStorage.removeItem("connected");
   localStorage.removeItem("userAddress");
@@ -284,9 +424,9 @@ document.querySelectorAll(".openModal").forEach((btn) => {
     if (userAddress) {
       setModalState(MODAL_STATE.DISCONNECT, {
         userAddress,
-        onAction: () => {
-          handleDisconnect();
-          location.reload(); // optional
+        onAction: async () => {
+          await disconnectWallet();
+          location.href = "index.html"; // optional
         },
       });
       return;
@@ -297,7 +437,7 @@ document.querySelectorAll(".openModal").forEach((btn) => {
       onAction: async () => {
         try {
           await connectWallet();
-          location.href = "page1.html";
+          location.href = "page1.html"; // optional: redirect after connection
           closeModal();
         } catch (err) {
           // WRONG NETWORK TRANSITION
@@ -307,6 +447,7 @@ document.querySelectorAll(".openModal").forEach((btn) => {
               onAction: async () => {
                 try {
                   await switchNetwork();
+                  location.href = "index.html"; // optional: force reload to reset state
                   location.reload();
                 } catch (err) {
                   setModalState(MODAL_STATE.ERROR, {
@@ -327,30 +468,108 @@ document.querySelectorAll(".openModal").forEach((btn) => {
   });
 });
 
-export function handleDisconnect() {
-  disconnectWallet(); // clear app state
-  location.href = "index.html"; // go back to home
-}
-
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("Initializing DApp...");
 
   // 1. Check if wallet is already connected
+  // console.log(formatEther(16968000000000000000n));
+
   await checkExistingConnection();
 });
 
 async function checkExistingConnection() {
   if (window.ethereum && window.ethereum.selectedAddress) {
+    userAddress = window.ethereum.selectedAddress;
     window.ethereum.on("accountsChanged", (userAddress) => {
       if (userAddress.length === 0) {
         // Wallet disconnected
         console.log("Wallet disconnected, reloading...");
-        // setTimeout(() => window.location.reload(), 100);
+        setTimeout(() => window.location.reload(), 100);
       }
     });
-    console.log("Wallet already connected:", window.ethereum.selectedAddress);
+
+    if (window.location.pathname.endsWith("index.html")) {
+      location.href = "page1.html";
+    }
+    console.log("Wallet already connected:", userAddress);
     connectHeaderBtn.innerText = shortenAddress(
       window.ethereum.selectedAddress,
     );
+
+    loadContract(); // initialize clients and contract
+
+    const userBalance = await publicClient.getBalance({
+      address: userAddress,
+    });
+
+    // console.log("User balance:", formatEther(userBalance), "ETH");
+
+    document.getElementById("userAddress").textContent =
+      shortenAddress(userAddress);
+
+    document.getElementById("userBalance").textContent =
+      `${Number(formatEther(userBalance)).toFixed(3)} ETH`;
+
+    document.getElementById("walletEthBalance").textContent =
+      `${Number(formatEther(userBalance)).toFixed(3)} ETH`;
+  }
+
+  // if (window.location.pathname.endsWith("page1.html")) {
+  //   location.href = "index.html";
+  // }
+}
+
+async function updateUI(tokenSymbol) {
+  const selectedToken = TOKENS[tokenSymbol];
+  const selectedTokenAddress = selectedToken.address;
+
+  const accounts = await window.ethereum.request({
+    method: "eth_accounts",
+  });
+
+  userAddress = accounts.length > 0 ? accounts[0] : null;
+  console.log("Current user address:", userAddress);
+
+  if (!userAddress || !publicClient) {
+    await connectWallet();
+    console.log("Public client:", publicClient);
+    console.log("User address after connection:", userAddress);
+  }
+
+  try {
+    const user = await publicClient.readContract({
+      address: CONTRACTS.sepolia.myContract.address,
+      abi: CONTRACTS.sepolia.myContract.abi,
+      functionName: "getUser",
+      args: [userAddress],
+    });
+    // destructure tuple
+    const [, stakedAmount, ,] = user;
+
+    document.getElementById("stakedEth").textContent =
+      formatEther(stakedAmount);
+
+    // Getting available borrow amount in USD
+    const availableBorrowUsd = await availableToBorrow(
+      userAddress,
+      selectedTokenAddress,
+    );
+    const avail = parseEther(availableBorrowUsd.toString());
+
+    const availableBorrowUsdPrice = await getUsdPrice(
+      selectedTokenAddress,
+      avail,
+    );
+
+    console.log("Available to borrow (LINK):", availableBorrowUsd);
+
+    if (availableBorrowUsd === 0) {
+      document.getElementById("connectWalletBtn2").disabled = true; // Disable borrow button if nothing is available to borrow
+    }
+
+    document.getElementById("borrowLimit").textContent =
+      `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol}___${availableBorrowUsdPrice} USD`;
+  } catch (err) {
+    console.error("Error updating UI:", err);
   }
 }

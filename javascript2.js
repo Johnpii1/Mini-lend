@@ -1,3 +1,7 @@
+
+import { disconnectWallet, borrowAsset } from "./wallet.js";
+
+
 //FOR MODULAR1
 const openBtn1 = document.querySelectorAll(".Modaled1");
 const closeBnt1 = document.getElementById("closeModal1");
@@ -131,6 +135,45 @@ openBtn6.forEach((btn) => {
 closeBtn6.addEventListener("click", () => {
   modal6.classList.add("hidden");
 });
+
+
+// WALLET DISCONNECT
+document
+  .getElementById("disconnectWalletBtn")
+  .addEventListener("click", async () => {
+    await disconnectWallet();
+    location.href = "index.html"; // optional: redirect to home after disconnect
+  });
+
+document
+  .getElementById("disconnectMobile")
+  .addEventListener("click", async () => {
+    await disconnectWallet();
+    location.href = "index.html"; // optional: redirect to home after disconnect
+  });
+
+// Borrow and Repay Calculator
+document.getElementById("connectWalletBtn2").onclick = async () => {
+  const amt = document.getElementById("borrowInput").value;
+  const selectedSymbol = document.getElementById("tokenSelect").value;
+  console.log("Borrowing", amt, selectedSymbol);
+
+  if (!amt || isNaN(amt)) {
+    alert("Enter valid amount");
+    return;
+  }
+
+  // this.disabled = true;
+
+  try {
+    await borrowAsset(selectedSymbol, amt);
+    alert("Borrow successful!");
+  } catch (err) {
+    alert("Borrow failed: " + (err.shortMessage || err.message));
+  } finally {
+    // this.disabled = false;
+  }
+};
 
 const ETH_PRICE = 3200;
 

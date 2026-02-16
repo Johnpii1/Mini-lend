@@ -117,15 +117,15 @@
                 </div>
 
 
-                <!--FOR DISCONNET WALLET FOR MOBILE-->
-                <div id="USER_DISCONNET"
-                    class="logo flex items-center  bg-[#331A1A]/20 rounded-lg h-[40px]  px-2 cursor-pointer hover:bg-[#331A1A]/30">
-                    <button class="flex flex-row items-center gap-2"><i
-                            class="bi bi-box-arrow-right flex items-center justify-center text-[#4E8141] h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"></i>Disconnet</button> 
+                    <!--FOR DISCONNET WALLET FOR MOBILE-->
+                    <div id="USER_DISCONNET"
+                        class="logo flex items-center flex-row gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px]  px-2 cursor-pointer hover:bg-[#331A1A]/30">
+                        <button class="h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"><i
+                                class="bi bi-box-arrow-right text-[#4E8141]"></i></button> Disconnet
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
 
@@ -155,10 +155,10 @@
                 </div>
 
                 <!--THE USER CONNETED ADDRESS-->
-                <h4>THE USER ADDRESS</h4>
+                <h4 id="userAddress">THE USER ADDRESS</h4>
 
                 <!--THE USER ADDRESS BALANCE-->
-                <p class="logo">0.00 ETH</p>
+                <p id="userBalance" class="logo">0.00 ETH</p>
 
             </div>
 
@@ -183,8 +183,8 @@
                 <div
                     class="flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px] px-2 cursor-pointer hover:bg-[#331A1A]/30">
                     <div class="logo flex items-center flex-row gap-2">
-                        <button class="flex items-center gap-2"><i
-                                class="bi bi-activity flex items-center justify-center h-[30px] w-[30px] rounded-full bg-[#3a1515]/90 text-[#4E8141]"></i></i>Activity</button> 
+                        <button class="h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"><i
+                                class="bi bi-activity text-[#4E8141]"></i></i></button> Activity
                     </div>
 
                     <div>
@@ -195,10 +195,10 @@
 
                 <!--USER DISCONNET WALLET FOR DESKTOP-->
                 <div id="USER_DISCONNET"
-                    class="logo flex items-center flex-row gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px]  px-2 cursor-pointer hover:bg-[#331A1A]/30">
-                    <button class="flex items-center gap-2"><i
-                            class="bi bi-box-arrow-right flex items-center justify-center h-[30px] w-[30px] rounded-full bg-[#3a1515]/90 text-[#4E8141]"></i>Disconnet</button> 
-                </div>
+                        class="logo flex items-center flex-row gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px]  px-2 cursor-pointer hover:bg-[#331A1A]/30">
+                        <button class="h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"><i
+                                class="bi bi-box-arrow-right text-[#4E8141]"></i></button> Disconnet
+                    </div>
 
             </div>
 
@@ -270,49 +270,55 @@
 
 
 
-        <!--MODULAR FOR GET STARTED 2-->
-        <!-- MODAL OVERLAY 2 -->
-        <div id="modalOverlay2"
-            class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
+<!--MODULAR FOR GET STARTED 2-->
+<!-- MODAL OVERLAY 2 -->
+<div id="modalOverlay2"
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
 
-            <!-- MODAL BOX -->
-            <div class="bg-[#F2E9D7] rounded-2xl p-6 w-[80%] md:w-[24%] h-fit max-w-sm text-[#331A1A] relative">
+    <!-- MODAL BOX -->
+    <div class="bg-[#F2E9D7] rounded-2xl p-6 w-[80%] md:w-[24%] h-fit max-w-sm text-[#331A1A] relative">
 
-                <!-- CLOSE BUTTON -->
-                <button id="closeModal2" class="absolute top-3 right-3 text-[#331A1A] text-lg">
-                    ✕
-                </button>
+        <!-- CLOSE BUTTON -->
+        <button id="closeModal2" class="absolute top-3 right-3 text-[#331A1A] text-lg">
+            ✕
+        </button>
 
-                <!-- CONTENT -->
-                <h2 id="modalTitle2" class="logo text-xl font-bold text-center mb-2">Borrow Asset</h2>
-                <p class="logo flex items-center justify-between text-sm  text-[#0D7328] py-2">
-                    Token <button
-                        class=" flex items-center gap-2 w-fit  h-[17.95px] rounded-[14px] border-[1px] border-[#331A1A] text-[12px] px-1">USDC
-                        <span class="font-bold"><i class="bi bi-caret-down-fill"></i></span></button>
-                </p>
+        <!-- CONTENT -->
+        <h2 id="modalTitle2" class="logo text-xl font-bold text-center mb-2">Borrow Asset</h2>
 
-                <p id="borrowLimit" class="logo flex items-center justify-between text-sm  text-[#0D7328] py-2">
-                    Max <span>0</span>
-                </p>
+        <!-- TOKEN SELECTOR -->
+        <div class="logo flex items-center justify-between text-sm text-[#0D7328] py-2">
+            <label for="tokenSelect">Token</label>
 
-
-                <p class="logo flex items-center justify-between text-sm  text-[#0D7328] py-2">
-                    Amount <input id="borrowInput" class="bg-transparent text-right outline-none w-[100px]"
-                        type="number" placeholder="0.0">
-                </p>
-
-
-                <div class="flex justify-center items-center">
-                    <button id="connectWalletBtn2"
-                        class="logo  w-[140px] h-[25px] bg-[#6DD054] text-black text-[12px] rounded-[14px] font-semibold md:h-[28px]">
-                        Borrow
-                    </button>
-                </div>
-
-                <p class="logo text-center text-[10px] md:text-[14px] mt-4">Borrowing increases liquidation risk</p>
-
-            </div>
+            <select id="tokenSelect"
+                class="bg-transparent border border-[#331A1A] rounded-[14px] text-[12px] px-2 py-[2px] outline-none">
+                <option value="LINK" selected>LINK</option>
+                <option value="USDC">USDC</option>
+            </select>
         </div>
+
+        <p class="logo flex items-center justify-between text-sm text-[#0D7328] py-2">
+            Amount
+            <input id="borrowInput"
+                class="bg-transparent text-right outline-none w-[100px]"
+                type="number"
+                placeholder="0.0">
+        </p>
+
+        <div class="flex justify-center items-center">
+            <button id="connectWalletBtn2"
+                class="logo w-[140px] h-[20px] bg-[#6DD054] text-black text-[12px] rounded-[14px] font-semibold">
+                Borrow
+            </button>
+        </div>
+
+        <p class="logo text-center text-[10px] md:text-[14px] mt-4">
+            Borrowing increases liquidation risk
+        </p>
+
+    </div>
+</div>
+
 
 
 
@@ -597,7 +603,7 @@
     </div>
 
 </body>
-<script src="./javascript2.js"></script>
+<script type="module" src="./javascript2.js"></script>
 <script type="module" src="./wallet.js"></script>
 
 </html>

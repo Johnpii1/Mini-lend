@@ -1,7 +1,10 @@
-export const CONTRACTS = {
+const CONTRACTS = {
   sepolia: {
     myContract: {
       address: "0x751B8eC585Ba3bdc38690e663151a7ceb4861a72",
+      usdcAddress: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+      linkAddress: "0x779877A7B0D9E8603169DdbD7836e478b4624789",
+      ethAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
       abi: [
         {
           inputs: [
@@ -997,3 +1000,24 @@ export const CONTRACTS = {
     },
   },
 };
+// HEAD
+
+const TOKENS = {
+  USDC: {
+    address: CONTRACTS.sepolia.myContract.usdcAddress,
+  },
+  ETH: {
+    address: CONTRACTS.sepolia.myContract.ethAddress,
+  },
+  LINK: {
+    address: CONTRACTS.sepolia.myContract.linkAddress,
+  },
+};
+
+// const tokenSymbol = document.getElementById("tokenSelect").value;
+// // const tokenSymbol = tokenSelect.value;
+
+// const selectedTokenAddress = TOKENS[tokenSymbol];
+
+export { CONTRACTS, TOKENS };
+
