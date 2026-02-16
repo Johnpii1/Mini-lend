@@ -8,6 +8,7 @@ import {
   formatEther,
   formatUnits,
   getContract,
+  maxUint256,
 } from "https://esm.sh/viem";
 import { setModalState, MODAL_STATE, closeModal } from "./modalController.js";
 import { EXPECTED_CHAIN } from "./config.js";
@@ -517,7 +518,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log("Initializing DApp...");
 
   // 1. Check if wallet is already connected
-  console.log(formatEther(16830000000000000000n));
+  console.log(formatEther(104489248056523438n));
 
   await checkExistingConnection();
 });
