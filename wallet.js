@@ -493,7 +493,14 @@ async function checkExistingConnection() {
     document.getElementById("userAddress").textContent =
       shortenAddress(userAddress);
 
+    document.getElementById("mobile").textContent = shortenAddress(userAddress);
+    document.getElementById("mobileAddress").textContent =
+      shortenAddress(userAddress);
+
     document.getElementById("userBalance").textContent =
+      `${Number(formatEther(userBalance)).toFixed(3)} ETH`;
+
+    document.getElementById("mobileBalance").textContent =
       `${Number(formatEther(userBalance)).toFixed(3)} ETH`;
 
     document.getElementById("walletEthBalance").textContent =
