@@ -3,6 +3,7 @@ import {
   borrowAsset,
   repayAsset,
   withdrawETH,
+  stakeETH,
 } from "./wallet.js";
 
 //FOR MODULAR1
@@ -155,6 +156,30 @@ document
   });
 
 // Borrow and Repay and withdraw
+const stake = document.getElementById("connectWalletBtn1");
+
+if (stake) {
+  document.getElementById("connectWalletBtn1").onclick = async () => {
+    const eth = document.getElementById("stakeInput").value;
+    // console.log(getuserAddress());
+    if (!eth || isNaN(eth) || eth == 0) {
+      stake.textContent = "Invalid";
+      return;
+    }
+    stake.disabled = true; // Disable button to prevent multiple clicks
+    try {
+      stake.textContent = "Staking...";
+      await stakeETH(eth);
+      stake.textContent = "Sucess";
+    } catch (err) {
+      stake.textContent = "Error";
+    } finally {
+      stake.disabled = false; // Re-enable button
+    }
+  };
+  stake.textContent = "Stake";
+}
+
 const borrow = document.getElementById("connectWalletBtn2");
 
 borrow.onclick = async () => {

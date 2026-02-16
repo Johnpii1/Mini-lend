@@ -246,87 +246,14 @@ async function executeMiniLendTx({
 }
 
 // ============ Stake ETH function ============
-async function stakeETH(amountInETH) {
-  try {
-    // Check if initialized
-    if (!userAddress) {
-      await connectWallet();
-    }
+export async function stakeETH(amountInETH) {
+  const amountWei = parseEther(amountInETH.toString());
 
-    if (!miniLend) {
-      console.log("Initializing contract...");
-      miniLend = loadContract(walletClient);
-      console.log("Contract initialized:", miniLend);
-    }
-
-    // Convert to wei
-    const amountWei = parseEther(amountInETH.toString());
-
-    // Send transaction
-    console.log("Sending stake transaction...");
-
-    const hash = await walletClient.writeContract({
-      address: CONTRACTS.sepolia.myContract.address,
-      abi: CONTRACTS.sepolia.myContract.abi,
-      functionName: "stakeEth",
-      args: [],
-      account: userAddress,
-      value: amountWei,
-    });
-
-    console.log("Transaction sent! Hash:", hash);
-
-    // Wait for confirmation
-    const receipt = await publicClient.waitForTransactionReceipt({ hash });
-
-    if (receipt.status === "success") {
-      console.log("Staking successful!", receipt);
-      // updateUI("success", receipt);
-
-      return receipt;
-    } else {
-      throw new Error("Transaction failed");
-    }
-  } catch (error) {
-    console.error("Staking error:", error);
-
-    // Handle specific errors
-    if (error.message.includes("insufficient funds")) {
-      // alert("Insufficient ETH balance!");
-      console.log("Insufficient funds - check your wallet balance.");
-    } else if (error.message.includes("user rejected")) {
-      // alert("Transaction rejected by user");
-      console.log("User rejected transaction.");
-    } else if (error.message.includes("execution reverted")) {
-      // alert("Contract execution failed - check conditions");
-      console.log("Contract execution reverted - check conditions.");
-    }
-
-    // updateUI("error", error.message);
-    throw error;
-  }
-}
-
-const stake = document.getElementById("connectWalletBtn1");
-
-if (stake) {
-  document.getElementById("connectWalletBtn1").onclick = async () => {
-    const eth = document.getElementById("stakeInput").value;
-    // console.log(getuserAddress());
-    if (!eth || isNaN(eth)) {
-      alert("Please enter a valid amount of ETH to stake.");
-      return;
-    }
-    document.getElementById("connectWalletBtn1").disabled = true; // Disable button to prevent multiple clicks
-    try {
-      await stakeETH(eth);
-      alert("Staking successful!");
-    } catch (err) {
-      alert("Staking failed: " + err.message);
-    } finally {
-      document.getElementById("connectWalletBtn1").disabled = false; // Re-enable button
-    }
-  };
+  return executeMiniLendTx({
+    functionName: "stakeEth",
+    args: [],
+    value: amountWei,
+  });
 }
 
 export async function borrowAsset(tokenSymbol, amount) {
