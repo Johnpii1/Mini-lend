@@ -121,7 +121,7 @@ closeBtn5.addEventListener("click", () => {
   modal5.classList.add("hidden");
 });
 
-//FOR MODULAR5
+//FOR MODULAR6
 // SELECT ELEMENTS
 const openBtn6 = document.querySelectorAll(".Modaled6");
 const modal6 = document.getElementById("modalOverlay6");
@@ -141,13 +141,84 @@ closeBtn6.addEventListener("click", () => {
 });
 
 
-//SEND DROP DOWN MENU
-const sendbtn = document.querySelectorAll(".send_btns");
-const menus = document.querySelectorAll(".send_menus");
+//SEND DROP DOWN MENU FOR DESKTOP
+document.addEventListener("DOMContentLoaded", () => {
 
-sendbtn.addEventListener("click", () => {
-menus.classList.add("hidden");
+  const walletModal = document.getElementById("modalOverlay5");
+  const sendModal = document.getElementById("sendModal");
+
+  const sendBtn = document.querySelector(".send_btns");
+  const backBtn = document.getElementById("backToWallet");
+
+  const closeWallet = document.getElementById("closeModal5");
+  const closeSend = document.getElementById("closeSendModal");
+
+  // OPEN SEND MODAL
+  sendBtn.addEventListener("click", () => {
+    walletModal.classList.add("hidden");
+    sendModal.classList.remove("hidden");
+    sendModal.classList.add("flex"); // IMPORTANT (because you used items-center)
+  });
+
+  // BACK TO WALLET
+  backBtn.addEventListener("click", () => {
+    sendModal.classList.add("hidden");
+    walletModal.classList.remove("hidden");
+    walletModal.classList.add("flex");
+  });
+
+  // CLOSE BUTTONS
+  closeWallet.addEventListener("click", () => {
+    walletModal.classList.add("hidden");
+  });
+
+  closeSend.addEventListener("click", () => {
+    sendModal.classList.add("hidden");
+  });
+
 });
+
+
+
+//SEND DROP DOWN MENU FOR DESKTOP
+document.addEventListener("DOMContentLoaded", () => {
+
+  const walletModals = document.getElementById("modalOverlay6");
+  const sendModals = document.getElementById("sendModal1");
+
+  const sendBtns = document.querySelector(".send_btns1");
+  const backBtns = document.getElementById("backToWallet1");
+
+  const closeWallets = document.getElementById("closeModal6");
+  const closeSends = document.getElementById("closeSendModal1");
+
+  // OPEN SEND MODAL
+  sendBtns.addEventListener("click", () => {
+    walletModals.classList.add("hidden");
+    sendModals.classList.remove("hidden");
+    sendModals.classList.add("flex"); // IMPORTANT (because you used items-center)
+  });
+
+  // BACK TO WALLET
+  backBtns.addEventListener("click", () => {
+    sendModals.classList.add("hidden");
+    walletModals.classList.remove("hidden");
+    walletModals.classList.add("flex");
+  });
+
+  // CLOSE BUTTONS
+  closeWallets.addEventListener("click", () => {
+    walletModals.classList.add("hidden");
+  });
+
+  closeSends.addEventListener("click", () => {
+    sendModals.classList.add("hidden");
+  });
+
+});
+
+
+
 
 
 

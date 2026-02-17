@@ -35,7 +35,8 @@
         </div>
 
         <!-- MOBILE WALLET -->
-        <div id="mobile"class="Modaled6 border border-[#D7CBB1] w-[25vw] h-[30px] rounded-[14px] text-[#D7CBB1] cursor-pointer text-center md:hidden">
+        <div id="mobile"
+            class="Modaled6 border border-[#D7CBB1] w-[25vw] h-[30px] rounded-[14px] text-[#D7CBB1] cursor-pointer text-center md:hidden">
         </div>
 
         <!-- DESKTOP WALLET -->
@@ -81,29 +82,21 @@
 
                 <h4 id="mobileAddress">THE USER ADDRESS</h4>
 
-                <p id="mobileBalance"class="logo">0.00 ETH</p>
+                <p id="mobileBalance" class="logo">0.00 ETH</p>
 
             </div>
 
 
 
-            <div 
+            <div class="block space-y-2 mt-4">
 
-            class="block space-y-2 mt-4">
+                <!--SEND-->
                 <div
-                    class="flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px]  px-2 cursor-pointer hover:bg-[#331A1A]/30">
+                    class="send_btns1 flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px]  px-2 cursor-pointer hover:bg-[#331A1A]/30">
                     <div class="logo flex items-center flex-row gap-2">
-                        <button 
-                        class="send_btns flex flex-row items-center gap-2 "><i
+                        <button class="flex flex-row items-center gap-2 "><i
                                 class="bi bi-send-fill flex items-center justify-center text-[#4E8141] h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"></i>Send</button>
                     </div>
-
-
-<!--MODULA FOR SEND-->
-<div class="send_menus hidden w-[400px] h-[30px] bg-[#331A1A]">
-<a href="#modalOverlay6"><i class="bi bi-caret-left-fill"> my naaa</i></a>
-
-</div>
 
                     <div>
                         <i class="bi bi-caret-right-fill"></i>
@@ -112,7 +105,7 @@
                 </div>
 
 
-
+                <!--ACTIVITY-->
                 <div
                     class="flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px] px-2 cursor-pointer hover:bg-[#331A1A]/30">
                     <div class="logo flex items-center flex-row gap-2">
@@ -176,7 +169,7 @@
 
                 <!--SEND-->
                 <div
-                    class="flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px] px-2 cursor-pointer hover:bg-[#331A1A]/30">
+                    class="send_btns  flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px] px-2 cursor-pointer hover:bg-[#331A1A]/30">
                     <div class="logo flex items-center flex-row gap-2">
                         <button class="flex items-center gap-2"><i
                                 class="bi bi-send-fill flex items-center justify-center h-[30px] w-[30px] rounded-full bg-[#3a1515]/90 text-[#4E8141]"></i>Send</button>
@@ -206,10 +199,10 @@
                 <!--USER DISCONNET WALLET FOR DESKTOP-->
                 <button id="USER_DISCONNET"
                     class="logo flex items-center flex-row gap-2 w-full bg-[#331A1A]/20 rounded-lg h-[40px] px-2 hover:bg-[#331A1A]/30">
-                        <span class="h-[30px] w-[30px] rounded-full bg-[#3a1515]/90 flex items-center justify-center">
+                    <span class="h-[30px] w-[30px] rounded-full bg-[#3a1515]/90 flex items-center justify-center">
                         <i class="bi bi-box-arrow-right text-[#4E8141]"></i>
                     </span>
-                        Disconnect
+                    Disconnect
                 </button>
 
 
@@ -220,6 +213,76 @@
 
         </div>
     </div>
+
+
+
+
+
+
+
+    
+
+
+    <!-- MODAL OVERLAY 5 FOR DESKTOP  -->
+    <div id="sendModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
+
+        <div class="bg-[#F2E9D7] rounded-2xl p-6 w-[80%] md:w-[24%] text-[#331A1A] relative">
+
+            <!-- Back Arrow -->
+            <button id="backToWallet" class="absolute top-3 left-3">
+              <i class="bi bi-caret-left-fill"></i>
+            </button>
+
+            <!-- Close -->
+            <button id="closeSendModal" class="absolute top-3 right-3">
+                ✕
+            </button>
+
+            <h2 class="logo text-center font-bold text-xl mb-4">Send ETH</h2>
+
+            <input type="text" placeholder="Recipient Address" class="logo w-full border rounded p-2 mb-3">
+
+            <input type="number" placeholder="Amount" class="logo w-full border rounded p-2 mb-4">
+
+            <button class="logo w-full bg-[#6DD054] rounded p-2 font-semibold">
+                Confirm Send
+            </button>
+
+        </div>
+    </div>
+
+
+
+
+    <!-- MODAL OVERLAY 5 FOR MOBILE  -->
+    <div id="sendModal1" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
+
+        <div class="bg-[#F2E9D7] rounded-2xl p-6 w-[80%] text-[#331A1A] relative">
+
+            <!-- Back Arrow -->
+            <button id="backToWallet1" class="absolute top-3 left-3">
+              <i class="bi bi-caret-left-fill"></i>
+            </button>
+
+            <!-- Close -->
+            <button id="closeSendModal1" class="absolute top-3 right-3">
+                ✕
+            </button>
+
+            <h2 class="logo text-center font-bold text-xl mb-4">Send ETH</h2>
+
+            <input type="text" placeholder="Recipient Address" class="logo w-full border rounded p-2 mb-3">
+
+            <input type="number" placeholder="Amount" class="logo w-full border rounded p-2 mb-4">
+
+            <button class="logo w-full bg-[#6DD054] rounded p-2 font-semibold">
+                Confirm Send
+            </button>
+
+        </div>
+    </div>
+
+
 
 
 
@@ -359,7 +422,7 @@
                 <!-- CONTENT -->
                 <h2 id="modalTitle3" class="logo text-xl font-bold text-center mb-2">Repay</h2>
 
-                                <!-- TOKEN SELECTOR -->
+                <!-- TOKEN SELECTOR -->
                 <div class="logo flex items-center justify-between text-sm text-[#0D7328] py-2">
                     <label for="tokenSelect">Token</label>
 
@@ -372,21 +435,17 @@
 
                 <p class="logo flex items-center justify-between text-sm text-[#0D7328] py-2">
                     Amount
-                    <div class="flex items-center gap-2">
-                        <button id="repayMaxBtn"
-                            class="text-[11px] border border-[#331A1A] rounded px-2">MAX</button>
+                <div class="flex items-center gap-2">
+                    <button id="repayMaxBtn" class="text-[11px] border border-[#331A1A] rounded px-2">MAX</button>
 
-                        <input id="repayInput"
-                            class="bg-transparent text-right outline-none w-[100px]"
-                            type="number"
-                            placeholder="0.0">
-                   </div>
+                    <input id="repayInput" class="bg-transparent text-right outline-none w-[100px]" type="number"
+                        placeholder="0.0">
+                </div>
                 </p>
 
-<p id="repayMaxDisplay"
-   class="logo text-center text-[12px] text-[#331A1A]">
-   Debt: 0
-</p>
+                <p id="repayMaxDisplay" class="logo text-center text-[12px] text-[#331A1A]">
+                    Debt: 0
+                </p>
 
 
                 <p id="repayUsdValue" class="logo text-center py-2 text-[14px]">USD value: $0</p>
@@ -613,23 +672,23 @@
 
 
         <!---LIQIDITY NOTE-->
-<div class="bg-[#FE0909] h-fit w-fit rounded-[10px] m-2 py-2">
+        <div class="bg-[#FE0909] h-fit w-fit rounded-[10px] m-2 py-2">
 
-    <!--DANGER ICON-->
-<div class="flex justify-center items-center">
-    <i class="bi bi-exclamation-triangle text-4xl"></i>
-</div>
+            <!--DANGER ICON-->
+            <div class="flex justify-center items-center">
+                <i class="bi bi-exclamation-triangle text-4xl"></i>
+            </div>
 
-<!--HEADER-->
-<h3 class="logo text-[#FFFFFF] text-[14px] px-2">POSITION AT RISK OF LIQUIDATION</h3>
+            <!--HEADER-->
+            <h3 class="logo text-[#FFFFFF] text-[14px] px-2">POSITION AT RISK OF LIQUIDATION</h3>
 
-<!--NOTED-->
-<p class="logo text-[#FFFFFF] text-[12px] px-2 py-2">Repay or add collateral immediately</p>
+            <!--NOTED-->
+            <p class="logo text-[#FFFFFF] text-[12px] px-2 py-2">Repay or add collateral immediately</p>
 
 
 
-<div class="flex justify-between items-center gap-2 px-2">
-    <div class="flex justify-center items-center">
+            <div class="flex justify-between items-center gap-2 px-2">
+                <div class="flex justify-center items-center">
                     <button
                         class="logo  w-[100px] h-[25px] bg-[#6DD054] text-black text-[12px] rounded-[14px] font-semibold md:h-[28px]">
                         Add ETH
@@ -637,20 +696,20 @@
                 </div>
 
 
- <div class="flex justify-center items-center">
+                <div class="flex justify-center items-center">
                     <button
                         class="logo  w-[100px] h-[25px] bg-[#6DD054] text-black text-[12px] rounded-[14px] font-semibold md:h-[28px]">
                         Repay
                     </button>
                 </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
 
 
-       
+
 
 
         <!--COPYRIGHT-->
