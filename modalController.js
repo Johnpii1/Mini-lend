@@ -6,6 +6,8 @@ const modalActionBtn = document.getElementById("connectWalletBtn");
 const modalFooter = document.getElementById("modalFooter");
 const closeBtn = document.getElementById("closeModal");
 
+
+
 export const MODAL_STATE = {
   CONNECT: "CONNECT",
   DISCONNECT: "DISCONNECT",
@@ -86,5 +88,5 @@ export function setModalState(state, payload = {}) {
 }
 
 // close button
-// console.log("closeBtn:", closeBtn);
-// closeBtn?.addEventListener("click", closeModal);
+console.log("closeBtn:", closeBtn);
+closeBtn?.addEventListener("click", closeModal);
