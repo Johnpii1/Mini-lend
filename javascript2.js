@@ -140,10 +140,8 @@ closeBtn6.addEventListener("click", () => {
   modal6.classList.add("hidden");
 });
 
-
 //SEND DROP DOWN MENU FOR DESKTOP
 document.addEventListener("DOMContentLoaded", () => {
-
   const walletModal = document.getElementById("modalOverlay5");
   const sendModal = document.getElementById("sendModal");
 
@@ -175,14 +173,10 @@ document.addEventListener("DOMContentLoaded", () => {
   closeSend.addEventListener("click", () => {
     sendModal.classList.add("hidden");
   });
-
 });
-
-
 
 //SEND DROP DOWN MENU FOR DESKTOP
 document.addEventListener("DOMContentLoaded", () => {
-
   const walletModals = document.getElementById("modalOverlay6");
   const sendModals = document.getElementById("sendModal1");
 
@@ -214,13 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
   closeSends.addEventListener("click", () => {
     sendModals.classList.add("hidden");
   });
-
 });
-
-
-
-
-
 
 // WALLET DISCONNECT
 document
