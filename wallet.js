@@ -16,6 +16,7 @@ import { CONTRACTS, TOKENS } from "./minilendContract.js";
 import { linkinfo } from "./linkAbi.js";
 
 const connectHeaderBtn = document.getElementById("headerConnect");
+const modalActionBtn = document.getElementById("connectWalletBtn");
 const tokenMetaCache = {}; // simple in-memory cache for token metadata
 let walletClient;
 let publicClient;
@@ -368,6 +369,9 @@ export async function disconnectWallet() {
           },
         ],
       });
+      if (window.location.pathname.endsWith("page1.html")) {
+        location.href = "index.html";
+      }
       console.log("Permissions revoked");
     } catch (error) {
       console.error("Failed to revoke:", error);
@@ -415,7 +419,12 @@ document.querySelectorAll(".openModal").forEach((btn) => {
     setModalState(MODAL_STATE.CONNECT, {
       onAction: async () => {
         try {
+          modalActionBtn.innerHTML = `
+        ${spinner}
+        <span>Connecting...</span>
+      `;
           await connectWallet();
+
           location.href = "page1.html"; // optional: redirect after connection
           closeModal();
         } catch (err) {
@@ -425,9 +434,15 @@ document.querySelectorAll(".openModal").forEach((btn) => {
               expectedName: EXPECTED_CHAIN.name,
               onAction: async () => {
                 try {
+                  modalActionBtn.innerHTML = `
+                  ${spinner}
+                    <span>Switching...</span>
+                  `;
                   await switchNetwork();
-                  location.href = "index.html"; // optional: force reload to reset state
-                  location.reload();
+                  if (window.location.pathname.endsWith("index.html")) {
+                    location.href = "page1.html";
+                  }
+                  // location.reload();
                 } catch (err) {
                   setModalState(MODAL_STATE.ERROR, {
                     message: "Network switch failed.",
