@@ -32,31 +32,7 @@
     <div id="header" class="fixed top-6 left-1/2 transform -translate-x-1/2
             h-[55px] flex items-center justify-between px-6
             border-[6px] border-[#6DD054] rounded-[17px] w-[95%] z-50 ">
-
-        <!--LIST BUTTON FOR MOBILE ONLY-->
-        <div class="flex flex-row items-center gap-6 cursor-pointer">
-            <div id="headers" class="text-[#FFFFFF] text-2xl font-bold md:hidden">
-                <i class="bi bi-list-task"></i>
-            </div>
-
-            <!--DROPDOWN HEADER FOR MOBILE ONLY-->
-            <div
-                class="menus hidden absolute top-12 h-fit w-fit rounded left-[-10px] bg-[#3a1515] border-[1px] border-[#D7CBB1]">
-
-
-                <!-- CLOSE BUTTON -->
-                <button id="closebtn" class="absolute font-bold right-1 text-[#D7CBB1] text-lg">
-                    ✕
-                </button>
-
-                <!--FOR HEDER TEXT AND MOBILE ONLY -->
-                <div class="logo flex flex-col gap-2 text-[#6DD054] text-[16px] mx-1 py-4">
-                    <a href="#">FAQ</a>
-                    <a href="./page1.html">WHITE PAPER</a>
-                </div>
-            </div>
-
-
+                
 
             <!--FOR HEADER ONLY-->
             <script>
@@ -71,30 +47,18 @@
                     }
                 });
 
-                //FOR MOBILE FQ AND WHITE PAPER
-                const headerBtn = document.getElementById("headers");
-                const headermenus = document.querySelector(".menus");
-                const closeBtns = document.getElementById("closebtn");
-
-                headerBtn.addEventListener("click", () => {
-                    headermenus.classList.toggle("hidden");
-                });
-
-                closeBtns.addEventListener("click", () => {
-                    headermenus.classList.toggle("hidden");
-                });
-
+               
             </script>
 
-
+<div class="flex justify-between items-center gap-[51px]">
             <!--LOGO-->
-            <div class="logo text-white font-semibold text-[16px]">
+            <div class="logo text-[14px] text-white font-semibold md:text-[16px]">
                 <a href="./index.html">MINI LEND</a>
             </div>
 
-        </div>
+        
         <!--TEXT-->
-        <div class="logo hidden md:flex md:text-[#6DD054] md:text-[15px] md:gap-8">
+        <div class="logo flex text-[12px] text-[#6DD054] gap-2 md:text-[15px] md:gap-8">
             <a href="#">FAQ</a>
             <a href="#">WHITE PAPER</a>
         </div>
@@ -107,7 +71,7 @@
                     WALLET</i></button>
 
         </div>
-
+</div>
     </div>
 
     <!--HERO SECETION-->
