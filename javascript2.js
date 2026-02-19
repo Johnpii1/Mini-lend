@@ -4,6 +4,7 @@ import {
   repayAsset,
   withdrawETH,
   stakeETH,
+  spinner,
 } from "./wallet.js";
 
 //FOR MODULAR1
@@ -238,24 +239,26 @@ if (stake) {
     }
     stake.disabled = true; // Disable button to prevent multiple clicks
     try {
-      stake.textContent = "Staking...";
+      stake.innerHTML = `
+        ${spinner}
+        <span>Staking...</span>
+      `;
       await stakeETH(eth);
-      stake.textContent = "Sucess";
+      stake.textContent = "Success";
     } catch (err) {
-      stake.textContent = "Error";
+      stake.innerHTML = err.shortMessage || "Error";
     } finally {
-      stake.disabled = false; // Re-enable button
+      setTimeout(() => {
+        stake.disabled = false;
+        stake.innerHTML = "Stake";
+      }, 1500);
     }
   };
-  stake.textContent = "Stake";
 }
 
 const borrow = document.getElementById("connectWalletBtn2");
 
 borrow.onclick = async () => {
-  borrow.textContent = "loading...";
-  borrow.disabled = true;
-
   const amt = document.getElementById("borrowInput").value;
   const selectedSymbol = document.getElementById("tokenSelect").value;
   console.log("Borrowing", amt, selectedSymbol);
@@ -268,23 +271,30 @@ borrow.onclick = async () => {
   // this.disabled = true;
 
   try {
+    borrow.innerHTML = `
+        ${spinner}
+        <span>Borrowing...</span>
+      `;
+
     await borrowAsset(selectedSymbol, amt);
 
     borrow.disabled = false;
-    borrow.textContent = "Sucess";
-    modals2.classList.add("hidden");
-    modals2.classList.remove("flex");
+    borrow.textContent = "Success";
+    // modals2.classList.add("hidden");
+    // modals2.classList.remove("flex");
   } catch (err) {
     borrow.disabled = false;
-    borrow.textContent = "Failed";
-    alert("Borrow failed: " + (err.shortMessage || err.message));
+    borrow.innerHTML = err.shortMessage || "Failed";
   } finally {
-    borrow.disabled = false;
-    // this.disabled = false;
+    setTimeout(() => {
+      borrow.disabled = false;
+      borrow.innerHTML = "Borrow";
+    }, 1500);
   }
 };
 
-document.getElementById("connectWalletBtn3").onclick = async () => {
+const repay = document.getElementById("connectWalletBtn3");
+repay.onclick = async () => {
   const amt = document.getElementById("repayInput").value;
   const selectedSymbol = document.getElementById("tokenSelect2").value;
   console.log("Repaying", amt, selectedSymbol);
@@ -294,14 +304,22 @@ document.getElementById("connectWalletBtn3").onclick = async () => {
     return;
   }
 
-  // this.disabled = true;
+  repay.disabled = true;
 
   try {
+    repay.innerHTML = `
+        ${spinner}
+        <span>Repaying...</span>
+      `;
     await repayAsset(selectedSymbol, amt);
+    repay.textContent = "Success";
   } catch (err) {
-    alert("Repay failed: " + (err.shortMessage || err.message));
+    repay.innerHTML = err.shortMessage || "Error";
   } finally {
-    // this.disabled = false;
+    setTimeout(() => {
+      repay.disabled = false;
+      repay.innerHTML = "Repay";
+    }, 1500);
   }
 };
 
@@ -317,13 +335,20 @@ if (withdraw) {
     }
     withdraw.disabled = true; // Disable button to prevent multiple clicks
     try {
+      withdraw.innerHTML = `
+        ${spinner}
+        <span>Withdrawing...</span>
+      `;
       await withdrawETH(eth);
       withdraw.textContent = "Sucess";
     } catch (err) {
-      withdraw.textContent = "Failed";
+      withdraw.textContent = err.shortMessage || "Error";
       // alert("Withdrawal failed: " + err.message);
     } finally {
-      withdraw.disabled = false; // Re-enable button
+      setTimeout(() => {
+        withdraw.disabled = false;
+        withdraw.innerHTML = "Withdraw";
+      }, 1500);
     }
   };
 }

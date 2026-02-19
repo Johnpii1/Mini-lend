@@ -266,14 +266,14 @@ export async function borrowAsset(tokenSymbol, amount) {
   const decimals = await getTokenDecimals(tokenAddress);
 
   const amountUnits = parseUnits(amount.toString(), decimals);
-  console.log("Borrowing with params:", {
-    tokenSymbol: tokenSymbol,
-    tokenAddress: tokenAddress,
-    amount: amount.toString(),
-    amountUnits: amountUnits.toString(),
-    decimals: decimals,
-    token: token,
-  });
+  // console.log("Borrowing with params:", {
+  //   tokenSymbol: tokenSymbol,
+  //   tokenAddress: tokenAddress,
+  //   amount: amount.toString(),
+  //   amountUnits: amountUnits.toString(),
+  //   decimals: decimals,
+  //   token: token,
+  // });
 
   // updateUI(tokenSymbol);
   return executeMiniLendTx({
@@ -394,6 +394,18 @@ export async function disconnectWallet() {
   localStorage.removeItem("userAddress");
   localStorage.clear();
 }
+
+// =========== Spinner ============
+export const spinner = `
+<svg class="animate-spin h-4 w-4" viewBox="0 0 24 24">
+  <circle class="opacity-25" cx="12" cy="12" r="10"
+    stroke="currentColor" stroke-width="4" fill="none"></circle>
+  <path class="opacity-75"
+    fill="currentColor"
+    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
+  </path>
+</svg>
+`;
 
 document.querySelectorAll(".openModal").forEach((btn) => {
   btn.addEventListener("click", () => {
