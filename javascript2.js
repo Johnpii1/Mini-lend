@@ -234,7 +234,7 @@ if (stake) {
     const eth = document.getElementById("stakeInput").value;
     // console.log(getuserAddress());
     if (!eth || isNaN(eth) || eth == 0) {
-      stake.textContent = "Invalid";
+      stake.textContent = "Invalid Input";
       return;
     }
     stake.disabled = true; // Disable button to prevent multiple clicks
@@ -246,7 +246,7 @@ if (stake) {
       await stakeETH(eth);
       stake.textContent = "Success";
     } catch (err) {
-      stake.innerHTML = err.shortMessage || "Error";
+      stake.innerHTML = "Failed";
     } finally {
       setTimeout(() => {
         stake.disabled = false;
@@ -264,7 +264,7 @@ borrow.onclick = async () => {
   console.log("Borrowing", amt, selectedSymbol);
 
   if (!amt || isNaN(amt) || amt == 0) {
-    alert("Enter valid amount");
+    borrow.textContent = "Invalid Input";
     return;
   }
 
@@ -284,7 +284,7 @@ borrow.onclick = async () => {
     // modals2.classList.remove("flex");
   } catch (err) {
     borrow.disabled = false;
-    borrow.innerHTML = err.shortMessage || "Failed";
+    borrow.innerHTML = "Failed";
   } finally {
     setTimeout(() => {
       borrow.disabled = false;
@@ -300,7 +300,7 @@ repay.onclick = async () => {
   console.log("Repaying", amt, selectedSymbol);
 
   if (!amt || isNaN(amt) || amt == 0) {
-    alert("Enter valid amount");
+    repay.textContent = "Invalid Input";
     return;
   }
 
@@ -314,7 +314,7 @@ repay.onclick = async () => {
     await repayAsset(selectedSymbol, amt);
     repay.textContent = "Success";
   } catch (err) {
-    repay.innerHTML = err.shortMessage || "Error";
+    repay.innerHTML = "Failed";
   } finally {
     setTimeout(() => {
       repay.disabled = false;
@@ -330,7 +330,7 @@ if (withdraw) {
     const eth = document.getElementById("withdrawInput").value;
     // console.log(getuserAddress());
     if (!eth || isNaN(eth) || eth == 0) {
-      withdraw.textContent = "Invalid";
+      withdraw.textContent = "Invalid Input";
       return;
     }
     withdraw.disabled = true; // Disable button to prevent multiple clicks
@@ -342,7 +342,7 @@ if (withdraw) {
       await withdrawETH(eth);
       withdraw.textContent = "Sucess";
     } catch (err) {
-      withdraw.textContent = err.shortMessage || "Error";
+      withdraw.textContent = "Failed";
       // alert("Withdrawal failed: " + err.message);
     } finally {
       setTimeout(() => {

@@ -266,14 +266,6 @@ export async function borrowAsset(tokenSymbol, amount) {
   const decimals = await getTokenDecimals(tokenAddress);
 
   const amountUnits = parseUnits(amount.toString(), decimals);
-  // console.log("Borrowing with params:", {
-  //   tokenSymbol: tokenSymbol,
-  //   tokenAddress: tokenAddress,
-  //   amount: amount.toString(),
-  //   amountUnits: amountUnits.toString(),
-  //   decimals: decimals,
-  //   token: token,
-  // });
 
   // updateUI(tokenSymbol);
   return executeMiniLendTx({
@@ -294,14 +286,6 @@ export async function repayAsset(tokenSymbol, amount) {
   const decimals = await getTokenDecimals(tokenAddress);
 
   const amountUnits = parseUnits(amount.toString(), decimals);
-  console.log("Repaying with params:", {
-    tokenSymbol: tokenSymbol,
-    tokenAddress: tokenAddress,
-    amount: amount.toString(),
-    amountUnits: amountUnits.toString(),
-    decimals: decimals,
-    token: token,
-  });
 
   // ensure userAddress and publicClient are initialized
   const accounts = await window.ethereum.request({
