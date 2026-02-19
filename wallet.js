@@ -424,9 +424,12 @@ document.querySelectorAll(".openModal").forEach((btn) => {
         <span>Connecting...</span>
       `;
           await connectWallet();
+          setTimeout(() => {
+            modalActionBtn.innerHTML = "Connected";
+          }, 1500);
+          closeModal();
 
           location.href = "page1.html"; // optional: redirect after connection
-          closeModal();
         } catch (err) {
           // WRONG NETWORK TRANSITION
           if (err.message === "WRONG_NETWORK") {
