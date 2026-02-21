@@ -184,7 +184,7 @@
 
                 <!--ACTIVITY FOR DESKTOP-->
                 <div
-                    class="flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px] px-2 cursor-pointer hover:bg-[#331A1A]/30">
+                    class="activity_btns flex justify-between items-center gap-2 w-full  bg-[#331A1A]/20 rounded-lg h-[40px] px-2 cursor-pointer hover:bg-[#331A1A]/30">
                     <div class="logo flex items-center flex-row gap-2">
                         <button class="h-[30px] w-[30px] rounded-full bg-[#3a1515]/90"><i
                                 class="bi bi-activity text-[#4E8141]"></i></i></button> Activity
@@ -213,7 +213,44 @@
 
 
 
+<!-- ACTIVITY MODAL -->
+<div id="activityModal"
+    class="modal fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
 
+    <div class="bg-[#F2E9D7] rounded-2xl p-6 w-[80%] md:w-[30%] text-[#331A1A] relative">
+
+            <!-- Back Arrow -->
+            <button id="backToWallet2" class="absolute top-3 left-3">
+                <i class="bi bi-caret-left-fill"></i>
+            </button>
+
+            <!-- Close -->
+            <button id="closeActivityModal" class="absolute top-3 right-3">
+                ✕
+            </button>
+
+        <h2 class="logo text-center font-bold text-xl mb-4">
+            Activity
+        </h2>
+
+        <!-- ACTIVITY LIST -->
+        <div id="activityList" class="space-y-3 max-h-[300px] overflow-y-auto">
+
+            <!-- Example item -->
+            <div class="bg-white rounded-lg p-3 flex justify-between items-center">
+                <div>
+                    <p class="logo text-sm font-semibold">Borrow USDC</p>
+                    <p class="logo text-xs text-gray-500">0.5 ETH</p>
+                </div>
+                <span class="logo text-xs text-green-600 font-semibold">
+                    Success
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+</div>
 
 
 
@@ -236,11 +273,21 @@
 
             <h2 class="logo text-center font-bold text-xl mb-4">Send ETH</h2>
 
-            <input type="text" placeholder="Recipient Address" class="logo w-full border rounded p-2 mb-3">
+                <!-- TOKEN SELECTOR -->
+               <div class="flex justify-center mb-4">
+                  <select id="tokenSelect"
+                    class="logo bg-white/60 border border-[#331A1A]/30 rounded-full px-4 py-2 text-sm font-semibold outline-none cursor-pointer">
+                    <option value="ETH" selected>ETH</option>
+                    <option value="LINK">LINK</option>
+                    <option value="USDC">USDC</option>
+                  </select>
+                </div>
 
-            <input type="number" placeholder="Amount" class="logo w-full border rounded p-2 mb-4">
+            <input id="recipientAddress" type="text" placeholder="Recipient Address" class="logo w-full border rounded p-2 mb-3">
 
-            <button class="logo w-full bg-[#6DD054] rounded p-2 font-semibold">
+            <input id="sendAmount" type="number" placeholder="Amount" class="logo w-full border rounded p-2 mb-4">
+
+            <button id="confirmSendBtn" class="logo w-full bg-[#6DD054] rounded p-2 font-semibold">
                 Confirm Send
             </button>
 

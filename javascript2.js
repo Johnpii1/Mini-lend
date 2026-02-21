@@ -180,12 +180,16 @@ closeBtn6.addEventListener("click", () => {
 document.addEventListener("DOMContentLoaded", () => {
   const walletModal = document.getElementById("modalOverlay5");
   const sendModal = document.getElementById("sendModal");
+  const activityModal = document.getElementById("activityModal");
 
   const sendBtn = document.querySelector(".send_btns");
-  const backBtn = document.getElementById("backToWallet");
+  const activityBtn = document.querySelector(".activity_btns");
+  const backBtns = document.getElementById("backToWallet");
+  const backActivityBtn = document.getElementById("backToWallet2");
 
   const closeWallet = document.getElementById("closeModal5");
   const closeSend = document.getElementById("closeSendModal");
+  const closeActivity = document.getElementById("closeActivityModal");
 
   // OPEN SEND MODAL
   sendBtn.addEventListener("click", () => {
@@ -194,11 +198,30 @@ document.addEventListener("DOMContentLoaded", () => {
     sendModal.classList.add("flex"); // IMPORTANT (because you used items-center)
   });
 
+  // OPEN ACTIVITY MODAL
+  activityBtn.addEventListener("click", () => {
+    walletModal.classList.add("hidden");
+    activityModal.classList.remove("hidden");
+    activityModal.classList.add("flex");
+  });
+
+  // BACK TO WALLET FROM ACTIVITY
+  backActivityBtn.addEventListener("click", () => {
+    activityModal.classList.add("hidden");
+    walletModal.classList.remove("hidden");
+    walletModal.classList.add("flex");
+  });
+
   // BACK TO WALLET
-  backBtn.addEventListener("click", () => {
+  backBtns.addEventListener("click", () => {
     sendModal.classList.add("hidden");
     walletModal.classList.remove("hidden");
     walletModal.classList.add("flex");
+  });
+
+  // CLOSE ACTIVITY MODAL
+  closeActivity.addEventListener("click", () => {
+    activityModal.classList.add("hidden");
   });
 
   // CLOSE BUTTONS
