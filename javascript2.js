@@ -7,6 +7,12 @@ import {
   spinner,
 } from "./wallet.js";
 
+// FOR HEALTH FACTOR
+// Hide all first
+document.getElementById("safeStatus").classList.add("hidden");
+document.getElementById("warningStatus").classList.add("hidden");
+document.getElementById("liquidateStatus").classList.add("hidden");
+
 //FOR MODULAR1
 const openBtn1 = document.querySelectorAll(".Modaled1");
 const closeBnt1 = document.getElementById("closeModal1");

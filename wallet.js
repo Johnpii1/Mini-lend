@@ -25,11 +25,6 @@ let userAddress = null;
 let miniLend;
 let chainId = null;
 
-// Hide all first
-document.getElementById("safeStatus").classList.add("hidden");
-document.getElementById("warningStatus").classList.add("hidden");
-document.getElementById("liquidateStatus").classList.add("hidden");
-
 // shorten address
 export function shortenAddress(addr) {
   return addr.slice(0, 6) + "..." + addr.slice(-4);
