@@ -9,29 +9,29 @@ import {
 
 // FOR HEALTH FACTOR
 // Hide all first
-const safe = document.getElementById("safeStatus");
-const warning = document.getElementById("warningStatus");
-const trigger = document.getElementById("liquidateStatus");
+// const safe = document.getElementById("safeStatus");
+// const warning = document.getElementById("warningStatus");
+// const trigger = document.getElementById("liquidateStatus");
 const liquidation = document.getElementById("liquidationModal");
 const closeLiquidation = document.getElementById("closeLiquidationModal");
 
-export function updateHealthStatus(healthFactor) {
-  // Show appropriate one
-  if (healthFactor >= 2) {
-    warning.classList.add("hidden");
-    trigger.classList.add("hidden");
-    safe.classList.remove("hidden");
-  } else if (healthFactor >= 1 && healthFactor < 2) {
-    safe.classList.add("hidden");
-    warning.classList.remove("hidden");
-  } else {
-    safe.classList.add("hidden");
-    warning.classList.add("hidden");
-    trigger.classList.remove("hidden");
-    liquidation.classList.remove("hidden");
-    liquidation.classList.add("flex");
-  }
-}
+// export function updateHealthStatus(healthFactor) {
+//   // Show appropriate one
+//   if (healthFactor >= 2) {
+//     warning.classList.add("hidden");
+//     trigger.classList.add("hidden");
+//     safe.classList.remove("hidden");
+//   } else if (healthFactor >= 1 && healthFactor < 2) {
+//     safe.classList.add("hidden");
+//     warning.classList.remove("hidden");
+//   } else {
+//     safe.classList.add("hidden");
+//     warning.classList.add("hidden");
+//     trigger.classList.remove("hidden");
+//     liquidation.classList.remove("hidden");
+//     liquidation.classList.add("flex");
+//   }
+// }
 
 closeLiquidation.addEventListener("click", () => {
   liquidation.classList.add("hidden");

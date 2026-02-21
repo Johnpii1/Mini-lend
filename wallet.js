@@ -14,7 +14,7 @@ import { setModalState, MODAL_STATE, closeModal } from "./modalController.js";
 import { EXPECTED_CHAIN } from "./config.js";
 import { CONTRACTS, TOKENS } from "./minilendContract.js";
 import { linkinfo } from "./linkAbi.js";
-import { updateHealthStatus } from "./javascript2.js";
+// import { updateHealthStatus } from "./javascript2.js";
 
 const connectHeaderBtn = document.getElementById("headerConnect");
 const modalActionBtn = document.getElementById("connectWalletBtn");
@@ -25,6 +25,13 @@ let publicClient;
 let userAddress = null;
 let miniLend;
 let chainId = null;
+
+// Hide all first
+const safe = document.getElementById("safeStatus");
+const warning = document.getElementById("warningStatus");
+const trigger = document.getElementById("liquidateStatus");
+const liquidation = document.getElementById("liquidationModal");
+// const closeLiquidation = document.getElementById("closeLiquidationModal");
 
 // shorten address
 export function shortenAddress(addr) {
@@ -726,4 +733,24 @@ function calculateHealthFactor(
   if (debtValue === 0) return Infinity; // no debt means infinitely healthy
   const healthFactor = (_liquidationThreshold * collateralValue) / debtValue;
   return healthFactor;
+}
+
+// FOR HEALTH FACTOR
+
+export function updateHealthStatus(healthFactor) {
+  // Show appropriate one
+  if (healthFactor >= 2) {
+    warning.classList.add("hidden");
+    trigger.classList.add("hidden");
+    safe.classList.remove("hidden");
+  } else if (healthFactor >= 1 && healthFactor < 2) {
+    safe.classList.add("hidden");
+    warning.classList.remove("hidden");
+  } else {
+    safe.classList.add("hidden");
+    warning.classList.add("hidden");
+    trigger.classList.remove("hidden");
+    liquidation.classList.remove("hidden");
+    liquidation.classList.add("flex");
+  }
 }
