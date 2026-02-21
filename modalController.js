@@ -87,4 +87,4 @@ export function setModalState(state, payload = {}) {
 
 // close button
 // console.log("closeBtn:", closeBtn);
-// closeBtn?.addEventListener("click", closeModal);
+closeBtn?.addEventListener("click", closeModal);

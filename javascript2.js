@@ -277,7 +277,11 @@ if (stake) {
         <span>Staking...</span>
       `;
       await stakeETH(eth);
-      stake.textContent = "Success";
+      stake.textContent = "✓ Success";
+      setTimeout(() => {
+        modals1.classList.add("hidden");
+        modals1.classList.remove("flex");
+      }, 1500);
     } catch (err) {
       stake.innerHTML = "Failed";
     } finally {
@@ -312,9 +316,11 @@ borrow.onclick = async () => {
     await borrowAsset(selectedSymbol, amt);
 
     borrow.disabled = false;
-    borrow.textContent = "Success";
-    // modals2.classList.add("hidden");
-    // modals2.classList.remove("flex");
+    borrow.textContent = "✓ Success";
+    setTimeout(() => {
+      modals2.classList.add("hidden");
+      modals2.classList.remove("flex");
+    }, 1500);
   } catch (err) {
     borrow.disabled = false;
     borrow.innerHTML = "Failed";
@@ -345,7 +351,11 @@ repay.onclick = async () => {
         <span>Repaying...</span>
       `;
     await repayAsset(selectedSymbol, amt);
-    repay.textContent = "Success";
+    repay.textContent = "✓ Success";
+    setTimeout(() => {
+      modals3.classList.add("hidden");
+      modals3.classList.remove("flex");
+    }, 1500);
   } catch (err) {
     repay.innerHTML = "Failed";
   } finally {
@@ -373,7 +383,11 @@ if (withdraw) {
         <span>Withdrawing...</span>
       `;
       await withdrawETH(eth);
-      withdraw.textContent = "Sucess";
+      withdraw.textContent = "✓ Sucess";
+      setTimeout(() => {
+        modals4.classList.add("hidden");
+        modals4.classList.remove("flex");
+      }, 1500);
     } catch (err) {
       withdraw.textContent = "Failed";
       // alert("Withdrawal failed: " + err.message);
