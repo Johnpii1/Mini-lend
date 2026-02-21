@@ -558,9 +558,9 @@ async function updateUI() {
       stakedAsset,
     });
 
-    if (formatEther(stakedAmount) > 0) {
-      document.getElementById("withdrawBtn").disabled = true; // Disable withdraw buttn if collateral isnt repaid
-    }
+    // if (formatEther(stakedAmount) > 0) {
+    //   document.getElementById("withdrawBtn").disabled = true; // Disable withdraw buttn if collateral isnt repaid
+    // }
 
     // getting user debt in usd...
     console.log("Fetching USD prices for user position...");
