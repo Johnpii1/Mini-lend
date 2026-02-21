@@ -18,12 +18,17 @@ import { linkinfo } from "./linkAbi.js";
 const connectHeaderBtn = document.getElementById("headerConnect");
 const modalActionBtn = document.getElementById("connectWalletBtn");
 const tokenMetaCache = {}; // simple in-memory cache for token metadata
+const _liquidationThreshold = 0.7; // example threshold, adjust as needed
 let walletClient;
 let publicClient;
 let userAddress = null;
 let miniLend;
 let chainId = null;
-let currentDebtWei = 0n;
+
+// Hide all first
+document.getElementById("safeStatus").classList.add("hidden");
+document.getElementById("warningStatus").classList.add("hidden");
+document.getElementById("liquidateStatus").classList.add("hidden");
 
 // shorten address
 export function shortenAddress(addr) {
@@ -207,7 +212,6 @@ async function executeMiniLendTx({
   functionName,
   args = [],
   value = undefined,
-  tokenSymbol = null,
 }) {
   try {
     if (!miniLend) {
@@ -238,7 +242,7 @@ async function executeMiniLendTx({
       throw new Error("Transaction failed");
     }
 
-    updateUI(tokenSymbol);
+    updateUI();
     return receipt;
   } catch (error) {
     console.error("Transaction error:", error);
@@ -469,7 +473,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log("Initializing DApp...");
 
   // 1. Check if wallet is already connected
-  console.log(formatEther(104489248056523438n));
+  // console.log(formatEther(104489248056523438n));
 
   await checkExistingConnection();
 });
@@ -495,8 +499,10 @@ async function checkExistingConnection() {
 
     loadContract(); // initialize clients and contract
     console.log(userAddress);
-    console.log("Detting user debt", getUserDebt(userAddress));
-    updateUI();
+
+    await updateUI();
+    console.log("Processing user position ...");
+    getUserPosition(userAddress);
 
     const userBalance = await publicClient.getBalance({
       address: userAddress,
@@ -521,18 +527,19 @@ async function checkExistingConnection() {
       `${Number(formatEther(userBalance)).toFixed(3)} ETH`;
   }
 
+  console.log("User address after checkExistingConnection:", userAddress);
   // if (window.location.pathname.endsWith("page1.html")) {
   //   location.href = "index.html";
   // }
 }
 
-async function updateUI(tokenSymbol = null) {
+async function updateUI() {
   const accounts = await window.ethereum.request({
     method: "eth_accounts",
   });
 
   userAddress = accounts.length > 0 ? accounts[0] : null;
-  console.log("UI user address:", userAddress);
+  // console.log("UI user address:", userAddress);
 
   if (!userAddress || !publicClient) {
     await loadContract();
@@ -541,42 +548,67 @@ async function updateUI(tokenSymbol = null) {
   }
 
   try {
-    const user = await publicClient.readContract({
-      address: CONTRACTS.sepolia.myContract.address,
-      abi: CONTRACTS.sepolia.myContract.abi,
-      functionName: "getUser",
-      args: [userAddress],
+    const userInfo = await getUserPosition(userAddress);
+    // const usdInfo = await getUserPositionInUSD(userAddress);
+
+    const stakedAmount = userInfo.stakedAmount;
+    const debtAmount = userInfo.debtAmount;
+    const debtAsset = userInfo.debtAsset;
+    const stakedAsset = userInfo.stakedAsset;
+    console.log("User position details:", {
+      stakedAmount: formatEther(stakedAmount),
+      debtAmount: formatEther(debtAmount),
+      debtAsset,
+      stakedAsset,
     });
-    // destructure tuple
-    const [, stakedAmount, ,] = user;
+
+    const debtInUsd = await getUsdPrice(debtAsset, debtAmount);
+    const collateralInUsd = await getUsdPrice(stakedAsset, stakedAmount);
+    const healthFactor = calculateHealthFactor(
+      _liquidationThreshold,
+      Number(collateralInUsd.replace(/,/g, "")),
+      Number(debtInUsd.replace(/,/g, "")),
+    );
+    console.log("Calculated health factor:", healthFactor);
+    updateHealthStatus(healthFactor);
+
+    console.log("User position in USD:", {
+      debtInUsd,
+      collateralInUsd,
+    });
 
     document.getElementById("stakedEth").textContent =
-      formatEther(stakedAmount);
+      `${formatEther(stakedAmount)} ETH ($${collateralInUsd})`;
+
+    document.getElementById("collateral").textContent =
+      `${formatEther(stakedAmount)} ETH ($${collateralInUsd})`;
+    // `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol}___${availableBorrowUsdPrice} USD`;
 
     // Getting available borrow amount in USD
-    if (tokenSymbol) {
-      const selectedToken = TOKENS[tokenSymbol];
-      const selectedTokenAddress = selectedToken.address;
+    for (const symbol in TOKENS) {
+      const token = TOKENS[symbol];
+      const tokenAddress = token.address;
+      if (tokenAddress === debtAsset) {
+        const tokenSymbol = symbol;
+        const availableBorrowUsd = await availableToBorrow(
+          userAddress,
+          tokenAddress,
+        );
+        const avail = parseEther(availableBorrowUsd.toString());
 
-      const availableBorrowUsd = await availableToBorrow(
-        userAddress,
-        selectedTokenAddress,
-      );
-      const avail = parseEther(availableBorrowUsd.toString());
+        const availableBorrowUsdPrice = await getUsdPrice(tokenAddress, avail);
 
-      const availableBorrowUsdPrice = await getUsdPrice(
-        selectedTokenAddress,
-        avail,
-      );
+        if (availableBorrowUsd === 0) {
+          document.getElementById("connectWalletBtn2").disabled = true; // Disable borrow button if nothing is available to borrow
+        }
+        // update debt and available borrow in UI
+        document.getElementById("debt").textContent =
+          `${formatEther(debtAmount)} ${tokenSymbol} ($${debtInUsd})`;
+        document.getElementById("available").textContent =
+          `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol} ($${availableBorrowUsdPrice})`;
 
-      console.log("Available to borrow (LINK):", availableBorrowUsd);
-
-      if (availableBorrowUsd === 0) {
-        document.getElementById("connectWalletBtn2").disabled = true; // Disable borrow button if nothing is available to borrow
+        break;
       }
-
-      document.getElementById("borrowLimit").textContent =
-        `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol}___${availableBorrowUsdPrice} USD`;
     }
   } catch (err) {
     console.error("Error updating UI:", err);
@@ -584,7 +616,7 @@ async function updateUI(tokenSymbol = null) {
 }
 
 // ========== Get USER DEBT ========
-export async function getUserDebt(userAddress) {
+export async function getUserPosition(userAddress) {
   const accounts = await window.ethereum.request({
     method: "eth_accounts",
   });
@@ -607,18 +639,36 @@ export async function getUserDebt(userAddress) {
       args: [userAddress],
     });
 
-    const [, , , debtAmount] = user;
-    console.log(debtAmount);
+    const [stakedAsset, stakedAmount, debtAsset, debtAmount] = user;
+    console.log(debtAmount, stakedAsset, stakedAmount, debtAsset);
 
-    return debtAmount; // bigint
+    return { stakedAsset, stakedAmount, debtAsset, debtAmount }; // bigint
   } catch (err) {
     console.error("unable to get user info:", err);
   }
 }
 
+export async function getUserPositionInUSD(userAddress) {
+  try {
+    const user = await getUserPosition(userAddress);
+    const debtAmount = user.debtAmount;
+    const debtAsset = user.debtAsset;
+    const stakedAmount = user.stakedAmount;
+    const stakedAsset = user.stakedAsset;
+
+    const debtInUsd = await getUsdPrice(debtAsset, debtAmount);
+    const collateralInUsd = await getUsdPrice(stakedAsset, stakedAmount);
+    return { debtInUsd, collateralInUsd };
+  } catch (err) {
+    console.error("unable to get user debt in USD:", err);
+  }
+}
+
 export async function loadRepayMax(user, whichToken) {
   try {
-    currentDebtWei = await getUserDebt(user);
+    const userInfo = await getUserPosition(user);
+
+    const currentDebtWei = userInfo.debtAmount;
 
     const token = TOKENS[whichToken];
     if (!token) throw new Error("Unsupported token");
@@ -654,3 +704,28 @@ document.getElementById("repayMaxBtn").onclick = async () => {
   document.getElementById("repayMaxDisplay").textContent =
     "Debt: " + Number(formatted).toFixed(4);
 };
+
+function updateHealthStatus(healthFactor) {
+  // Show appropriate one
+  if (healthFactor >= 2) {
+    document.getElementById("safeStatus").classList.remove("hidden");
+  } else if (healthFactor >= 1 && healthFactor < 2) {
+    document.getElementById("safeStatus").classList.add("hidden");
+    document.getElementById("warningStatus").classList.remove("hidden");
+  } else {
+    document.getElementById("safeStatus").classList.add("hidden");
+    document.getElementById("warningStatus").classList.add("hidden");
+    document.getElementById("liquidateStatus").classList.remove("hidden");
+    document.getElementById("liquidationNote").classList.remove("hidden");
+  }
+}
+
+function calculateHealthFactor(
+  _liquidationThreshold,
+  collateralValue,
+  debtValue,
+) {
+  if (debtValue === 0) return Infinity; // no debt means infinitely healthy
+  const healthFactor = (_liquidationThreshold * collateralValue) / debtValue;
+  return healthFactor;
+}

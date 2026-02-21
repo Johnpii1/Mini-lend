@@ -216,14 +216,12 @@ document
   .getElementById("USER_DISCONNET")
   .addEventListener("click", async () => {
     await disconnectWallet();
-    // location.href = "index.html"; // optional: redirect to home after disconnect
   });
 
 document
   .getElementById("disconnectMobile")
   .addEventListener("click", async () => {
     await disconnectWallet();
-    location.href = "index.html"; // optional: redirect to home after disconnect
   });
 
 // Borrow and Repay and withdraw

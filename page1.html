@@ -523,47 +523,57 @@
                 <div class="flex flex-col md:gap-2">
                     <div
                         class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-                        <p>Borrow Limit</p>
-                        <p id="borrowLimit">$0</p>
+                        <p>Collateral</p>
+                        <p id="collateral">0 ETH ($0)</p>
                     </div>
 
 
                     <div
                         class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-                        <p>Borrowed</p>
-                        <p id="borrowed">$0</p>
+                        <p>Debt</p>
+                        <p id="debt">0 USDC/LINK</p>
+                    </div>
+
+
+                    <div
+                        class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
+                        <p>Available</p>
+                        <p id="available">0 USDC/LINK</p>
                     </div>
 
 
                     <div
                         class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
                         <p>Health</p>
-                        <p id="healthWarning">Warning </p>
-                        <div class="w-[18px] h-[17px] rounded-full bg-[#D79A17]"></div>
 
-                        <!-- <p id="healthsafe">Safe </p>
-                    <div class="w-[18px] h-[17px] rounded-full bg-[#4E8141]"></div>
+                        <!--safe-->
+                          <!-- Safe Status -->
+                          <div id="safeStatus" class="flex items-center gap-2">
+                            <p id="healthsafe">Safe</p>
+                            <div class="w-[18px] h-[17px] rounded-full bg-[#4E8141]"></div>
+                          </div>
 
+                                             <!-- Warning Status -->
+                          <div id="warningStatus" class="flex items-center gap-2 hidden">
+                            <p id="healthWarning">Warning</p>
+                            <div class="w-[18px] h-[17px] rounded-full bg-[#D79A17]"></div>
+                          </div>
 
-                    <p id="healthLiquidateable">Liquidatable</p>
-                    <div class="w-[18px] h-[17px] rounded-full bg-[#FF0000]"></div> -->
+                          <!-- Liquidatable Status -->
+                          <div id="liquidateStatus" class="flex items-center gap-2 hidden">
+                            <p id="healthLiquidateable">Liquidatable</p>
+                            <div class="w-[18px] h-[17px] rounded-full bg-[#FF0000]"></div>
+                          </div>
+                        </div>
 
                     </div>
 
 
-
-                    <div
-                        class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
-                        <p>Utilization</p>
-                        <p id="Utilization">0%</p>
-                    </div>
-
-
-                    <div
+                    <!-- div
                         class="logo flex justify-between items-center text-[#0D7328] px-[3rem] text-[14px] md:px-[10rem]">
                         <p>Liquidation at</p>
                         <p id="liquidation">$0</p>
-                    </div>
+                    </div-->
                 </div>
 
 
@@ -589,8 +599,7 @@
 
                         <!--change this to input -->
 
-                        <p id="stakedEth" class="ethInput no-spinner bg-transparent text-right outline-none w-[100px]">0
-                        </p>
+                        <p id="stakedEth" class="ethInput no-spinner bg-transparent text-right outline-none w-[100px]">0</p>
 
 
                     </div>
@@ -668,7 +677,7 @@
 
 
         <!---LIQIDITY NOTE-->
-        <div class="hidden bg-[#FE0909] h-fit w-fit rounded-[10px] m-2 py-2">
+        <div id="liquidationNote" class="hidden bg-[#FE0909] h-fit w-fit rounded-[10px] m-2 py-2">
 
             <!--DANGER ICON-->
             <div class="flex justify-center items-center">
