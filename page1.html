@@ -467,7 +467,7 @@
 
         <!--box 4-->
         <div class="flex items-center justify-center w-[98px] h-[25px] bg-[#4E8141] rounded-[14px]">
-            <button class="Modaled4 cursor-pointer logo text-black font-semibold text-[14px]">Withdraw</button>
+            <button id="withdrawBtn" class="Modaled4 cursor-pointer logo text-black font-semibold text-[14px]">Withdraw</button>
         </div>
 
 
@@ -677,40 +677,50 @@
 
 
         <!---LIQIDITY NOTE-->
-        <div id="liquidationNote" class="hidden bg-[#FE0909] h-fit w-fit rounded-[10px] m-2 py-2">
-
-            <!--DANGER ICON-->
-            <div class="flex justify-center items-center">
-                <i class="bi bi-exclamation-triangle text-4xl"></i>
-            </div>
-
-            <!--HEADER-->
-            <h3 class="logo text-[#FFFFFF] text-[14px] px-2">POSITION AT RISK OF LIQUIDATION</h3>
-
-            <!--NOTED-->
-            <p class="logo text-[#FFFFFF] text-[12px] px-2 py-2">Repay or add collateral immediately</p>
-
-
-
-            <div class="flex justify-between items-center gap-2 px-2">
-                <div class="flex justify-center items-center">
-                    <button
-                        class="Modaled1 logo  w-[100px] h-[25px] bg-[#6DD054] text-black text-[12px] rounded-[14px] font-semibold md:h-[28px]">
-                        Add ETH
-                    </button>
+                    <!-- LIQUIDATION WARNING MODAL -->
+                <div id="liquidationModal"
+                    class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center z-50">
+                    
+                    <!-- MODAL BOX -->
+                    <div class="bg-[#FE0909] rounded-2xl p-6 w-[90%] max-w-sm text-white relative">
+                    
+                        <!-- CLOSE BUTTON -->
+                        <button id="closeLiquidationModal"
+                            class="absolute top-3 right-3 text-white text-lg">
+                            ✕
+                        </button>
+                    
+                        <!-- ICON -->
+                        <div class="flex justify-center mb-3">
+                            <i class="bi bi-exclamation-triangle text-4xl text-white"></i>
+                        </div>
+                    
+                        <!-- HEADER -->
+                        <h3 class="logo text-sm text-center font-semibold mb-2">
+                            POSITION AT RISK OF LIQUIDATION
+                        </h3>
+                    
+                        <!-- MESSAGE -->
+                        <p class="logo text-xs text-center mb-6">
+                            Repay or add collateral immediately
+                        </p>
+                    
+                        <!-- BUTTONS -->
+                        <div class="flex justify-center gap-3">
+                            <button 
+                                class=" Modaled1 logo w-[110px] bg-[#6DD054] text-black py-2 rounded-lg font-semibold hover:bg-[#5bb543] transition">
+                                Add ETH
+                            </button>
+                        
+                            <button 
+                                class="Modaled3 logo w-[110px] bg-[#6DD054] text-black py-2 rounded-lg font-semibold hover:bg-[#5bb543] transition">
+                                Repay
+                            </button>
+                        </div>
+                    
+                    </div>
                 </div>
 
-
-                <div class="flex justify-center items-center">
-                    <button
-                        class="logo  w-[100px] h-[25px] bg-[#6DD054] text-black text-[12px] rounded-[14px] font-semibold md:h-[28px]">
-                        Repay
-                    </button>
-                </div>
-
-            </div>
-
-        </div>
 
 
 

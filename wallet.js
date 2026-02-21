@@ -14,6 +14,7 @@ import { setModalState, MODAL_STATE, closeModal } from "./modalController.js";
 import { EXPECTED_CHAIN } from "./config.js";
 import { CONTRACTS, TOKENS } from "./minilendContract.js";
 import { linkinfo } from "./linkAbi.js";
+import { updateHealthStatus } from "./javascript2.js";
 
 const connectHeaderBtn = document.getElementById("headerConnect");
 const modalActionBtn = document.getElementById("connectWalletBtn");
@@ -237,7 +238,7 @@ async function executeMiniLendTx({
       throw new Error("Transaction failed");
     }
 
-    updateUI();
+    await updateUI();
     return receipt;
   } catch (error) {
     console.error("Transaction error:", error);
@@ -557,7 +558,19 @@ async function updateUI() {
       stakedAsset,
     });
 
+    if (formatEther(stakedAmount) > 0) {
+      document.getElementById("withdrawBtn").disabled = true; // Disable withdraw buttn if collateral isnt repaid
+    }
+
+    // getting user debt in usd...
+    console.log("Fetching USD prices for user position...");
+    if (
+      debtAsset === "0x0000000000000000000000000000000000000000" ||
+      debtAmount === 0n
+    )
+      return;
     const debtInUsd = await getUsdPrice(debtAsset, debtAmount);
+    console.log("fetching collateral value in USD...");
     const collateralInUsd = await getUsdPrice(stakedAsset, stakedAmount);
     const healthFactor = calculateHealthFactor(
       _liquidationThreshold,
@@ -577,13 +590,17 @@ async function updateUI() {
 
     document.getElementById("collateral").textContent =
       `${formatEther(stakedAmount)} ETH ($${collateralInUsd})`;
-    // `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol}___${availableBorrowUsdPrice} USD`;
 
     // Getting available borrow amount in USD
     for (const symbol in TOKENS) {
       const token = TOKENS[symbol];
       const tokenAddress = token.address;
       if (tokenAddress === debtAsset) {
+        if (
+          debtAsset === "0x0000000000000000000000000000000000000000" ||
+          debtAmount === 0n
+        )
+          break;
         const tokenSymbol = symbol;
         const availableBorrowUsd = await availableToBorrow(
           userAddress,
@@ -595,6 +612,7 @@ async function updateUI() {
 
         if (availableBorrowUsd === 0) {
           document.getElementById("connectWalletBtn2").disabled = true; // Disable borrow button if nothing is available to borrow
+          document.getElementsByClassName("Modaled4").disabled = true; // Disable withdraw buttn if collateral isnt repaid
         }
         // update debt and available borrow in UI
         document.getElementById("debt").textContent =
@@ -699,21 +717,6 @@ document.getElementById("repayMaxBtn").onclick = async () => {
   document.getElementById("repayMaxDisplay").textContent =
     "Debt: " + Number(formatted).toFixed(4);
 };
-
-function updateHealthStatus(healthFactor) {
-  // Show appropriate one
-  if (healthFactor >= 2) {
-    document.getElementById("safeStatus").classList.remove("hidden");
-  } else if (healthFactor >= 1 && healthFactor < 2) {
-    document.getElementById("safeStatus").classList.add("hidden");
-    document.getElementById("warningStatus").classList.remove("hidden");
-  } else {
-    document.getElementById("safeStatus").classList.add("hidden");
-    document.getElementById("warningStatus").classList.add("hidden");
-    document.getElementById("liquidateStatus").classList.remove("hidden");
-    document.getElementById("liquidationNote").classList.remove("hidden");
-  }
-}
 
 function calculateHealthFactor(
   _liquidationThreshold,

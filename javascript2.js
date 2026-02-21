@@ -9,9 +9,34 @@ import {
 
 // FOR HEALTH FACTOR
 // Hide all first
-document.getElementById("safeStatus").classList.add("hidden");
-document.getElementById("warningStatus").classList.add("hidden");
-document.getElementById("liquidateStatus").classList.add("hidden");
+const safe = document.getElementById("safeStatus");
+const warning = document.getElementById("warningStatus");
+const trigger = document.getElementById("liquidateStatus");
+const liquidation = document.getElementById("liquidationModal");
+const closeLiquidation = document.getElementById("closeLiquidationModal");
+
+export function updateHealthStatus(healthFactor) {
+  // Show appropriate one
+  if (healthFactor >= 2) {
+    warning.classList.add("hidden");
+    trigger.classList.add("hidden");
+    safe.classList.remove("hidden");
+  } else if (healthFactor >= 1 && healthFactor < 2) {
+    safe.classList.add("hidden");
+    warning.classList.remove("hidden");
+  } else {
+    safe.classList.add("hidden");
+    warning.classList.add("hidden");
+    trigger.classList.remove("hidden");
+    liquidation.classList.remove("hidden");
+    liquidation.classList.add("flex");
+  }
+}
+
+closeLiquidation.addEventListener("click", () => {
+  liquidation.classList.add("hidden");
+  liquidation.classList.remove("flex");
+});
 
 //FOR MODULAR1
 const openBtn1 = document.querySelectorAll(".Modaled1");
@@ -22,6 +47,8 @@ openBtn1.forEach((bnt) => {
   bnt.addEventListener("click", () => {
     modals1.classList.remove("hidden");
     modals1.classList.add("flex");
+    liquidation.classList.add("hidden");
+    liquidation.classList.remove("flex");
   });
 });
 
@@ -70,6 +97,8 @@ openBtn3.forEach((bnt) => {
   bnt.addEventListener("click", () => {
     modals3.classList.remove("hidden");
     modals3.classList.add("flex");
+    liquidation.classList.add("hidden");
+    liquidation.classList.remove("flex");
   });
 });
 
