@@ -542,22 +542,19 @@ async function updateUI() {
   });
 
   userAddress = accounts.length > 0 ? accounts[0] : null;
-  // console.log("UI user address:", userAddress);
 
   if (!userAddress || !publicClient) {
     await loadContract();
-    console.log("Public client:", publicClient);
-    console.log("User address after connection:", userAddress);
   }
 
   try {
     const userInfo = await getUserPosition(userAddress);
-    // const usdInfo = await getUserPositionInUSD(userAddress);
 
     const stakedAmount = userInfo.stakedAmount;
     const debtAmount = userInfo.debtAmount;
     const debtAsset = userInfo.debtAsset;
     const stakedAsset = userInfo.stakedAsset;
+
     console.log("User position details:", {
       stakedAmount: formatEther(stakedAmount),
       debtAmount: formatEther(debtAmount),
@@ -565,32 +562,55 @@ async function updateUI() {
       stakedAsset,
     });
 
-    // if (formatEther(stakedAmount) > 0) {
-    //   document.getElementById("withdrawBtn").disabled = true; // Disable withdraw buttn if collateral isnt repaid
-    // }
+    // -----------------------------
+    // USD VALUES (SAFE HANDLING)
+    // -----------------------------
 
-    // getting user debt in usd...
-    console.log("Fetching USD prices for user position...");
+    // Always calculate collateral USD (if user has staked)
+    let collateralInUsd = "0.00";
+
+    if (stakedAmount > 0n) {
+      collateralInUsd = await getUsdPrice(stakedAsset, stakedAmount);
+    }
+
+    // Only calculate debt USD if valid
+    let debtInUsd = "0.00";
+
     if (
-      debtAsset === "0x0000000000000000000000000000000000000000" ||
-      debtAmount === 0n
-    )
-      return;
-    const debtInUsd = await getUsdPrice(debtAsset, debtAmount);
-    console.log("fetching collateral value in USD...");
-    const collateralInUsd = await getUsdPrice(stakedAsset, stakedAmount);
-    const healthFactor = calculateHealthFactor(
-      _liquidationThreshold,
-      Number(collateralInUsd.replace(/,/g, "")),
-      Number(debtInUsd.replace(/,/g, "")),
-    );
-    console.log("Calculated health factor:", healthFactor);
+      debtAsset !== "0x0000000000000000000000000000000000000000" &&
+      debtAmount > 0n
+    ) {
+      debtInUsd = await getUsdPrice(debtAsset, debtAmount);
+    }
+
+    // -----------------------------
+    // HEALTH FACTOR (SAFE)
+    // -----------------------------
+
+    let healthFactor = Infinity; // default to infinitely healthy
+
+    const debtUsdNumber = Number(debtInUsd.replace(/,/g, ""));
+    const collateralUsdNumber = Number(collateralInUsd.replace(/,/g, ""));
+
+    if (debtUsdNumber > 0) {
+      healthFactor = calculateHealthFactor(
+        _liquidationThreshold,
+        collateralUsdNumber,
+        debtUsdNumber,
+      );
+    }
+
     updateHealthStatus(healthFactor);
 
     console.log("User position in USD:", {
       debtInUsd,
       collateralInUsd,
+      healthFactor,
     });
+
+    // -----------------------------
+    // UPDATE UI (ALWAYS)
+    // -----------------------------
 
     document.getElementById("stakedEth").textContent =
       `${formatEther(stakedAmount)} ETH ($${collateralInUsd})`;
@@ -598,36 +618,48 @@ async function updateUI() {
     document.getElementById("collateral").textContent =
       `${formatEther(stakedAmount)} ETH ($${collateralInUsd})`;
 
-    // Getting available borrow amount in USD
-    for (const symbol in TOKENS) {
-      const token = TOKENS[symbol];
-      const tokenAddress = token.address;
-      if (tokenAddress === debtAsset) {
-        if (
-          debtAsset === "0x0000000000000000000000000000000000000000" ||
-          debtAmount === 0n
-        )
+    // Default debt display (empty state)
+    document.getElementById("debt").textContent = `0.0 ($0.00)`;
+
+    document.getElementById("available").textContent = `0.0 ($0.00)`;
+
+    // -----------------------------
+    // AVAILABLE BORROW LOGIC
+    // -----------------------------
+
+    if (debtAsset !== "0x0000000000000000000000000000000000000000") {
+      for (const symbol in TOKENS) {
+        const token = TOKENS[symbol];
+        const tokenAddress = token.address;
+
+        if (tokenAddress === debtAsset) {
+          const tokenSymbol = symbol;
+
+          const availableBorrowUsd = await availableToBorrow(
+            userAddress,
+            tokenAddress,
+          );
+
+          const avail = parseEther(availableBorrowUsd.toString());
+
+          let availableBorrowUsdPrice = "0.00";
+
+          if (availableBorrowUsd > 0) {
+            availableBorrowUsdPrice = await getUsdPrice(tokenAddress, avail);
+          }
+
+          if (availableBorrowUsd === 0) {
+            document.getElementById("connectWalletBtn2").disabled = true;
+          }
+
+          document.getElementById("debt").textContent =
+            `${formatEther(debtAmount)} ${tokenSymbol} ($${debtInUsd})`;
+
+          document.getElementById("available").textContent =
+            `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol} ($${availableBorrowUsdPrice})`;
+
           break;
-        const tokenSymbol = symbol;
-        const availableBorrowUsd = await availableToBorrow(
-          userAddress,
-          tokenAddress,
-        );
-        const avail = parseEther(availableBorrowUsd.toString());
-
-        const availableBorrowUsdPrice = await getUsdPrice(tokenAddress, avail);
-
-        if (availableBorrowUsd === 0) {
-          document.getElementById("connectWalletBtn2").disabled = true; // Disable borrow button if nothing is available to borrow
-          document.getElementsByClassName("Modaled4").disabled = true; // Disable withdraw buttn if collateral isnt repaid
         }
-        // update debt and available borrow in UI
-        document.getElementById("debt").textContent =
-          `${formatEther(debtAmount)} ${tokenSymbol} ($${debtInUsd})`;
-        document.getElementById("available").textContent =
-          `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol} ($${availableBorrowUsdPrice})`;
-
-        break;
       }
     }
   } catch (err) {
