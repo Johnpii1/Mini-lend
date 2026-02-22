@@ -536,6 +536,24 @@ async function checkExistingConnection() {
   // }
 }
 
+async function userEthUsd() {
+  const accounts = await window.ethereum.request({
+    method: "eth_accounts",
+  });
+
+  userAddress = accounts.length > 0 ? accounts[0] : null;
+  try {
+    const userInfo = await getUserPosition(userAddress);
+
+    const stakedAmount = userInfo.stakedAmount;
+    const stakedAsset = userInfo.stakedAsset;
+    collateralInUsd = await getUsdPrice(stakedAsset, stakedAmount);
+    // for every occurances of eth replace the price with the usd price
+  } catch (err) {
+    console.error("unable to get user debt in USD:", err);
+  }
+}
+
 async function updateUI() {
   const accounts = await window.ethereum.request({
     method: "eth_accounts",
@@ -785,4 +803,61 @@ export function updateHealthStatus(healthFactor) {
     liquidation.classList.remove("hidden");
     liquidation.classList.add("flex");
   }
+}
+
+// populate activity log
+// const logs = await publicClient.getLogs({
+//   address: contractAddress,
+//   event: parsedAbiItem("event Borrowed(address indexed user, uint256 amount)"),
+// });
+
+function saveActivity(type, amount, status, txHash) {
+  const activity = JSON.parse(localStorage.getItem("activity")) || [];
+
+  activity.unshift({
+    type,
+    amount,
+    status,
+    txHash,
+    timestamp: Date.now(),
+  });
+
+  localStorage.setItem("activity", JSON.stringify(activity));
+}
+
+function renderActivity() {
+  const activityList = document.getElementById("activityList");
+  const activity = JSON.parse(localStorage.getItem("activity")) || [];
+
+  activityList.innerHTML = "";
+
+  if (activity.length === 0) {
+    activityList.innerHTML = `
+      <p class="logo text-center text-sm text-gray-500">
+        No activity yet
+      </p>
+    `;
+    return;
+  }
+
+  activity.forEach((item) => {
+    activityList.innerHTML += `
+      <div class="bg-white rounded-lg p-3 flex justify-between items-center cursor-pointer"
+           onclick="window.open('https://sepolia.etherscan.io/tx/${item.txHash}', '_blank')">
+        <div>
+            <p class="logo text-sm font-semibold">${item.type}</p>
+            <p class="logo text-xs text-gray-500">${item.amount}</p>
+        </div>
+        <span class="logo text-xs font-semibold ${
+          item.status === "Success"
+            ? "text-green-600"
+            : item.status === "Pending"
+              ? "text-yellow-600"
+              : "text-red-600"
+        }">
+          ${item.status}
+        </span>
+      </div>
+    `;
+  });
 }
