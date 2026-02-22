@@ -439,6 +439,6 @@ ethInputs.forEach((input, index) => {
     }
 
     const usd = eth * ETH_PRICE;
-    usdOutputs[index].textContent = "$" + usd.toFixed(2);
+    usdOutputs[index].textContent = usd.toFixed(2) + " USD";
   });
 });

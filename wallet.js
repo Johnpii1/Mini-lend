@@ -354,6 +354,7 @@ async function getUsdPrice(token, amount) {
   return formattedUsd;
 }
 
+// get latest price from contract (for availableToBorrow calculation)
 async function getLatestPrice(token) {
   // call contract
   const price = await publicClient.readContract({
@@ -810,6 +811,7 @@ export function updateHealthStatus(healthFactor) {
     safe.classList.remove("hidden");
   } else if (healthFactor >= 1 && healthFactor < 2) {
     safe.classList.add("hidden");
+    trigger.classList.add("hidden");
     warning.classList.remove("hidden");
   } else {
     safe.classList.add("hidden");
