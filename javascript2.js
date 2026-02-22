@@ -331,6 +331,7 @@ borrow.onclick = async () => {
   // this.disabled = true;
 
   try {
+    console.log("Borrowing asset...");
     borrow.innerHTML = `
         ${spinner}
         <span>Borrowing...</span>
@@ -346,7 +347,7 @@ borrow.onclick = async () => {
     }, 1500);
   } catch (err) {
     borrow.disabled = false;
-    borrow.innerHTML = "Failed";
+    borrow.innerHTML = err.shortMessage || "Failed";
   } finally {
     setTimeout(() => {
       borrow.disabled = false;
