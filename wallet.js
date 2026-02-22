@@ -354,6 +354,21 @@ async function getUsdPrice(token, amount) {
   return formattedUsd;
 }
 
+async function getLatestPrice(token) {
+  // call contract
+  const price = await publicClient.readContract({
+    address: CONTRACTS.sepolia.myContract.address,
+    abi: CONTRACTS.sepolia.myContract.abi,
+    functionName: "getLatestPrice",
+    args: [token],
+  });
+
+  // Store in localStorage as backup/default
+  localStorage.setItem(`lastPrice_${token}`, price.toString());
+
+  return Number(formatUnits(price, 18));
+}
+
 async function availableToBorrow(user, token) {
   const available = await publicClient.readContract({
     address: CONTRACTS.sepolia.myContract.address,
