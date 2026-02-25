@@ -274,12 +274,22 @@ document
   .getElementById("USER_DISCONNET")
   .addEventListener("click", async () => {
     await disconnectWallet();
+    if (window.location.pathname.endsWith("page1.html")) {
+      location.href = "index.html";
+    }
+    console.log("Permissions revoked");
+    location.href = "index.html";
   });
 
 document
   .getElementById("disconnectMobile")
   .addEventListener("click", async () => {
     await disconnectWallet();
+    if (window.location.pathname.endsWith("page1.html")) {
+      location.href = "index.html";
+    }
+    console.log("Permissions revoked");
+    location.href = "index.html";
   });
 
 // Borrow and Repay and withdraw
