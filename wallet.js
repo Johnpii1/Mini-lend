@@ -649,6 +649,7 @@ async function updateUI() {
 
     document.getElementById("collateral").textContent =
       `${formatEther(stakedAmount)} ETH ($${collateralInUsd})`;
+    document.getElementById("usdOutput").textContent = `$${collateralInUsd}`;
 
     // Default debt display (empty state)
     document.getElementById("debt").textContent = `0.0 ($0.00)`;
@@ -686,6 +687,12 @@ async function updateUI() {
 
           document.getElementById("debt").textContent =
             `${formatEther(debtAmount)} ${tokenSymbol} ($${debtInUsd})`;
+
+          document.getElementById("debt1").textContent =
+            `${formatEther(debtAmount)} ${tokenSymbol}`;
+          document.getElementById("debtUsdValue").textContent = `$${debtInUsd}`;
+
+          document.getElementById("asset").textContent = tokenSymbol;
 
           document.getElementById("available").textContent =
             `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol} ($${availableBorrowUsdPrice})`;
