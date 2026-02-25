@@ -124,13 +124,7 @@ async function connectWallet() {
     userAddress = addresses[0];
 
     connectHeaderBtn.innerText = shortenAddress(userAddress);
-
-    console.log("Checking existing wallet connection...");
-    console.log("walletClient:", walletClient);
-    console.log("publicClient:", publicClient);
-    console.log("userAddress:", userAddress);
-    console.log("chainId:", chainId);
-
+    updateUI();
     updateInfo(userAddress, walletClient, publicClient, chainId, miniLend);
     return { miniLend, walletClient, userAddress };
   } catch (err) {
