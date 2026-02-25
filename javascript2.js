@@ -442,6 +442,7 @@ const ethInputs = document.querySelectorAll(".ethInput");
 const usdOutputs = document.querySelectorAll(".usdOutput");
 const debtUsdOutputs = document.querySelectorAll(".repayUsdValue");
 const debtInputs = document.querySelectorAll(".borrowInput");
+const repayInput = document.getElementById("repayInput");
 
 ethInputs.forEach((input, index) => {
   input.addEventListener("input", () => {
@@ -460,10 +461,16 @@ ethInputs.forEach((input, index) => {
 debtInputs.forEach((input, index) => {
   input.addEventListener("input", () => {
     const debtAmount = Number(input.value);
+    const maxrepay = Number(repayInput.value);
 
     if (!debtAmount || !debtPrice) {
       debtUsdOutputs[index].textContent = "$0";
       return;
+    }
+
+    if (maxrepay) {
+      const debtUsd = maxrepay * debtPrice;
+      debtUsdOutputs[index].textContent = debtUsd.toFixed(2) + " USD";
     }
 
     const debtUsd = debtAmount * debtPrice;
