@@ -25,6 +25,7 @@ let publicClient;
 let userAddress = null;
 let miniLend;
 export let ETH_PRICE = null;
+export let debtPrice = null;
 let chainId = null;
 
 // Hide all first
@@ -616,6 +617,8 @@ async function updateUI() {
       debtAmount > 0n
     ) {
       debtInUsd = await getUsdPrice(debtAsset, debtAmount);
+      debtPrice = await getLatestPrice(debtAsset);
+      console.log("Debt asset price updated:", debtPrice);
     }
 
     // -----------------------------

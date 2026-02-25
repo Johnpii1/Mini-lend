@@ -6,6 +6,7 @@ import {
   stakeETH,
   spinner,
   ETH_PRICE,
+  debtPrice,
 } from "./wallet.js";
 
 // FOR HEALTH FACTOR
@@ -439,6 +440,8 @@ if (withdraw) {
 
 const ethInputs = document.querySelectorAll(".ethInput");
 const usdOutputs = document.querySelectorAll(".usdOutput");
+const debtUsdOutputs = document.querySelectorAll(".repayUsdValue");
+const debtInputs = document.querySelectorAll(".borrowInput");
 
 ethInputs.forEach((input, index) => {
   input.addEventListener("input", () => {
@@ -451,5 +454,19 @@ ethInputs.forEach((input, index) => {
 
     const usd = eth * ETH_PRICE;
     usdOutputs[index].textContent = usd.toFixed(2) + " USD";
+  });
+});
+
+debtInputs.forEach((input, index) => {
+  input.addEventListener("input", () => {
+    const debtAmount = Number(input.value);
+
+    if (!debtAmount || !debtPrice) {
+      debtUsdOutputs[index].textContent = "$0";
+      return;
+    }
+
+    const debtUsd = debtAmount * debtPrice;
+    debtUsdOutputs[index].textContent = debtUsd.toFixed(2) + " USD";
   });
 });

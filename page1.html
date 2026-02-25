@@ -419,9 +419,12 @@
 
                 <p class="logo flex items-center justify-between text-sm text-[#0D7328] py-2">
                     Amount
-                    <input id="borrowInput" class="bg-transparent text-right outline-none w-[100px]" type="number"
+                    <input class="borrowInput bg-transparent text-right outline-none w-[100px]" type="number"
                         placeholder="0.0">
                 </p>
+
+                <p class="repayUsdValue logo text-center py-2 text-[14px]">USD value: $0</p>
+
 
                 <div class="flex justify-center items-center">
                     <button id="connectWalletBtn2"
@@ -482,7 +485,7 @@
                 <div class="flex items-center gap-2">
                     <button id="repayMaxBtn" class="text-[11px] border border-[#331A1A] rounded px-2">MAX</button>
 
-                    <input id="repayInput" class="bg-transparent text-right outline-none w-[100px]" type="number"
+                    <input id="repayInput" class="borrowInput bg-transparent text-right outline-none w-[100px]" type="number"
                         placeholder="0.0">
                 </div>
                 </p>
@@ -492,7 +495,7 @@
                 </p>
 
 
-                <p id="repayUsdValue" class="logo text-center py-2 text-[14px]">USD value: $0</p>
+                <p class="repayUsdValue logo text-center py-2 text-[14px]">USD value: $0</p>
 
                 <div class="flex justify-center items-center">
                     <button id="connectWalletBtn3"
