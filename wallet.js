@@ -124,7 +124,7 @@ async function connectWallet() {
     userAddress = addresses[0];
 
     connectHeaderBtn.innerText = shortenAddress(userAddress);
-    updateUI();
+    await updateUI();
     updateInfo(userAddress, walletClient, publicClient, chainId, miniLend);
     return { miniLend, walletClient, userAddress };
   } catch (err) {
@@ -499,6 +499,9 @@ async function checkExistingConnection() {
         // Wallet disconnected
         console.log("Wallet disconnected, reloading...");
         setTimeout(() => window.location.reload(), 100);
+        if (window.location.pathname.endsWith("page1.html")) {
+          location.href = "index.html";
+        }
       }
     });
 
