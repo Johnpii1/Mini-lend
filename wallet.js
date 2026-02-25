@@ -24,6 +24,7 @@ let walletClient;
 let publicClient;
 let userAddress = null;
 let miniLend;
+export let ETH_PRICE = null;
 let chainId = null;
 
 // Hide all first
@@ -603,6 +604,8 @@ async function updateUI() {
 
     if (stakedAmount > 0n) {
       collateralInUsd = await getUsdPrice(stakedAsset, stakedAmount);
+      ETH_PRICE = await getLatestPrice(stakedAsset); // update global ETH price for availableToBorrow calculations
+      console.log("Eth price updated:", ETH_PRICE);
     }
 
     // Only calculate debt USD if valid

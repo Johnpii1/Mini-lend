@@ -5,6 +5,7 @@ import {
   withdrawETH,
   stakeETH,
   spinner,
+  ETH_PRICE,
 } from "./wallet.js";
 
 // FOR HEALTH FACTOR
@@ -434,7 +435,7 @@ if (withdraw) {
   };
 }
 
-const ETH_PRICE = 3200;
+// const ETH_PRICE = 3200;
 
 const ethInputs = document.querySelectorAll(".ethInput");
 const usdOutputs = document.querySelectorAll(".usdOutput");
