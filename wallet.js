@@ -390,6 +390,7 @@ export async function disconnectWallet() {
         location.href = "index.html";
       }
       console.log("Permissions revoked");
+      location.href = "index.html";
     } catch (error) {
       console.error("Failed to revoke:", error);
     }
