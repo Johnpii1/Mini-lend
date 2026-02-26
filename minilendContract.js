@@ -1005,12 +1005,15 @@ const CONTRACTS = {
 const TOKENS = {
   USDC: {
     address: CONTRACTS.sepolia.myContract.usdcAddress,
+    decimals: 6,
   },
   ETH: {
     address: CONTRACTS.sepolia.myContract.ethAddress,
+    decimals: 18,
   },
   LINK: {
     address: CONTRACTS.sepolia.myContract.linkAddress,
+    decimals: 18,
   },
 };
 

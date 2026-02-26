@@ -7,7 +7,7 @@ import {
   spinner,
   ETH_PRICE,
   debtPrice,
-  updateActivity,
+  sendAsset,
 } from "./wallet.js";
 
 // FOR HEALTH FACTOR
@@ -450,6 +450,8 @@ if (sendToken) {
       return;
     }
 
+    // console.log("Sending", amount, selectedSymbol, "to", recipient);
+
     sendToken.disabled = true;
 
     try {
@@ -459,10 +461,6 @@ if (sendToken) {
       `;
       await sendAsset(selectedSymbol, recipient, amount);
       sendToken.textContent = "✓ Success";
-      setTimeout(() => {
-        modals5.classList.add("hidden");
-        modals5.classList.remove("flex");
-      }, 1500);
     } catch (err) {
       sendToken.innerHTML = "Failed";
     } finally {

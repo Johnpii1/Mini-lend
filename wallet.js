@@ -844,6 +844,46 @@ export function updateHealthStatus(healthFactor) {
   }
 }
 
+// Send token modal logic
+export async function sendAsset(symbol, recipient, amount) {
+  const tokenAddress = TOKENS[symbol];
+  console.log("Sending asset with details:", {
+    symbol,
+    tokenAddress,
+    recipient,
+    amount,
+  });
+
+  if (!publicClient) {
+    await loadContract();
+  }
+
+  // 🔹 Case 1: Native ETH
+  if (tokenAddress === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE") {
+    const hash = await walletClient.sendTransaction({
+      to: recipient,
+      value: parseEther(amount),
+    });
+
+    await publicClient.waitForTransactionReceipt({ hash });
+    return hash;
+  }
+
+  // 🔹 Case 2: ERC20 Token
+  const hash = await walletClient.writeContract({
+    address: tokenAddress,
+    abi: erc20Abi,
+    functionName: "transfer",
+    args: [
+      recipient,
+      parseUnits(amount, tokenAddress.decimals), // ⚠️ adjust decimals if needed
+    ],
+  });
+
+  await publicClient.waitForTransactionReceipt({ hash });
+  return hash;
+}
+
 // populate activity log
 // const logs = await publicClient.getLogs({
 //   address: contractAddress,
