@@ -438,6 +438,42 @@ if (withdraw) {
   };
 }
 
+const sendToken = document.querySelector(".confirmSend");
+if (sendToken) {
+  sendToken.onclick = async () => {
+    const recipient = document.getElementById("recipientAddress").value;
+    const amount = document.getElementById("sendAmount").value;
+    const selectedSymbol = document.getElementById("sendTokenSelect").value;
+
+    if (!recipient || !amount || isNaN(amount) || amount == 0) {
+      sendToken.textContent = "Invalid Input";
+      return;
+    }
+
+    sendToken.disabled = true;
+
+    try {
+      sendToken.innerHTML = `
+        ${spinner}
+        <span>Sending...</span>
+      `;
+      await sendAsset(selectedSymbol, recipient, amount);
+      sendToken.textContent = "✓ Success";
+      setTimeout(() => {
+        modals5.classList.add("hidden");
+        modals5.classList.remove("flex");
+      }, 1500);
+    } catch (err) {
+      sendToken.innerHTML = "Failed";
+    } finally {
+      setTimeout(() => {
+        sendToken.disabled = false;
+        sendToken.innerHTML = "Confirm Send";
+      }, 1500);
+    }
+  };
+}
+
 // const ETH_PRICE = 3200;
 
 const ethInputs = document.querySelectorAll(".ethInput");
