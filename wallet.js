@@ -501,6 +501,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 1. Check if wallet is already connected
   // console.log(formatEther(104489248056523438n));
+  await updateUI();
 
   await checkExistingConnection();
 });
@@ -530,7 +531,7 @@ export async function checkExistingConnection() {
     loadContract(); // initialize clients and contract
     console.log(userAddress);
 
-    await updateUI();
+    // await updateUI();
     console.log("Processing user position ...");
     getUserPosition(userAddress);
 
@@ -672,6 +673,12 @@ async function updateUI() {
     document.getElementById("debt").textContent = `0.0 ($0.00)`;
 
     document.getElementById("available").textContent = `0.0 ($0.00)`;
+
+    document.getElementById("debt1").textContent = `0.0 Token`;
+
+    document.getElementById("debtUsdValue").textContent = `$ 0.0`;
+
+    document.getElementById("asset").textContent = `Token`;
 
     // -----------------------------
     // AVAILABLE BORROW LOGIC
