@@ -494,7 +494,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await checkExistingConnection();
 });
 
-async function checkExistingConnection() {
+export async function checkExistingConnection() {
   if (window.ethereum && window.ethereum.selectedAddress) {
     userAddress = window.ethereum.selectedAddress;
     window.ethereum.on("accountsChanged", (userAddress) => {
