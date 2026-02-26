@@ -15,6 +15,10 @@ import { setModalState, MODAL_STATE, closeModal } from "./modalController.js";
 import { EXPECTED_CHAIN } from "./config.js";
 import { CONTRACTS, TOKENS } from "./minilendContract.js";
 import { linkinfo } from "./linkAbi.js";
+import {
+  renderLiquidationOpportunity,
+  clearLiquidations,
+} from "./liquidation.js";
 // import { updateHealthStatus } from "./javascript2.js";
 
 const connectHeaderBtn = document.getElementById("headerConnect");
@@ -832,7 +836,7 @@ function calculateHealthFactor(
 
 // FOR HEALTH FACTOR
 
-export function updateHealthStatus(healthFactor) {
+export function updateHealthStatus(healthFactor, positionData) {
   // Show appropriate one
   if (healthFactor >= 2) {
     warning.classList.add("hidden");
@@ -846,8 +850,13 @@ export function updateHealthStatus(healthFactor) {
     safe.classList.add("hidden");
     warning.classList.add("hidden");
     trigger.classList.remove("hidden");
+
     liquidation.classList.remove("hidden");
     liquidation.classList.add("flex");
+
+    clearLiquidations();
+
+    renderLiquidationOpportunity(positionData);
   }
 }
 
