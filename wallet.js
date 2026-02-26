@@ -847,45 +847,62 @@ export function updateHealthStatus(healthFactor) {
 // Send token modal logic
 export async function sendAsset(symbol, recipient, amount) {
   const tokenAddress = TOKENS[symbol];
+
+  const accounts = await window.ethereum.request({
+    method: "eth_accounts",
+  });
+
+  userAddress = accounts.length > 0 ? accounts[0] : null;
+  console.log("Current user address:", userAddress);
+
   console.log("Sending asset with details:", {
     symbol,
     tokenAddress,
     recipient,
     amount,
+    userAddress,
   });
 
-  if (!walletClient || !publicClient) {
-    await loadContract();
-  }
+  // 🔹 Case 1: Native ETHa
+  try {
+    if (!walletClient || !publicClient) {
+      await loadContract();
+    }
 
-  // 🔹 Case 1: Native ETH
-  if (tokenAddress === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE") {
-    console.log("Sending native ETH...");
-    const hash = await walletClient.sendTransaction({
-      to: recipient,
-      value: parseEther(amount),
+    if (tokenAddress.address === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE") {
+      console.log("Sending native ETH...");
+      console.log("walletClient:", walletClient);
+      const hash = await walletClient.sendTransaction({
+        account: userAddress,
+        to: recipient,
+        value: parseEther(amount),
+      });
+
+      await publicClient.waitForTransactionReceipt({ hash });
+      console.log("ETH transfer successful:", hash);
+      return hash;
+    }
+
+    // 🔹 Case 2: ERC20 Token
+    console.log("Sending ERC20 token...");
+    const hash = await walletClient.writeContract({
+      account: userAddress,
+      address: tokenAddress.address,
+      abi: linkinfo.linkSepolia.abi, // standard ERC20 ABI with transfer function
+      functionName: "transferFrom",
+      args: [
+        userAddress,
+        recipient,
+        parseUnits(amount, tokenAddress.decimals), // ⚠️ adjust decimals if needed
+      ],
     });
 
     await publicClient.waitForTransactionReceipt({ hash });
-    console.log("ETH transfer successful:", hash);
+    console.log(`${symbol} transfer successful:`, hash);
     return hash;
+  } catch (err) {
+    console.error("Error loading contract in sendAsset:", err);
   }
-
-  // 🔹 Case 2: ERC20 Token
-  console.log("Sending ERC20 token...");
-  const hash = await walletClient.writeContract({
-    address: tokenAddress,
-    abi: linkinfo.linkSepolia.abi, // standard ERC20 ABI with transfer function
-    functionName: "transfer",
-    args: [
-      recipient,
-      parseUnits(amount, tokenAddress.decimals), // ⚠️ adjust decimals if needed
-    ],
-  });
-
-  await publicClient.waitForTransactionReceipt({ hash });
-  console.log(`${symbol} transfer successful:`, hash);
-  return hash;
 }
 
 // populate activity log
