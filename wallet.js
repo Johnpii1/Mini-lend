@@ -887,13 +887,7 @@ export async function sendAsset(symbol, recipient, amount) {
       }); // log activity with actual amount and hash
       return hash;
     }
-    // Approve ERC20 transfer first (if needed)
-    await userApprove({
-      tokenAddress: tokenAddress.address,
-      owner: userAddress,
-      spender: recipient,
-      amount: amount.toString(),
-    });
+
     // 🔹 Case 2: ERC20 Token
     console.log("Sending ERC20 token...");
     const hash = await walletClient.writeContract({
