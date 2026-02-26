@@ -1,6 +1,7 @@
 import {
   createWalletClient,
   createPublicClient,
+  parseAbiItem,
   custom,
   http,
   parseEther,
@@ -236,6 +237,16 @@ async function executeMiniLendTx({
     console.log("Transaction sent:", hash);
 
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+    handleUserAction({
+      type: functionName,
+      amount: args[1]
+        ? formatUnits(args[1], 18)
+        : value
+          ? formatEther(value)
+          : "N/A",
+      hash,
+    }); // log activity with actual amount and hash
 
     if (receipt.status !== "success") {
       throw new Error("Transaction failed");
@@ -838,19 +849,64 @@ export function updateHealthStatus(healthFactor) {
 //   address: contractAddress,
 //   event: parsedAbiItem("event Borrowed(address indexed user, uint256 amount)"),
 // });
+// import {  } from "viem";
 
-function saveActivity(type, amount, status, txHash) {
-  const activity = JSON.parse(localStorage.getItem("activity")) || [];
+export function updateActivity(newItem) {
+  const existing = JSON.parse(localStorage.getItem("activity")) || [];
 
-  activity.unshift({
+  // Prevent duplicate txHash entries
+  const index = existing.findIndex((item) => item.txHash === newItem.txHash);
+
+  if (index !== -1) {
+    // Update existing item (e.g. Pending → Success)
+    existing[index] = { ...existing[index], ...newItem };
+  } else {
+    // Add newest at the top
+    existing.unshift(newItem);
+  }
+
+  localStorage.setItem("activity", JSON.stringify(existing));
+
+  renderActivity(); // auto re-render
+}
+
+async function handleUserAction({ type, amount, hash }) {
+  // const hash = await writeContract(writeArgs);
+
+  updateActivity({
+    txHash: hash,
     type,
     amount,
-    status,
-    txHash,
-    timestamp: Date.now(),
+    status: "Pending",
   });
 
-  localStorage.setItem("activity", JSON.stringify(activity));
+  try {
+    await publicClient.waitForTransactionReceipt({ hash });
+
+    updateActivity({
+      txHash: hash,
+      status: "Success",
+    });
+  } catch (err) {
+    updateActivity({
+      txHash: hash,
+      status: "Failed",
+    });
+  }
+}
+
+export function watchUserEvent({
+  contractAddress,
+  eventSignature,
+  filterArgs,
+  callback,
+}) {
+  return publicClient.watchEvent({
+    address: contractAddress,
+    event: parseAbiItem(eventSignature),
+    args: filterArgs,
+    onLogs: callback,
+  });
 }
 
 function renderActivity() {
@@ -859,7 +915,7 @@ function renderActivity() {
 
   activityList.innerHTML = "";
 
-  if (activity.length === 0) {
+  if (!activity.length) {
     activityList.innerHTML = `
       <p class="logo text-center text-sm text-gray-500">
         No activity yet
@@ -868,24 +924,49 @@ function renderActivity() {
     return;
   }
 
+  const fragment = document.createDocumentFragment();
+
   activity.forEach((item) => {
-    activityList.innerHTML += `
-      <div class="bg-white rounded-lg p-3 flex justify-between items-center cursor-pointer"
-           onclick="window.open('https://sepolia.etherscan.io/tx/${item.txHash}', '_blank')">
-        <div>
-            <p class="logo text-sm font-semibold">${item.type}</p>
-            <p class="logo text-xs text-gray-500">${item.amount}</p>
-        </div>
-        <span class="logo text-xs font-semibold ${
-          item.status === "Success"
-            ? "text-green-600"
-            : item.status === "Pending"
-              ? "text-yellow-600"
-              : "text-red-600"
-        }">
-          ${item.status}
-        </span>
+    const container = document.createElement("div");
+    container.className =
+      "bg-white rounded-lg p-3 flex justify-between items-center cursor-pointer";
+
+    container.onclick = () =>
+      window.open(`https://sepolia.etherscan.io/tx/${item.txHash}`, "_blank");
+
+    const statusColor =
+      item.status === "Success"
+        ? "text-green-600"
+        : item.status === "Pending"
+          ? "text-yellow-600"
+          : "text-red-600";
+
+    container.innerHTML = `
+      <div>
+          <p class="logo text-sm font-semibold">${item.type}</p>
+          <p class="logo text-xs text-gray-500">${item.amount}</p>
       </div>
+      <span class="logo text-xs font-semibold ${statusColor}">
+          ${item.status}
+      </span>
     `;
+
+    fragment.appendChild(container);
   });
+
+  activityList.appendChild(fragment);
 }
+
+// function saveActivity(type, amount, status, txHash) {
+//   const activity = JSON.parse(localStorage.getItem("activity")) || [];
+
+//   activity.unshift({
+//     type,
+//     amount,
+//     status,
+//     txHash,
+//     timestamp: Date.now(),
+//   });
+
+//   localStorage.setItem("activity", JSON.stringify(activity));
+// }

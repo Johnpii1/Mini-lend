@@ -7,6 +7,7 @@ import {
   spinner,
   ETH_PRICE,
   debtPrice,
+  updateActivity,
 } from "./wallet.js";
 
 // FOR HEALTH FACTOR
@@ -294,7 +295,8 @@ document
     location.href = "index.html";
   });
 
-// Borrow and Repay and withdraw
+// Stake, Borrow and Repay and withdraw
+
 const stake = document.getElementById("connectWalletBtn1");
 
 if (stake) {
