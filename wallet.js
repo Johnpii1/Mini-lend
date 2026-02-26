@@ -854,25 +854,28 @@ export async function sendAsset(symbol, recipient, amount) {
     amount,
   });
 
-  if (!publicClient) {
+  if (!walletClient || !publicClient) {
     await loadContract();
   }
 
   // 🔹 Case 1: Native ETH
   if (tokenAddress === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE") {
+    console.log("Sending native ETH...");
     const hash = await walletClient.sendTransaction({
       to: recipient,
       value: parseEther(amount),
     });
 
     await publicClient.waitForTransactionReceipt({ hash });
+    console.log("ETH transfer successful:", hash);
     return hash;
   }
 
   // 🔹 Case 2: ERC20 Token
+  console.log("Sending ERC20 token...");
   const hash = await walletClient.writeContract({
     address: tokenAddress,
-    abi: erc20Abi,
+    abi: linkinfo.linkSepolia.abi, // standard ERC20 ABI with transfer function
     functionName: "transfer",
     args: [
       recipient,
@@ -881,6 +884,7 @@ export async function sendAsset(symbol, recipient, amount) {
   });
 
   await publicClient.waitForTransactionReceipt({ hash });
+  console.log(`${symbol} transfer successful:`, hash);
   return hash;
 }
 
@@ -935,19 +939,19 @@ async function handleUserAction({ type, amount, hash }) {
   }
 }
 
-export function watchUserEvent({
-  contractAddress,
-  eventSignature,
-  filterArgs,
-  callback,
-}) {
-  return publicClient.watchEvent({
-    address: contractAddress,
-    event: parseAbiItem(eventSignature),
-    args: filterArgs,
-    onLogs: callback,
-  });
-}
+// export function watchUserEvent({
+//   contractAddress,
+//   eventSignature,
+//   filterArgs,
+//   callback,
+// }) {
+//   return publicClient.watchEvent({
+//     address: contractAddress,
+//     event: parseAbiItem(eventSignature),
+//     args: filterArgs,
+//     onLogs: callback,
+//   });
+// }
 
 function renderActivity() {
   const activityList = document.getElementById("activityList");
