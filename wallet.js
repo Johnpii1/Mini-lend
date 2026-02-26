@@ -880,9 +880,20 @@ export async function sendAsset(symbol, recipient, amount) {
 
       await publicClient.waitForTransactionReceipt({ hash });
       console.log("ETH transfer successful:", hash);
+      await handleUserAction({
+        type: `Send ${symbol}`,
+        amount,
+        hash,
+      }); // log activity with actual amount and hash
       return hash;
     }
-
+    // Approve ERC20 transfer first (if needed)
+    await userApprove({
+      tokenAddress: tokenAddress.address,
+      owner: userAddress,
+      spender: recipient,
+      amount: amount.toString(),
+    });
     // 🔹 Case 2: ERC20 Token
     console.log("Sending ERC20 token...");
     const hash = await walletClient.writeContract({
@@ -899,6 +910,11 @@ export async function sendAsset(symbol, recipient, amount) {
 
     await publicClient.waitForTransactionReceipt({ hash });
     console.log(`${symbol} transfer successful:`, hash);
+    await handleUserAction({
+      type: `Send ${symbol}`,
+      amount,
+      hash,
+    }); // log activity with actual amount and hash
     return hash;
   } catch (err) {
     console.error("Error loading contract in sendAsset:", err);
