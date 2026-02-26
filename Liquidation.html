@@ -1,197 +1,177 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Liqudity Page</title>
 
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liqudity Page</title>
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="./style.css" />
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <!--FONT LINK-->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Irish+Grover&family=Momo+Trust+Display&display=swap"
-      rel="stylesheet"
-    />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./style.css" />
 
-    <!--BOOSTRAP LINK-->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-    />
+  <!--FONT LINK-->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Irish+Grover&family=Momo+Trust+Display&display=swap"
+    rel="stylesheet" />
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
-  </head>
+  <!--BOOSTRAP LINK-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
-  <body class="bg-[#331A1A] overflow-y-auto">
-   
-   
-    <!-- HEADER -->
-    <div class="flex justify-between items-center px-4 py-10">
-      
-<div class="flex flex-row gap-6 items-center">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body class="bg-[#331A1A] overflow-y-auto">
+
+
+  <!-- HEADER -->
+  <div class="flex justify-between items-center px-4 py-10">
+
+    <div class="flex flex-row gap-6 items-center">
       <!-- BACK ARROW -->
-    <div class="text-[#D7CBB1] text-2xl  px-4">
-      <a href="./page1.html"> <i class="bi bi-arrow-left"></i></a>
-    </div>
-      
-      
+      <div class="text-[#D7CBB1] text-2xl  px-4">
+        <a href="./page1.html"> <i class="bi bi-arrow-left"></i></a>
+      </div>
+
+
       <!-- LOGO -->
       <div class="logo text-white font-semibold text-[16px]">
         <p>MINI LEND</p>
       </div>
-</div>
-
-
-      <!-- MOBILE WALLET -->
-      <div
-        id="mobile"
-        class="Modaled6 border border-[#D7CBB1] w-[25vw] h-[31px] rounded-[14px] text-[#D7CBB1] cursor-pointer px-4 text-center flex items-center justify-center font-semibold sm:w-[28vw] text-sm md:hidden"
-      ></div>
-
-      <!-- DESKTOP WALLET -->
-      <div
-        class="hidden Modaled5 md:flex md:items-center md:justify-between border border-[#D7CBB1] rounded-[14px] px-3 h-[36px] gap-3 w-fit cursor-pointer"
-      >
-        <div
-          id="walletBalanceBox"
-          class="flex items-center gap-2 text-white font-semibold"
-        >
-          <img
-            src="./image/ethereum-eth-logo-colored.svg"
-            alt="ETH"
-            class="w-4 h-4"
-          />
-          <p id="walletEthBalance" class="logo text-[15px] text-[#D7CBB1]">
-            0.000 ETH
-          </p>
-        </div>
-
-        <div
-          class="bg-[#D7CBB1] rounded-[14px] flex items-center justify-center px-4 h-[30px] md:h-[36px]"
-        >
-          <button
-            id="headerConnect"
-            class="logo text-[#4E8141] font-semibold text-sm md:text-[15px]"
-          >
-            <i>CONNECT WALLET</i>
-          </button>
-        </div>
-      </div>
     </div>
 
-    
-<!-- HERO HEADEER -->
-    <h2 class="logo text-center text-[#FFFFFF] text-[18px]">Liquidation Opportunities</h2>
 
+    <!-- MOBILE WALLET -->
+    <div id="mobile"
+      class="Modaled6 border border-[#D7CBB1] w-[25vw] h-[31px] rounded-[14px] text-[#D7CBB1] cursor-pointer px-4 text-center flex items-center justify-center font-semibold sm:w-[28vw] text-sm md:hidden">
+    </div>
 
-
-    <!-- MAIN DIV -->
-     <div class="flex flex-col gap-4 items-center m-8 md:flex-row md:justify-between">
-
-      <!-- FRIST BOX -->
-      <div class="h-[100px] w-[90%] rounded-[5px] bg-[#D7CBB1] md:w-[50%]">
-
-
-        <!-- ALL THE DIV HOLDING ALL -->
-        <div class="flex flex-row gap-12 items-center py-2 px-4 md:gap-[7rem]">
-        
-        <!-- box 1 -->
-<div class="logo flex flex-col gap-2">
-<h5 class="text-[14px] font-semibold">Borrower</h5>
-<p class="text-[#4E8141]">John Doe</p>
-</div>
-
-
- 
-        <!-- box 2 -->
-<div class="logo flex flex-col gap-2">
-<h5 class="text-[14px] font-semibold">Debt</h5>
-<p class="text-[#4E8141]">$0</p>
-</div>
-
-
- 
-        <!-- box 3 -->
-<div class="logo flex flex-col gap-2">
-<h5 class="text-[14px] font-semibold">Collateral</h5>
-<p class="text-[#4E8141]">$0</p>
-</div>
-
-
- 
-        <!-- box 4 -->
-<div class="logo flex flex-col gap-2">
-<h5 class="text-[14px] font-semibold">Bonus</h5>
-<p class="text-[#4E8141]">5%</p>
-</div>
-</div>
-
-<!-- BUTTON DIV -->
-<div class="logo flex justify-center items-center">
-  <button class="w-[50px] h-auto bg-[#6DD054] rounded-[7px]">Go</button>
-</div>
+    <!-- DESKTOP WALLET -->
+    <div
+      class="hidden Modaled5 md:flex md:items-center md:justify-between border border-[#D7CBB1] rounded-[14px] px-3 h-[36px] gap-3 w-fit cursor-pointer">
+      <div id="walletBalanceBox" class="flex items-center gap-2 text-white font-semibold">
+        <img src="./image/ethereum-eth-logo-colored.svg" alt="ETH" class="w-4 h-4" />
+        <p id="walletEthBalance" class="logo text-[15px] text-[#D7CBB1]">
+          0.000 ETH
+        </p>
       </div>
 
+      <div class="bg-[#D7CBB1] rounded-[14px] flex items-center justify-center px-4 h-[30px] md:h-[36px]">
+        <button id="headerConnect" class="logo text-[#4E8141] font-semibold text-sm md:text-[15px]">
+          <i>CONNECT WALLET</i>
+        </button>
+      </div>
+    </div>
+  </div>
 
 
-      <!-- FRIST BOX -->
-      <div class="h-[100px] w-[90%] rounded-[5px] bg-[#D7CBB1] md:w-[50%]">
+  <!-- HERO HEADEER -->
+  <h2 class="logo text-center text-[#FFFFFF] text-[18px]">Liquidation Opportunities</h2>
 
 
-        <!-- ALL THE DIV HOLDING ALL -->
-        <div class="flex flex-row gap-12 items-center py-2 px-4 md:gap-[7rem]">
-        
+
+  <!-- MAIN DIV -->
+  <div class="flex flex-col gap-4 items-center m-8 md:flex-row md:justify-between">
+
+    <!-- FRIST BOX -->
+    <div class="h-[100px] w-fit rounded-[5px] bg-[#D7CBB1]">
+
+
+      <!-- ALL THE DIV HOLDING ALL -->
+      <div class="flex flex-row gap-12 items-center py-2 px-4 md:gap-[7rem]">
+
         <!-- box 1 -->
-<div class="logo flex flex-col gap-2">
-<h5 class="text-[14px] font-semibold">Borrower</h5>
-<p class="text-[#4E8141]">John Doe</p>
-</div>
+        <div class="logo flex flex-col gap-2">
+          <h5 class="text-[14px] font-semibold">Borrower</h5>
+          <p class="text-[#4E8141] text-[13px]">John Doe</p>
+        </div>
 
 
- 
+
         <!-- box 2 -->
-<div class="logo flex flex-col gap-2">
-<h5 class="text-[14px] font-semibold">Debt</h5>
-<p class="text-[#4E8141]">$0</p>
-</div>
+        <div class="logo flex flex-col gap-2">
+          <h5 class="text-[14px] font-semibold">Debt</h5>
+          <p class="text-[#4E8141] text-[13px]">$0</p>
+        </div>
 
 
- 
+
         <!-- box 3 -->
-<div class="logo flex flex-col gap-2">
-<h5 class="text-[14px] font-semibold">Collateral</h5>
-<p class="text-[#4E8141]">$0</p>
-</div>
+        <div class="logo flex flex-col gap-2">
+          <h5 class="text-[14px] font-semibold">Collateral</h5>
+          <p class="text-[#4E8141] text-[13px]">$0</p>
+        </div>
 
 
- 
+
         <!-- box 4 -->
-<div class="logo flex flex-col gap-2">
-<h5 class="text-[14px] font-semibold">Bonus</h5>
-<p class="text-[#4E8141]">5%</p>
-</div>
-</div>
-
-<!-- BUTTON DIV -->
-<div class="logo flex justify-center items-center">
-  <button class="w-[50px] h-auto bg-[#6DD054] rounded-[7px]">Go</button>
-</div>
+        <div class="logo flex flex-col gap-2">
+          <h5 class="text-[14px] font-semibold">Bonus</h5>
+          <p class="text-[#4E8141] text-[12px]">5%</p>
+        </div>
       </div>
 
+      <!-- BUTTON DIV -->
+      <div class="logo flex justify-center items-center">
+        <button class="w-[50px] h-auto bg-[#6DD054] rounded-[7px]">Go</button>
+      </div>
+
+    </div>
 
 
 
+    <!-- SECOND BOX -->
+    <div class="h-[100px] w-fit rounded-[5px] bg-[#D7CBB1]">
 
-     </div>
+
+      <!-- ALL THE DIV HOLDING ALL -->
+      <div class="flex flex-row gap-12 items-center py-2 px-4 md:gap-[7rem]">
+
+
+        <!-- box 1 -->
+        <div class="logo flex flex-col gap-2">
+          <h5 class="text-[14px] font-semibold">Borrower</h5>
+          <p class="text-[#4E8141] text-[13px]">John Doe</p>
+        </div>
+
+
+
+        <!-- box 2 -->
+        <div class="logo flex flex-col gap-2">
+          <h5 class="text-[14px] font-semibold">Debt</h5>
+          <p class="text-[#4E8141] text-[13px]">$0</p>
+        </div>
+
+
+
+        <!-- box 3 -->
+        <div class="logo flex flex-col gap-2">
+          <h5 class="text-[14px] font-semibold">Collateral</h5>
+          <p class="text-[#4E8141] text-[13px]">$0</p>
+        </div>
+
+
+
+        <!-- box 4 -->
+        <div class="logo flex flex-col gap-2">
+          <h5 class="text-[14px] font-semibold">Bonus</h5>
+          <p class="text-[#4E8141] text-[13px]">5%</p>
+        </div>
+      </div>
+
+      <!-- BUTTON DIV -->
+      <div class="logo flex justify-center items-center">
+        <button class="w-[50px] h-auto bg-[#6DD054] rounded-[7px]">Go</button>
+      </div>
+    </div>
     
-  </body>
+  </div>
+
+
+
+</body>
+
 </html>
