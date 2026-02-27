@@ -31,14 +31,137 @@
 <body class="bg-[#331A1A] overflow-y-auto">
 
     <!-- BACK ARROW -->
-    <div class="text-[#D7CBB1] text-2xl py-4 px-4">
+    <div class="sticky top-0 text-[#D7CBB1] text-2xl py-4 px-4">
         <a href="./index.html"> <i class="bi bi-arrow-left"></i></a>
     </div>
 
 
-    <div class="flex  h-screen justify-center items-center">
-        <h1 class="text-lg text-[#D7CBB1] shadow-[0_4px_8px_rgba(215,203,177,0.4)] font-bold">COMING SOON</h1>
+
+    <h1 class="logo text-center text-[#D7CBB1] text-2xl">Frequently Asked Questions</h1>
+
+
+    <section class="py-16">
+  <div class="logo max-w-3xl mx-auto px-4">
+
+  
+
+    <div class="space-y-4 text-lg">
+
+      <!-- FAQ Item -->
+      <div class="border border-gray-200 rounded-xl bg-[#D7CBB1]">
+        <button class="faq-btn w-full flex justify-between items-center p-5 text-left">
+          <span class="font-medium text-gray-900">
+            What is MiniLend?
+          </span>
+          <span class="icon text-xl transition-transform duration-300">+</span>
+        </button>
+
+        <div class="faq-answer hidden px-5 pb-5 text-gray-600">
+          Draft helps you manage your business and track earnings easily.
+        </div>
+      </div>
+
+      <!-- FAQ Item -->
+      <div class="rounded-xl bg-[#D7CBB1]">
+        <button class="faq-btn w-full flex justify-between items-center p-5 text-left">
+          <span class="font-medium text-gray-900">
+            Is it free to use?
+          </span>
+          <span class="icon text-xl transition-transform duration-300">+</span>
+        </button>
+
+        <div class="faq-answer hidden px-5 pb-5 text-gray-600">
+          Yes, the basic version is free.
+        </div>
+      </div>
+
+
+
+
+      <!-- FAQ Item -->
+      <div class="rounded-xl bg-[#D7CBB1]">
+        <button class="faq-btn w-full flex justify-between items-center p-5 text-left">
+          <span class="font-medium text-gray-900">
+            Is it free to use?
+          </span>
+          <span class="icon text-xl transition-transform duration-300">+</span>
+        </button>
+
+        <div class="faq-answer hidden px-5 pb-5 text-gray-600">
+          Yes, the basic version is free.
+        </div>
+      </div>
+
+
+
+      
+      <!-- FAQ Item -->
+      <div class="rounded-xl bg-[#D7CBB1]">
+        <button class="faq-btn w-full flex justify-between items-center p-5 text-left">
+          <span class="font-medium text-gray-900">
+            Is it free to use?
+          </span>
+          <span class="icon text-xl transition-transform duration-300">+</span>
+        </button>
+
+        <div class="faq-answer hidden px-5 pb-5 text-gray-600">
+          Yes, the basic version is free.
+        </div>
+      </div>
+
+
     </div>
+  </div>
+</section>
+
+
+<!-- JAVA SCRIPT -->
+<script>
+  const buttons = document.querySelectorAll(".faq-btn");
+
+  buttons.forEach(button => {
+    button.addEventListener("click", () => {
+
+      const answer = button.nextElementSibling;
+      const icon = button.querySelector(".icon");
+
+      // Toggle answer
+      answer.classList.toggle("hidden");
+
+      // Change + to -
+      if (answer.classList.contains("hidden")) {
+        icon.textContent = "+";
+      } else {
+        icon.textContent = "-";
+      }
+
+    });
+  });
+</script>
+
+
+
+
+        <!--COPYRIGHT-->
+
+        <div class="flex justify-between  mt-[40%] py-1 px-8 md:mt-[3%]">
+
+            <p class="logo text-[9.8px] md:text-sm text-[#D7CBB1]">©2026 Copyright by MiniLend.eth</p>
+
+            <div class="flex flex-row gap-6">
+
+                <a href="#">
+                    <p class="logo text-[9.8px] md:text-sm text-[#D7CBB1]">Privacy Policy</p>
+                </a>
+
+                <a href="#">
+                    <p class="logo text-[9.8px] md:text-sm text-[#D7CBB1]">Terms of use</p>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
 
 
 </body>
