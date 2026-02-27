@@ -1,6 +1,6 @@
-import { checkExistingConnection } from "./wallet.js";
+// import { checkExistingConnection } from "./wallet.js";
 
-await checkExistingConnection();
+// await checkExistingConnection();
 
 export function renderLiquidationOpportunity({
   borrower,
