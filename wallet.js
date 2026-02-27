@@ -250,7 +250,7 @@ async function executeMiniLendTx({
           ? formatEther(value)
           : "N/A",
       hash,
-    }); // log activity with actual amount and hash
+    }); // log activity with actual amount and hash.
 
     if (receipt.status !== "success") {
       throw new Error("Transaction failed");
