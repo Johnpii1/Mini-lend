@@ -548,27 +548,29 @@ export async function checkExistingConnection() {
 
     // console.log("User balance:", formatEther(userBalance), "ETH");
 
-    document.getElementById("userAddress").textContent =
-      shortenAddress(userAddress);
-
-    document.getElementById("mobile").textContent = shortenAddress(userAddress);
-    document.getElementById("mobileAddress").textContent =
-      shortenAddress(userAddress);
-
-    document.getElementById("userBalance").textContent =
-      `${Number(formatEther(userBalance)).toFixed(3)} ETH`;
-
-    document.getElementById("mobileBalance").textContent =
-      `${Number(formatEther(userBalance)).toFixed(3)} ETH`;
-
     document.getElementById("walletEthBalance").textContent =
       `${Number(formatEther(userBalance)).toFixed(3)} ETH`;
-  }
 
-  console.log("User address after checkExistingConnection:", userAddress);
-  // if (window.location.pathname.endsWith("page1.html")) {
-  //   location.href = "index.html";
-  // }
+    if (window.location.pathname.endsWith("page1.html")) {
+      document.getElementById("userAddress").textContent =
+        shortenAddress(userAddress);
+      document.getElementById("mobile").textContent =
+        shortenAddress(userAddress);
+      document.getElementById("mobileAddress").textContent =
+        shortenAddress(userAddress);
+
+      document.getElementById("userBalance").textContent =
+        `${Number(formatEther(userBalance)).toFixed(3)} ETH`;
+
+      document.getElementById("mobileBalance").textContent =
+        `${Number(formatEther(userBalance)).toFixed(3)} ETH`;
+    }
+
+    console.log("User address after checkExistingConnection:", userAddress);
+    // if (window.location.pathname.endsWith("page1.html")) {
+    //   location.href = "index.html";
+    // }
+  }
 }
 
 async function userEthUsd() {
@@ -741,6 +743,7 @@ async function updateUI() {
     }
   } catch (err) {
     console.error("Error updating UI:", err);
+    console.log("error details:", err.shortMessage);
   }
 }
 
@@ -848,24 +851,27 @@ function calculateHealthFactor(
 
 export function updateHealthStatus(healthFactor, positionData) {
   // Show appropriate one
-  if (healthFactor >= 2) {
-    warning.classList.add("hidden");
-    trigger.classList.add("hidden");
-    safe.classList.remove("hidden");
-  } else if (healthFactor >= 1 && healthFactor < 2) {
-    safe.classList.add("hidden");
-    trigger.classList.add("hidden");
-    warning.classList.remove("hidden");
-  } else {
-    safe.classList.add("hidden");
-    warning.classList.add("hidden");
-    trigger.classList.remove("hidden");
+  if (window.location.pathname.endsWith("page1.html")) {
+    if (healthFactor >= 2) {
+      warning.classList.add("hidden");
+      trigger.classList.add("hidden");
+      safe.classList.remove("hidden");
+    } else if (healthFactor >= 1 && healthFactor < 2) {
+      safe.classList.add("hidden");
+      trigger.classList.add("hidden");
+      warning.classList.remove("hidden");
+    } else {
+      safe.classList.add("hidden");
+      warning.classList.add("hidden");
+      trigger.classList.remove("hidden");
 
-    liquidation.classList.remove("hidden");
-    liquidation.classList.add("flex");
-
+      liquidation.classList.remove("hidden");
+      liquidation.classList.add("flex");
+    }
+  }
+  if (healthFactor < 1) {
     if (window.location.pathname.endsWith("Liquidation.html")) {
-      clearLiquidations();
+      // clearLiquidations();
 
       renderLiquidationOpportunity(positionData);
     }
