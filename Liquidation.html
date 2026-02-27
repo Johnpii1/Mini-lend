@@ -1,71 +1,87 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Liqudity Page</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Liqudity Page</title>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./style.css" />
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="./style.css" />
+    <!--FONT LINK-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Irish+Grover&family=Momo+Trust+Display&display=swap"
+      rel="stylesheet"
+    />
 
-  <!--FONT LINK-->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Irish+Grover&family=Momo+Trust+Display&display=swap"
-    rel="stylesheet" />
+    <!--BOOSTRAP LINK-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
 
-  <!--BOOSTRAP LINK-->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-</head>
+  <body class="bg-[#331A1A] overflow-y-auto">
+    <!-- HEADER -->
+    <div class="flex justify-between items-center px-4 py-10">
+      <div class="flex flex-row gap-6 items-center">
+        <!-- BACK ARROW -->
+        <div class="text-[#D7CBB1] text-2xl px-4">
+          <a href="./page1.html"> <i class="bi bi-arrow-left"></i></a>
+        </div>
 
-<body class="bg-[#331A1A] overflow-y-auto">
-
-
-  <!-- HEADER -->
-  <div class="flex justify-between items-center px-4 py-10">
-
-    <div class="flex flex-row gap-6 items-center">
-      <!-- BACK ARROW -->
-      <div class="text-[#D7CBB1] text-2xl  px-4">
-        <a href="./page1.html"> <i class="bi bi-arrow-left"></i></a>
+        <!-- LOGO -->
+        <div class="logo text-white font-semibold text-[16px]">
+          <p>MINI LEND</p>
+        </div>
       </div>
 
+      <!-- MOBILE WALLET -->
+      <div
+        id="mobile"
+        class="Modaled6 border border-[#D7CBB1] w-[25vw] h-[31px] rounded-[14px] text-[#D7CBB1] cursor-pointer px-4 text-center flex items-center justify-center font-semibold sm:w-[28vw] text-sm md:hidden"
+      ></div>
 
-      <!-- LOGO -->
-      <div class="logo text-white font-semibold text-[16px]">
-        <p>MINI LEND</p>
+      <!-- DESKTOP WALLET -->
+      <div
+        class="hidden Modaled5 md:flex md:items-center md:justify-between border border-[#D7CBB1] rounded-[14px] px-3 h-[36px] gap-3 w-fit cursor-pointer"
+      >
+        <div
+          id="walletBalanceBox"
+          class="flex items-center gap-2 text-white font-semibold"
+        >
+          <img
+            src="./image/ethereum-eth-logo-colored.svg"
+            alt="ETH"
+            class="w-4 h-4"
+          />
+          <p id="walletEthBalance" class="logo text-[15px] text-[#D7CBB1]">
+            0.000 ETH
+          </p>
+        </div>
+
+        <div
+          class="bg-[#D7CBB1] rounded-[14px] flex items-center justify-center px-4 h-[30px] md:h-[36px]"
+        >
+          <button
+            id="headerConnect"
+            class="logo text-[#4E8141] font-semibold text-sm md:text-[15px]"
+          >
+            <i>CONNECT WALLET</i>
+          </button>
+        </div>
       </div>
     </div>
-
-
-    <!-- MOBILE WALLET -->
-    <div id="mobile"
-      class="Modaled6 border border-[#D7CBB1] w-[25vw] h-[31px] rounded-[14px] text-[#D7CBB1] cursor-pointer px-4 text-center flex items-center justify-center font-semibold sm:w-[28vw] text-sm md:hidden">
-    </div>
-
-    <!-- DESKTOP WALLET -->
-    <div
-      class="hidden Modaled5 md:flex md:items-center md:justify-between border border-[#D7CBB1] rounded-[14px] px-3 h-[36px] gap-3 w-fit cursor-pointer">
-      <div id="walletBalanceBox" class="flex items-center gap-2 text-white font-semibold">
-        <img src="./image/ethereum-eth-logo-colored.svg" alt="ETH" class="w-4 h-4" />
-        <p id="walletEthBalance" class="logo text-[15px] text-[#D7CBB1]">
-          0.000 ETH
-        </p>
-      </div>
-
-      <div class="bg-[#D7CBB1] rounded-[14px] flex items-center justify-center px-4 h-[30px] md:h-[36px]">
-        <button id="headerConnect" class="logo text-[#4E8141] font-semibold text-sm md:text-[15px]">
-          <i>CONNECT WALLET</i>
-        </button>
-      </div>
-    </div>
-  </div>
 
 
   <!-- HERO HEADEER -->
@@ -167,11 +183,12 @@
         <button class="w-[50px] h-auto bg-[#6DD054] rounded-[7px]">Go</button>
       </div>
     </div>
-
+    
   </div>
 
 
 
 </body>
 
+  <script type="module" src="./liquidation.js"></script>
 </html>

@@ -239,11 +239,11 @@
                 <!-- Example item -->
                 <div class="bg-white rounded-lg p-3 flex justify-between items-center">
                     <div>
-                        <p class="logo text-sm font-semibold">Borrow USDC</p>
-                        <p class="logo text-xs text-gray-500">0.5 ETH</p>
+                        <p class="logo text-sm font-semibold">Action</p>
+                        <p class="logo text-xs text-gray-500">0</p>
                     </div>
                     <span class="logo text-xs text-green-600 font-semibold">
-                        Success
+                        ...
                     </span>
                 </div>
             
@@ -271,15 +271,15 @@
                 ✕
             </button>
 
-            <h2 class="logo text-center font-bold text-xl mb-4">Send ETH</h2>
+            <h2 class="logo text-center font-bold text-xl mb-4">Send Token</h2>
 
                 <!-- TOKEN SELECTOR -->
                <div class="flex justify-center mb-4">
                   <select id="sendTokenSelect"
                     class="logo bg-white/60 border border-[#331A1A]/30  rounded-full px-4 py-2 text-sm font-semibold outline-none cursor-pointer">
                     <option value="ETH" selected>ETH</option>
-                    <option value="LINK">LINK</option>
-                    <option value="USDC">USDC</option>
+                    <!--<option value="LINK">LINK</option>
+                    <option value="USDC">USDC</option-->
                   </select>
                 </div>
 
@@ -287,7 +287,7 @@
 
             <input id="sendAmount" type="number" placeholder="Amount" class="logo w-full border rounded p-2 mb-4">
 
-            <button id="confirmSendBtn" class="logo w-full bg-[#6DD054] rounded p-2 font-semibold">
+            <button id="confirmSendBtn" class="confirmSend logo flex items-center justify-center gap-2 w-full bg-[#6DD054] rounded p-2 font-semibold">
                 Confirm Send
             </button>
 
@@ -312,13 +312,13 @@
                 ✕
             </button>
 
-            <h2 class="logo text-center font-bold text-xl mb-4">Send ETH</h2>
+            <h2 class="logo text-center font-bold text-xl mb-4">Send Token</h2>
 
             <input type="text" placeholder="Recipient Address" class="logo w-full border rounded p-2 mb-3">
 
             <input type="number" placeholder="Amount" class="logo w-full border rounded p-2 mb-4">
 
-            <button class="logo w-full bg-[#6DD054] rounded p-2 font-semibold">
+            <button class="confirmSend logo w-full bg-[#6DD054] rounded p-2 font-semibold">
                 Confirm Send
             </button>
 

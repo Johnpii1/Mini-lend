@@ -7,6 +7,7 @@ import {
   spinner,
   ETH_PRICE,
   debtPrice,
+  sendAsset,
 } from "./wallet.js";
 
 // FOR HEALTH FACTOR
@@ -294,7 +295,8 @@ document
     location.href = "index.html";
   });
 
-// Borrow and Repay and withdraw
+// Stake, Borrow and Repay and withdraw
+
 const stake = document.getElementById("connectWalletBtn1");
 
 if (stake) {
@@ -431,6 +433,40 @@ if (withdraw) {
       setTimeout(() => {
         withdraw.disabled = false;
         withdraw.innerHTML = "Withdraw";
+      }, 1500);
+    }
+  };
+}
+
+const sendToken = document.querySelector(".confirmSend");
+if (sendToken) {
+  sendToken.onclick = async () => {
+    const recipient = document.getElementById("recipientAddress").value;
+    const amount = document.getElementById("sendAmount").value;
+    const selectedSymbol = document.getElementById("sendTokenSelect").value;
+
+    if (!recipient || !amount || isNaN(amount) || amount == 0) {
+      sendToken.textContent = "Invalid Input";
+      return;
+    }
+
+    // console.log("Sending", amount, selectedSymbol, "to", recipient);
+
+    sendToken.disabled = true;
+
+    try {
+      sendToken.innerHTML = `
+        ${spinner}
+        <span>Sending...</span>
+      `;
+      await sendAsset(selectedSymbol, recipient, amount);
+      sendToken.textContent = "✓ Success";
+    } catch (err) {
+      sendToken.innerHTML = "Failed";
+    } finally {
+      setTimeout(() => {
+        sendToken.disabled = false;
+        sendToken.innerHTML = "Confirm Send";
       }, 1500);
     }
   };

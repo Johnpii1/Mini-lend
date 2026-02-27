@@ -1,6 +1,7 @@
 import {
   createWalletClient,
   createPublicClient,
+  parseAbiItem,
   custom,
   http,
   parseEther,
@@ -14,6 +15,10 @@ import { setModalState, MODAL_STATE, closeModal } from "./modalController.js";
 import { EXPECTED_CHAIN } from "./config.js";
 import { CONTRACTS, TOKENS } from "./minilendContract.js";
 import { linkinfo } from "./linkAbi.js";
+import {
+  renderLiquidationOpportunity,
+  clearLiquidations,
+} from "./liquidation.js";
 // import { updateHealthStatus } from "./javascript2.js";
 
 const connectHeaderBtn = document.getElementById("headerConnect");
@@ -236,6 +241,16 @@ async function executeMiniLendTx({
     console.log("Transaction sent:", hash);
 
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+    handleUserAction({
+      type: functionName,
+      amount: args[1]
+        ? formatUnits(args[1], 18)
+        : value
+          ? formatEther(value)
+          : "N/A",
+      hash,
+    }); // log activity with actual amount and hash
 
     if (receipt.status !== "success") {
       throw new Error("Transaction failed");
@@ -490,11 +505,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 1. Check if wallet is already connected
   // console.log(formatEther(104489248056523438n));
+  await updateUI();
 
   await checkExistingConnection();
 });
 
-async function checkExistingConnection() {
+export async function checkExistingConnection() {
   if (window.ethereum && window.ethereum.selectedAddress) {
     userAddress = window.ethereum.selectedAddress;
     window.ethereum.on("accountsChanged", (userAddress) => {
@@ -519,7 +535,7 @@ async function checkExistingConnection() {
     loadContract(); // initialize clients and contract
     console.log(userAddress);
 
-    await updateUI();
+    // await updateUI();
     console.log("Processing user position ...");
     getUserPosition(userAddress);
 
@@ -661,6 +677,12 @@ async function updateUI() {
     document.getElementById("debt").textContent = `0.0 ($0.00)`;
 
     document.getElementById("available").textContent = `0.0 ($0.00)`;
+
+    document.getElementById("debt1").textContent = `0.0 Token`;
+
+    document.getElementById("debtUsdValue").textContent = `$ 0.0`;
+
+    document.getElementById("asset").textContent = `Token`;
 
     // -----------------------------
     // AVAILABLE BORROW LOGIC
@@ -814,7 +836,7 @@ function calculateHealthFactor(
 
 // FOR HEALTH FACTOR
 
-export function updateHealthStatus(healthFactor) {
+export function updateHealthStatus(healthFactor, positionData) {
   // Show appropriate one
   if (healthFactor >= 2) {
     warning.classList.add("hidden");
@@ -828,8 +850,84 @@ export function updateHealthStatus(healthFactor) {
     safe.classList.add("hidden");
     warning.classList.add("hidden");
     trigger.classList.remove("hidden");
+
     liquidation.classList.remove("hidden");
     liquidation.classList.add("flex");
+
+    clearLiquidations();
+
+    renderLiquidationOpportunity(positionData);
+  }
+}
+
+// Send token modal logic
+export async function sendAsset(symbol, recipient, amount) {
+  const tokenAddress = TOKENS[symbol];
+
+  const accounts = await window.ethereum.request({
+    method: "eth_accounts",
+  });
+
+  userAddress = accounts.length > 0 ? accounts[0] : null;
+  console.log("Current user address:", userAddress);
+
+  console.log("Sending asset with details:", {
+    symbol,
+    tokenAddress,
+    recipient,
+    amount,
+    userAddress,
+  });
+
+  // 🔹 Case 1: Native ETHa
+  try {
+    if (!walletClient || !publicClient) {
+      await loadContract();
+    }
+
+    if (tokenAddress.address === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE") {
+      console.log("Sending native ETH...");
+      console.log("walletClient:", walletClient);
+      const hash = await walletClient.sendTransaction({
+        account: userAddress,
+        to: recipient,
+        value: parseEther(amount),
+      });
+
+      await publicClient.waitForTransactionReceipt({ hash });
+      console.log("ETH transfer successful:", hash);
+      await handleUserAction({
+        type: `Send ${symbol}`,
+        amount,
+        hash,
+      }); // log activity with actual amount and hash
+      return hash;
+    }
+
+    // 🔹 Case 2: ERC20 Token
+    console.log("Sending ERC20 token...");
+    const hash = await walletClient.writeContract({
+      account: userAddress,
+      address: tokenAddress.address,
+      abi: linkinfo.linkSepolia.abi, // standard ERC20 ABI with transfer function
+      functionName: "transferFrom",
+      args: [
+        userAddress,
+        recipient,
+        parseUnits(amount, tokenAddress.decimals), // ⚠️ adjust decimals if needed
+      ],
+    });
+
+    await publicClient.waitForTransactionReceipt({ hash });
+    console.log(`${symbol} transfer successful:`, hash);
+    await handleUserAction({
+      type: `Send ${symbol}`,
+      amount,
+      hash,
+    }); // log activity with actual amount and hash
+    return hash;
+  } catch (err) {
+    console.error("Error loading contract in sendAsset:", err);
   }
 }
 
@@ -838,20 +936,65 @@ export function updateHealthStatus(healthFactor) {
 //   address: contractAddress,
 //   event: parsedAbiItem("event Borrowed(address indexed user, uint256 amount)"),
 // });
+// import {  } from "viem";
 
-function saveActivity(type, amount, status, txHash) {
-  const activity = JSON.parse(localStorage.getItem("activity")) || [];
+export function updateActivity(newItem) {
+  const existing = JSON.parse(localStorage.getItem("activity")) || [];
 
-  activity.unshift({
+  // Prevent duplicate txHash entries
+  const index = existing.findIndex((item) => item.txHash === newItem.txHash);
+
+  if (index !== -1) {
+    // Update existing item (e.g. Pending → Success)
+    existing[index] = { ...existing[index], ...newItem };
+  } else {
+    // Add newest at the top
+    existing.unshift(newItem);
+  }
+
+  localStorage.setItem("activity", JSON.stringify(existing));
+
+  renderActivity(); // auto re-render
+}
+
+async function handleUserAction({ type, amount, hash }) {
+  // const hash = await writeContract(writeArgs);
+
+  updateActivity({
+    txHash: hash,
     type,
     amount,
-    status,
-    txHash,
-    timestamp: Date.now(),
+    status: "Pending",
   });
 
-  localStorage.setItem("activity", JSON.stringify(activity));
+  try {
+    await publicClient.waitForTransactionReceipt({ hash });
+
+    updateActivity({
+      txHash: hash,
+      status: "Success",
+    });
+  } catch (err) {
+    updateActivity({
+      txHash: hash,
+      status: "Failed",
+    });
+  }
 }
+
+// export function watchUserEvent({
+//   contractAddress,
+//   eventSignature,
+//   filterArgs,
+//   callback,
+// }) {
+//   return publicClient.watchEvent({
+//     address: contractAddress,
+//     event: parseAbiItem(eventSignature),
+//     args: filterArgs,
+//     onLogs: callback,
+//   });
+// }
 
 function renderActivity() {
   const activityList = document.getElementById("activityList");
@@ -859,7 +1002,7 @@ function renderActivity() {
 
   activityList.innerHTML = "";
 
-  if (activity.length === 0) {
+  if (!activity.length) {
     activityList.innerHTML = `
       <p class="logo text-center text-sm text-gray-500">
         No activity yet
@@ -868,24 +1011,49 @@ function renderActivity() {
     return;
   }
 
+  const fragment = document.createDocumentFragment();
+
   activity.forEach((item) => {
-    activityList.innerHTML += `
-      <div class="bg-white rounded-lg p-3 flex justify-between items-center cursor-pointer"
-           onclick="window.open('https://sepolia.etherscan.io/tx/${item.txHash}', '_blank')">
-        <div>
-            <p class="logo text-sm font-semibold">${item.type}</p>
-            <p class="logo text-xs text-gray-500">${item.amount}</p>
-        </div>
-        <span class="logo text-xs font-semibold ${
-          item.status === "Success"
-            ? "text-green-600"
-            : item.status === "Pending"
-              ? "text-yellow-600"
-              : "text-red-600"
-        }">
-          ${item.status}
-        </span>
+    const container = document.createElement("div");
+    container.className =
+      "bg-white rounded-lg p-3 flex justify-between items-center cursor-pointer";
+
+    container.onclick = () =>
+      window.open(`https://sepolia.etherscan.io/tx/${item.txHash}`, "_blank");
+
+    const statusColor =
+      item.status === "Success"
+        ? "text-green-600"
+        : item.status === "Pending"
+          ? "text-yellow-600"
+          : "text-red-600";
+
+    container.innerHTML = `
+      <div>
+          <p class="logo text-sm font-semibold">${item.type}</p>
+          <p class="logo text-xs text-gray-500">${item.amount}</p>
       </div>
+      <span class="logo text-xs font-semibold ${statusColor}">
+          ${item.status}
+      </span>
     `;
+
+    fragment.appendChild(container);
   });
+
+  activityList.appendChild(fragment);
 }
+
+// function saveActivity(type, amount, status, txHash) {
+//   const activity = JSON.parse(localStorage.getItem("activity")) || [];
+
+//   activity.unshift({
+//     type,
+//     amount,
+//     status,
+//     txHash,
+//     timestamp: Date.now(),
+//   });
+
+//   localStorage.setItem("activity", JSON.stringify(activity));
+// }
