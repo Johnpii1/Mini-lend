@@ -1,5 +1,5 @@
 // import { checkExistingConnection } from "./wallet.js";
-
+import { shortenAddress } from "./wallet.js";
 // await checkExistingConnection();
 
 export function renderLiquidationOpportunity({

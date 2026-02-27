@@ -608,12 +608,12 @@ async function updateUI() {
     const debtAsset = userInfo.debtAsset;
     const stakedAsset = userInfo.stakedAsset;
 
-    console.log("User position details:", {
-      stakedAmount: formatEther(stakedAmount),
-      debtAmount: formatEther(debtAmount),
-      debtAsset,
-      stakedAsset,
-    });
+    // console.log("User position details:", {
+    //   stakedAmount: formatEther(stakedAmount),
+    //   debtAmount: formatEther(debtAmount),
+    //   debtAsset,
+    //   stakedAsset,
+    // });
 
     // -----------------------------
     // USD VALUES (SAFE HANDLING)
@@ -657,7 +657,12 @@ async function updateUI() {
       );
     }
 
-    updateHealthStatus(healthFactor);
+    updateHealthStatus(healthFactor, {
+      borrower: userAddress,
+      debt: debtInUsd,
+      collateral: collateralInUsd,
+      bonus: 5,
+    });
 
     console.log("User position in USD:", {
       debtInUsd,
@@ -668,67 +673,69 @@ async function updateUI() {
     // -----------------------------
     // UPDATE UI (ALWAYS)
     // -----------------------------
+    if (window.location.pathname.endsWith("page1.html")) {
+      document.getElementById("stakedEth").textContent =
+        `${formatEther(stakedAmount)} ETH ($${collateralInUsd})`;
 
-    document.getElementById("stakedEth").textContent =
-      `${formatEther(stakedAmount)} ETH ($${collateralInUsd})`;
+      document.getElementById("collateral").textContent =
+        `${formatEther(stakedAmount)} ETH ($${collateralInUsd})`;
+      document.getElementById("usdOutput").textContent = `$${collateralInUsd}`;
 
-    document.getElementById("collateral").textContent =
-      `${formatEther(stakedAmount)} ETH ($${collateralInUsd})`;
-    document.getElementById("usdOutput").textContent = `$${collateralInUsd}`;
+      // Default debt display (empty state)
+      document.getElementById("debt").textContent = `0.0 ($0.00)`;
 
-    // Default debt display (empty state)
-    document.getElementById("debt").textContent = `0.0 ($0.00)`;
+      document.getElementById("available").textContent = `0.0 ($0.00)`;
 
-    document.getElementById("available").textContent = `0.0 ($0.00)`;
+      document.getElementById("debt1").textContent = `0.0 Token`;
 
-    document.getElementById("debt1").textContent = `0.0 Token`;
+      document.getElementById("debtUsdValue").textContent = `$ 0.0`;
 
-    document.getElementById("debtUsdValue").textContent = `$ 0.0`;
+      document.getElementById("asset").textContent = `Token`;
 
-    document.getElementById("asset").textContent = `Token`;
+      // -----------------------------
+      // AVAILABLE BORROW LOGIC
+      // -----------------------------
 
-    // -----------------------------
-    // AVAILABLE BORROW LOGIC
-    // -----------------------------
+      if (debtAsset !== "0x0000000000000000000000000000000000000000") {
+        for (const symbol in TOKENS) {
+          const token = TOKENS[symbol];
+          const tokenAddress = token.address;
 
-    if (debtAsset !== "0x0000000000000000000000000000000000000000") {
-      for (const symbol in TOKENS) {
-        const token = TOKENS[symbol];
-        const tokenAddress = token.address;
+          if (tokenAddress === debtAsset) {
+            const tokenSymbol = symbol;
 
-        if (tokenAddress === debtAsset) {
-          const tokenSymbol = symbol;
+            const availableBorrowUsd = await availableToBorrow(
+              userAddress,
+              tokenAddress,
+            );
 
-          const availableBorrowUsd = await availableToBorrow(
-            userAddress,
-            tokenAddress,
-          );
+            const avail = parseEther(availableBorrowUsd.toString());
 
-          const avail = parseEther(availableBorrowUsd.toString());
+            let availableBorrowUsdPrice = "0.00";
 
-          let availableBorrowUsdPrice = "0.00";
+            if (availableBorrowUsd > 0) {
+              availableBorrowUsdPrice = await getUsdPrice(tokenAddress, avail);
+            }
 
-          if (availableBorrowUsd > 0) {
-            availableBorrowUsdPrice = await getUsdPrice(tokenAddress, avail);
+            if (availableBorrowUsd === 0) {
+              document.getElementById("connectWalletBtn2").disabled = true;
+            }
+
+            document.getElementById("debt").textContent =
+              `${formatEther(debtAmount)} ${tokenSymbol} ($${debtInUsd})`;
+
+            document.getElementById("debt1").textContent =
+              `${formatEther(debtAmount)} ${tokenSymbol}`;
+            document.getElementById("debtUsdValue").textContent =
+              `$${debtInUsd}`;
+
+            document.getElementById("asset").textContent = tokenSymbol;
+
+            document.getElementById("available").textContent =
+              `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol} ($${availableBorrowUsdPrice})`;
+
+            break;
           }
-
-          if (availableBorrowUsd === 0) {
-            document.getElementById("connectWalletBtn2").disabled = true;
-          }
-
-          document.getElementById("debt").textContent =
-            `${formatEther(debtAmount)} ${tokenSymbol} ($${debtInUsd})`;
-
-          document.getElementById("debt1").textContent =
-            `${formatEther(debtAmount)} ${tokenSymbol}`;
-          document.getElementById("debtUsdValue").textContent = `$${debtInUsd}`;
-
-          document.getElementById("asset").textContent = tokenSymbol;
-
-          document.getElementById("available").textContent =
-            `${Number(availableBorrowUsd).toFixed(3)} ${tokenSymbol} ($${availableBorrowUsdPrice})`;
-
-          break;
         }
       }
     }
@@ -857,9 +864,11 @@ export function updateHealthStatus(healthFactor, positionData) {
     liquidation.classList.remove("hidden");
     liquidation.classList.add("flex");
 
-    clearLiquidations();
+    if (window.location.pathname.endsWith("Liquidation.html")) {
+      clearLiquidations();
 
-    renderLiquidationOpportunity(positionData);
+      renderLiquidationOpportunity(positionData);
+    }
   }
 }
 
