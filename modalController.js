@@ -12,6 +12,7 @@ export const MODAL_STATE = {
   NO_WALLET: "NO_WALLET",
   WRONG_NETWORK: "WRONG_NETWORK",
   ERROR: "ERROR",
+  CLOSE: "CLOSE",
 };
 
 let currentAction = null;

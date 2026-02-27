@@ -430,6 +430,8 @@ export const spinner = `
 </svg>
 `;
 
+// closeBtn.onclick = closeModal();
+
 document.querySelectorAll(".openModal").forEach((btn) => {
   btn.addEventListener("click", () => {
     // CASE 3: No wallet detected
@@ -497,6 +499,7 @@ document.querySelectorAll(".openModal").forEach((btn) => {
         }
       },
     });
+    // closeBtn.onclick = closeModal();
   });
 });
 
