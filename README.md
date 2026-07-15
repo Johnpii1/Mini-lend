@@ -10,6 +10,7 @@ MiniLend is a decentralized lending application where users can:
 ✅ Withdraw their collateral
 
 This project is designed with **learning and experimentation in mind**, especially for beginners entering the Web3 space.
+Link to project contract: [Minilend Contract](https://github.com/Osfoce/Mini-Lend_-Defi-project-/tree/main/src/contracts)
 
 ---
 
@@ -49,7 +50,7 @@ Verify:
 forge --version
 anvil --version
 ```
-❗❗❗ If forge is showing error, it might be using zoe forge library and that is not what we want
+❗❗❗ If Forge is showing an error, it might be using zoe forge library, and that is not what we want
 run 
 ```bash
 export PATH="$HOME/.foundry/bin:$PATH"
@@ -58,7 +59,7 @@ to change the path and confirm the forge with
 ```bash
 which forge
 ```
-it should show 
+It should show 
 ```bash
 /.foundry/bin/forge
 ```
@@ -154,7 +155,7 @@ Chain ID: 31337
 Currency Symbol: ETH
 ```
 
-Save. (Chrome browser preferable)
+Save. (Chrome browser preferred)
 
 ---
 
@@ -182,7 +183,7 @@ Open `index.html` in a browser
 OR run a simple server:
 
 ```bash
-npx serve .
+npx serve.
 ```
 
 or
@@ -258,7 +259,7 @@ Expected:
 
 ### ✅ Borrow USD
 
-Enter amount within LTV limit
+Enter the amount within the LTV limit
 
 Click:
 
@@ -283,7 +284,7 @@ Click:
 
 ### ✅ Repay Loan
 
-Enter amount to repay
+Enter the amount to repay
 
 Click:
 
