@@ -1,30 +1,109 @@
-# MiniLend dApp 🏦
+# MiniLend 🏦
 
-A Simple Crypto-Backed Lending System (Built with Solidity, Foundry, Viem & Anvil)
+### A Simple Crypto-Backed Lending dApp
 
-MiniLend is a decentralized lending application where users can:
+MiniLend is a decentralized lending application that allows users to use **ETH as collateral to borrow a mock USD token (MockUSDT)**.
 
-✅ Stake ETH as collateral
-✅ Borrow a mock USD token (MockUSDT) based on collateral value
-✅ Repay borrowed tokens
-✅ Withdraw their collateral
+The project was built as a hands-on Web3 learning project using:
 
-This project is designed with **learning and experimentation in mind**, especially for beginners entering the Web3 space.
-Link to project contract: [Minilend Contract](https://github.com/Osfoce/Mini-Lend_-Defi-project-/tree/main/src/contracts)
+* **Solidity** — Smart contracts
+* **Foundry** — Development, testing, and deployment
+* **Anvil** — Local Ethereum blockchain
+* **Viem** — Blockchain interaction
+* **MetaMask** — Wallet connection
+* **MockUSDT** — ERC-20 token used for lending experiments
+
+> **Note:** MiniLend is an educational/demo project designed for learning and experimentation. It is not intended for production use or real funds.
 
 ---
 
-## 🚀 Prerequisites
+## ✨ Features
 
-Before you begin, make sure you have the following installed:
+| Feature              | Description                                  |
+| -------------------- | -------------------------------------------- |
+| 🔐 Wallet Connection | Connect your MetaMask wallet                 |
+| 🏦 Stake ETH         | Deposit ETH as collateral                    |
+| 💵 Borrow            | Borrow MockUSDT against your collateral      |
+| ✅ Approve            | Approve MiniLend to spend MockUSDT           |
+| 💸 Repay             | Repay your outstanding loan                  |
+| 📤 Withdraw          | Withdraw collateral after repaying your loan |
+| 📊 Local Testing     | Test everything on an Anvil blockchain       |
 
-### ✅ Foundry (Forge + Anvil)
+---
 
-Foundry is used for:
+## 🏗️ How MiniLend Works
 
-* Compiling smart contracts
-* Running the local blockchain (Anvil)
-* Deploying contracts using deployment scripts
+The basic lending flow is:
+
+```text
+                    ┌──────────────┐
+                    │   MetaMask   │
+                    └──────┬───────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │   MiniLend   │
+                    │     dApp     │
+                    └──────┬───────┘
+                           │
+             ┌─────────────┴─────────────┐
+             ▼                           ▼
+      ┌─────────────┐             ┌─────────────┐
+      │    ETH      │             │  MockUSDT   │
+      │ Collateral  │             │    Token    │
+      └─────────────┘             └─────────────┘
+             │                           │
+             └─────────────┬─────────────┘
+                           ▼
+                    ┌──────────────┐
+                    │  Local Chain │
+                    │    Anvil     │
+                    └──────────────┘
+```
+
+### Typical user flow
+
+```text
+Connect Wallet
+      ↓
+Stake ETH
+      ↓
+Borrow MockUSDT
+      ↓
+Use MockUSDT
+      ↓
+Approve MiniLend
+      ↓
+Repay Loan
+      ↓
+Withdraw ETH
+```
+
+---
+
+# 📋 Prerequisites
+
+Before running MiniLend, install the following:
+
+* [Foundry](https://book.getfoundry.sh/)
+* MetaMask
+* Node.js
+* Git
+
+You should also have a basic understanding of:
+
+* Ethereum wallets
+* Smart contracts
+* ERC-20 tokens
+* Solidity
+* JavaScript
+* Local blockchain development
+
+---
+
+# 🛠️ 1. Install Foundry
+
+Foundry provides the tools used to compile, test, and deploy the smart contracts.
 
 Install Foundry:
 
@@ -38,37 +117,40 @@ Reload your terminal:
 source ~/.bashrc
 ```
 
-Install components:
+Then install the Foundry tools:
 
 ```bash
 foundryup
 ```
 
-Verify:
+Verify the installation:
 
 ```bash
 forge --version
 anvil --version
 ```
-❗❗❗ If Forge is showing an error, it might be using zoe forge library, and that is not what we want
-run 
-```bash
-export PATH="$HOME/.foundry/bin:$PATH"
-```
-to change the path and confirm the forge with 
+
+### ⚠️ Windows Users
+
+If `forge` is pointing to the wrong installation, check which version is being used:
+
 ```bash
 which forge
 ```
-It should show 
-```bash
-/.foundry/bin/forge
+
+or on Windows:
+
+```powershell
+where.exe forge
 ```
+
+Make sure the Foundry installation you expect is being used.
 
 ---
 
-## 🧱 Step 1: Start Anvil (Local Blockchain)
+# ⛓️ 2. Start Anvil
 
-Anvil simulates a local Ethereum network with funded accounts.
+Anvil provides a local Ethereum blockchain for development and testing.
 
 Run:
 
@@ -76,284 +158,553 @@ Run:
 anvil
 ```
 
-You should see something like:
+You should see something similar to:
 
-```
+```text
 Listening on 127.0.0.1:8545
 ```
 
-and a list of 10 private keys + addresses funded with 10,000 ETH.
+Anvil will also provide several funded accounts.
 
-✅ Keep this terminal running
-❗ Do NOT close it
+Keep this terminal running.
+
+> ⚠️ Do not close the Anvil terminal while testing MiniLend.
 
 ---
 
-## 🔑 Step 2: Set Your Private Key
+# 🔑 3. Configure Your Private Key
 
-From the Anvil output, copy the first private key:
+Anvil provides test private keys.
+
+Copy one of the private keys shown in the Anvil terminal.
+
+Create a `.env` file in the project root:
+
+```env
+PRIVATE_KEY=your_anvil_private_key
+```
 
 Example:
 
-```
-0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
-```
-
-Create a `.env` file:
-
-```
+```env
 PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 ```
 
-✅ No quotes
-✅ No spaces
+### Important
+
+* Do not add quotes.
+* Do not add spaces around `=`.
+* Never use a real wallet private key.
+* Never commit `.env` to GitHub.
+
+Your `.gitignore` should contain:
+
+```gitignore
+.env
+```
 
 ---
 
-## 📦 Step 3: Deploy the Contracts
+# 📦 4. Install Project Dependencies
 
-This project contains two contracts:
+Clone the project:
 
-1. `MockUSDT.sol` – a mintable ERC20 token
-2. `MiniLend.sol` – the lending logic
+```bash
+git clone https://github.com/Osfoce/Mini-Lend_-Defi-project-.git
+```
 
-Deployment is done using a Foundry deploy script.
+Enter the project:
 
-Run:
+```bash
+cd Mini-Lend_-Defi-project-
+```
+
+Install the required dependencies according to the project's package configuration.
+
+If using Foundry dependencies:
+
+```bash
+forge install
+```
+
+---
+
+# 🔨 5. Build the Smart Contracts
+
+Compile the contracts:
+
+```bash
+forge build
+```
+
+If compilation succeeds, you should see a successful build.
+
+You can also run the test suite:
+
+```bash
+forge test
+```
+
+For more detailed output:
+
+```bash
+forge test -vv
+```
+
+---
+
+# 🚀 6. Deploy the Contracts
+
+MiniLend uses two main contracts:
+
+### `MockUSDT.sol`
+
+A mock ERC-20 token used for testing the lending system.
+
+### `MiniLend.sol`
+
+The main lending contract responsible for:
+
+* ETH collateral
+* Borrowing
+* Repayment
+* Withdrawals
+* Loan-related logic
+
+Deploy using the Foundry deployment script:
 
 ```bash
 source .env
-forge script script/Deploy.s.sol --rpc-url http://127.0.0.1:8545 --broadcast --private-key $PRIVATE_KEY
+
+forge script script/Deploy.s.sol \
+  --rpc-url http://127.0.0.1:8545 \
+  --broadcast \
+  --private-key $PRIVATE_KEY
 ```
 
-If successful, the output will show something like:
+On Windows PowerShell, you may need to set the private key differently depending on your shell.
 
-```
-Deployed MockUSDT at: 0x....
-Deployed MiniLend at: 0x....
+After deployment, save the addresses displayed by the script:
+
+```text
+Deployed MockUSDT at: 0x...
+Deployed MiniLend at: 0x...
 ```
 
-✅ COPY both contract addresses
-You will need them in the DApp
+You will need these addresses in the frontend.
 
 ---
 
-## 🦊 Step 4: Connect Anvil to MetaMask
+# 🦊 7. Connect Anvil to MetaMask
 
-Open MetaMask → top network dropdown → Add Network
+Open MetaMask and add a custom network.
 
-Click:
+Use:
 
-**Add network manually**
+| Setting         | Value                   |
+| --------------- | ----------------------- |
+| Network Name    | Anvil                   |
+| RPC URL         | `http://127.0.0.1:8545` |
+| Chain ID        | `31337`                 |
+| Currency Symbol | ETH                     |
 
-Enter:
-
-```
-Network Name: Anvil
-RPC URL: http://127.0.0.1:8545
-Chain ID: 31337
-Currency Symbol: ETH
-```
-
-Save. (Chrome browser preferred)
+Save the network.
 
 ---
 
-### ✅ Import a funded account
+# 🔐 8. Import an Anvil Account
 
-Click:
+In MetaMask:
 
-MetaMask → Account → Import Account
+```text
+MetaMask
+   ↓
+Account menu
+   ↓
+Add / Import Account
+   ↓
+Import private key
+```
 
-Paste the same private key from `.env`
+Paste the private key from your Anvil terminal.
 
-Now MetaMask shows:
+You should now have an account funded with test ETH.
 
-✅ Local network
-✅ 10,000 ETH balance
+> ⚠️ Anvil accounts are for local development only. Never import a real wallet private key into a development environment.
 
 ---
 
-## 🌐 Step 5: Run the DApp Frontend
+# 🌐 9. Run the Frontend
 
-If your frontend is static:
+MiniLend's original frontend is a static web application.
 
-Open `index.html` in a browser
+Do not open `index.html` directly if the application relies on JavaScript modules.
 
-OR run a simple server:
+Instead, run a local server.
+
+For example:
 
 ```bash
-npx serve.
+npx serve .
 ```
 
-or
+Or:
 
 ```bash
 python3 -m http.server
 ```
 
+Then open the local address provided by the server.
+
 ---
 
-## 🪝 Step 6: Connect Wallet (IMPORTANT!)
+# 🔌 10. Connect Your Wallet
 
-Your dApp **must connect to MetaMask BEFORE loading contracts**
+When the dApp loads:
 
-If you load contracts first:
+1. Make sure Anvil is running.
+2. Make sure MetaMask is connected to Anvil.
+3. Click **Connect Wallet**.
+4. Approve the MetaMask request.
 
-❌ publicClient will not attach properly
-❌ walletClient will have no account
-❌ calls will fail
+You should see your connected wallet address.
 
-So:
+Example:
 
-1. Open the DApp
-2. Click **Connect Wallet**
-3. MetaMask will pop up
-4. Accept connection
-
-You should now see something like:
-
-```
+```text
 Connected: 0x643...345
 ```
 
+### Important
+
+The wallet should be connected **before initializing wallet-dependent contract clients**.
+
+The application needs access to the connected account before performing wallet transactions.
+
 ---
 
-## 🧳 Step 7: Load Contract Addresses
+# 📍 11. Load Contract Addresses
 
-Paste:
+Enter the addresses generated during deployment:
 
-✅ MiniLend contract address
-✅ MockUSDT token address
+```text
+MiniLend Contract:
+0x...
 
-Then click:
-
-👉 Load Contracts
-
-If successful:
-
+MockUSDT Contract:
+0x...
 ```
-Contracts loaded
+
+Then select:
+
+**Load Contracts**
+
+If successful, the application should confirm that the contracts have been loaded.
+
+---
+
+# 🧪 12. Test MiniLend
+
+## 🏦 Stake ETH
+
+Enter an amount of ETH.
+
+Example:
+
+```text
+1 ETH
 ```
 
----
+Select:
 
-## 🧪 Step 8: Test the dApp Features
+**Stake**
 
-Now you can interact:
+Expected result:
 
-### ✅ Stake ETH
-
-Enter an amount (e.g. 1)
-
-Click:
-
-🟩 Stake
-
-Expected:
-
-* Your staked balance increases
-* Contract ETH balance increases
+* Your collateral balance increases.
+* The MiniLend contract receives the ETH.
+* Your wallet balance decreases by the staked amount plus gas.
 
 ---
 
-### ✅ Borrow USD
+## 💵 Borrow MockUSDT
 
-Enter the amount within the LTV limit
+After staking collateral, enter an amount within the allowed borrowing limit.
 
-Click:
+Select:
 
-🟨 Borrow
+**Borrow**
 
-Expected:
+Expected result:
 
-* Your mock USDT balance increases
-* Contract USDT decreases or mints
-
----
-
-### ✅ Approve Spending
-
-Before repaying, you must approve MiniLend to spend your USDT
-
-Click:
-
-🟦 Approve
+* Your MockUSDT balance increases.
+* Your borrowing position is updated.
+* The transaction is recorded on the local blockchain.
 
 ---
 
-### ✅ Repay Loan
+## ✅ Approve MockUSDT
 
-Enter the amount to repay
+Before repaying, MiniLend needs permission to spend your MockUSDT.
 
-Click:
+Select:
 
-🟥 Repay
+**Approve**
 
----
-
-### ✅ Withdraw ETH
-
-Only works when:
-
-✅ You have fully repaid
-✅ You have staked ETH
+Confirm the transaction in MetaMask.
 
 ---
 
-## 🧠 Common Mistakes & Fixes
+## 💸 Repay Your Loan
 
-| Problem              | Cause                                      | Fix                            |
-| -------------------- | ------------------------------------------ | ------------------------------ |
-| No MetaMask popup    | Not served with HTTP / module import error | Use local server               |
-| Cannot load contract | Wallet not connected first                 | Connect wallet before load     |
-| Balance shows 0      | Wrong address or wrong chain               | Check Anvil + MetaMask network |
-| ABI invalid          | Importing wrong field                      | Use `abi: MiniLendAbi.abi`     |
+Enter the amount you want to repay.
+
+Select:
+
+**Repay**
+
+Confirm the transaction.
+
+Your outstanding debt should decrease accordingly.
 
 ---
 
-## 📦 Project Structure
+## 📤 Withdraw ETH
 
-```
+After your loan has been fully repaid, you can withdraw your collateral.
+
+Select:
+
+**Withdraw**
+
+Expected result:
+
+* Your staked ETH is returned.
+* Your collateral balance decreases.
+* The transaction is confirmed on Anvil.
+
+---
+
+# 🧩 Contract Architecture
+
+MiniLend currently uses two primary contracts:
+
+```text
 contracts/
-  MiniLend.sol
-  MockUSDT.sol
-
-script/
-  Deploy.s.sol
-
-frontend/
-  index.html
-  script.js
-  abi/
+├── MiniLend.sol
+└── MockUSDT.sol
 ```
 
+Deployment:
+
+```text
+script/
+└── Deploy.s.sol
+```
+
+Frontend:
+
+```text
+frontend/
+├── index.html
+├── script.js
+└── abi/
+```
+
+Your exact frontend structure may change as the project evolves.
+
 ---
 
-## ✅ What You Learned
+# 🔗 Contract Source
 
-By following this guide, you learned:
+The MiniLend smart contracts can be found in the repository:
 
-✅ How to run a local blockchain (Anvil)
-✅ How deployment scripts work in Foundry
-✅ How to connect MetaMask to a local chain
-✅ How to connect a DApp to MetaMask using Viem
-✅ How to interact with deployed contracts
+**MiniLend Contracts**
 
-This is the **exact journey every Web3 developer goes through**, and now you have a full working workflow.
+https://github.com/Osfoce/Mini-Lend_-Defi-project-/tree/main/src/contracts
 
 ---
 
-## ❤️ Final Words
+# 🐛 Common Problems
 
-This project exists because:
+| Problem                  | Possible Cause                      | Solution                            |
+| ------------------------ | ----------------------------------- | ----------------------------------- |
+| MetaMask doesn't open    | Frontend isn't running through HTTP | Use a local development server      |
+| Contract won't load      | Wallet isn't connected              | Connect MetaMask first              |
+| Balance shows `0`        | Wrong account or network            | Check MetaMask and Anvil            |
+| Transaction fails        | Incorrect contract address          | Verify deployment output            |
+| ABI error                | Incorrect ABI object                | Verify the ABI being passed to Viem |
+| Insufficient funds       | Wrong Anvil account                 | Import a funded Anvil account       |
+| Wrong chain              | MetaMask is on another network      | Switch to Anvil                     |
+| Contract doesn't respond | Anvil isn't running                 | Start `anvil`                       |
+| Deployment fails         | Private key/RPC configuration       | Check `.env` and RPC URL            |
 
-> "I was once a newbie who couldn't do anything without detailed steps."
+---
 
-If this README helps even one developer avoid frustration, then it has achieved its purpose.
+# 🧪 Testing Checklist
+
+Use this checklist when testing a fresh deployment:
+
+* [ ] Start Anvil
+* [ ] Create/configure `.env`
+* [ ] Build contracts
+* [ ] Run contract tests
+* [ ] Deploy contracts
+* [ ] Save MiniLend address
+* [ ] Save MockUSDT address
+* [ ] Add Anvil to MetaMask
+* [ ] Import Anvil account
+* [ ] Start frontend
+* [ ] Connect wallet
+* [ ] Load contracts
+* [ ] Stake ETH
+* [ ] Borrow MockUSDT
+* [ ] Approve MockUSDT
+* [ ] Repay loan
+* [ ] Withdraw ETH
+
+---
+
+# 📚 What This Project Teaches
+
+MiniLend brings several Web3 concepts together in one project.
+
+### Smart Contracts
+
+You learn how to:
+
+* Write Solidity contracts
+* Work with ERC-20 tokens
+* Manage collateral
+* Implement borrowing logic
+* Handle repayments
+* Manage withdrawals
+
+### Foundry
+
+You learn how to:
+
+* Compile contracts
+* Run tests
+* Start Anvil
+* Deploy contracts
+* Debug smart contracts
+
+### Wallet Integration
+
+You learn how to:
+
+* Connect MetaMask
+* Work with wallet accounts
+* Sign transactions
+* Switch networks
+* Handle transaction states
+
+### Viem
+
+You learn how a frontend can communicate with Ethereum-compatible networks.
+
+---
+
+# 🎯 Project Goals
+
+MiniLend was created primarily for **learning and experimentation**.
+
+The goal is to make it easier for someone new to Web3 to understand how the following pieces fit together:
+
+```text
+Solidity
+   ↓
+Foundry
+   ↓
+Anvil
+   ↓
+Deployed Contract
+   ↓
+Viem
+   ↓
+MetaMask
+   ↓
+Frontend
+   ↓
+User Interaction
+```
+
+Instead of learning each technology separately, MiniLend connects them into one practical project.
+
+---
+
+# 🚧 Future Improvements
+
+Possible improvements include:
+
+* [ ] React frontend migration
+* [ ] Improved UX/UI
+* [ ] Better transaction feedback
+* [ ] Loan health indicators
+* [ ] Collateral ratio visualization
+* [ ] Transaction history
+* [ ] Better error messages
+* [ ] Responsive mobile interface
+* [ ] Testnet deployment
+* [ ] More comprehensive automated tests
+* [ ] Improved contract security
+* [ ] Production-grade oracle integration
+
+> These improvements are intentionally separate from the current educational implementation.
+
+---
+
+# ⚠️ Disclaimer
+
+MiniLend is an **educational project**.
+
+It uses:
+
+* A local Anvil blockchain
+* Test ETH
+* MockUSDT
+* Experimental lending logic
+
+It has **not been audited** and should not be used with real funds.
+
+Do not deploy or use the contracts with real assets without appropriate security review, testing, and auditing.
+
+---
+
+# ❤️ Why I Built MiniLend
+
+I built MiniLend from the perspective of someone learning Web3.
+
+When you're starting out, blockchain development can feel overwhelming because you have to understand many different pieces at once:
+
+```text
+Solidity
+Foundry
+Blockchain
+Wallets
+Viem
+Frontend
+Transactions
+Tokens
+```
+
+MiniLend was my way of bringing those concepts together into one practical project.
+
+> *I was once a newbie who couldn't do anything without detailed steps.*
+
+If this project helps another developer understand how a Web3 application works from **smart contract → blockchain → wallet → frontend**, then it has achieved its purpose.
 
 Keep building.
 Keep learning.
-Your progress is inspiring. 🚀🔥
+Keep experimenting.
 
 ---
+
+## ⭐ If You Find This Project Useful
+
+Give the repository a ⭐ and feel free to explore the code.
+
+Learning Web3 is a journey — build, break things, fix them, and keep going.
+
+**Happy building!**
