@@ -8,6 +8,7 @@ import HealthCard from "./HealthCard";
 import LiquidityOpportunity from "./LiquidityOpportunity";
 import ActionButtons from "./ActionButtons";
 import Activity from "./Activity";
+import Footer from "../components/Footer"
 
 export default function Dashboard() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -75,6 +76,9 @@ export default function Dashboard() {
             <Activity />
           </section>
 
+
+
+<Footer />
         </div>
 
       </main>
