@@ -172,9 +172,7 @@ export default function Navbar() {
         const navbarOffset = 110;
 
         const position =
-          section.getBoundingClientRect().top +
-          window.scrollY -
-          navbarOffset;
+          section.getBoundingClientRect().top + window.scrollY - navbarOffset;
 
         window.scrollTo({
           top: position,
@@ -216,9 +214,7 @@ export default function Navbar() {
     const navbarOffset = 110;
 
     const sectionPosition =
-      section.getBoundingClientRect().top +
-      window.scrollY -
-      navbarOffset;
+      section.getBoundingClientRect().top + window.scrollY - navbarOffset;
 
     /*
       Immediately mark this section as active.
@@ -230,11 +226,7 @@ export default function Navbar() {
       Update URL without refreshing the page.
     */
 
-    window.history.replaceState(
-      null,
-      "",
-      id === "home" ? "/" : `/#${id}`
-    );
+    window.history.replaceState(null, "", id === "home" ? "/" : `/#${id}`);
 
     /*
       Smooth scroll.
@@ -320,7 +312,6 @@ export default function Navbar() {
       ====================================================== */}
 
       <div className="h-[64px] px-4 sm:px-6 lg:px-7 flex items-center justify-between">
-
         {/* =====================================================
             LOGO
         ====================================================== */}
@@ -331,26 +322,11 @@ export default function Navbar() {
           className="group flex items-center gap-2.5 shrink-0"
         >
           <div
-            className="
-              relative
-              w-9
-              h-9
-              rounded-xl
-              bg-[#6DD054]
-              flex
-              items-center
-              justify-center
-              overflow-hidden
-              shadow-[0_0_25px_rgba(109,208,84,0.18)]
-              transition-all
-              duration-300
-              group-hover:shadow-[0_0_30px_rgba(109,208,84,0.35)]
-              group-hover:scale-105
-            "
+            className=""
           >
-            <span className="relative z-10 text-[#0d1b0a] font-black text-sm">
-              M
-            </span>
+            <img
+            className="object-contain w-[50px]"
+             src="./favicon.png" alt="" />
 
             <div
               className="
@@ -532,7 +508,6 @@ export default function Navbar() {
         ====================================================== */}
 
         <div className="flex items-center gap-2.5">
-
           {/* NETWORK */}
 
           <div
@@ -558,9 +533,7 @@ export default function Navbar() {
               "
             />
 
-            <span className="text-xs font-medium text-white/55">
-              Anvil
-            </span>
+            <span className="text-xs font-medium text-white/55">Anvil</span>
           </div>
 
           {/* CONNECT WALLET */}
@@ -595,9 +568,7 @@ export default function Navbar() {
               active:scale-[0.98]
             "
           >
-            <span className="relative z-10">
-              Connect Wallet
-            </span>
+            <span className="relative z-10">Connect Wallet</span>
 
             <FiArrowUpRight
               className="
@@ -633,11 +604,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => setMobileOpen((prev) => !prev)}
-            aria-label={
-              mobileOpen
-                ? "Close navigation"
-                : "Open navigation"
-            }
+            aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
             aria-expanded={mobileOpen}
             className="
               md:hidden
@@ -689,7 +656,6 @@ export default function Navbar() {
         <div className="overflow-hidden">
           <div className="px-4 pb-4">
             <div className="border-t border-white/[0.08] pt-3 space-y-1">
-
               {/* NETWORK */}
 
               <div
@@ -706,9 +672,7 @@ export default function Navbar() {
                   border-[#6DD054]/10
                 "
               >
-                <span className="text-xs text-white/45">
-                  Network
-                </span>
+                <span className="text-xs text-white/45">Network</span>
 
                 <span className="flex items-center gap-2 text-xs font-medium text-[#6DD054]">
                   <FiCircle
@@ -718,7 +682,6 @@ export default function Navbar() {
                       animate-pulse
                     "
                   />
-
                   Anvil
                 </span>
               </div>
@@ -758,7 +721,6 @@ export default function Navbar() {
                       "
                     >
                       <span className="flex items-center gap-3">
-
                         <span
                           className="
                             w-8
@@ -776,7 +738,6 @@ export default function Navbar() {
                         </span>
 
                         {item.label}
-
                       </span>
 
                       <FiArrowUpRight
@@ -798,16 +759,13 @@ export default function Navbar() {
                 =================================================
                 */
 
-                const isActive =
-                  activeSection === item.id;
+                const isActive = activeSection === item.id;
 
                 return (
                   <button
                     key={item.id}
                     type="button"
-                    onClick={() =>
-                      scrollToSection(item.id)
-                    }
+                    onClick={() => scrollToSection(item.id)}
                     className={`
                       group
                       w-full
@@ -831,7 +789,6 @@ export default function Navbar() {
                     `}
                   >
                     <span className="flex items-center gap-3">
-
                       <span
                         className={`
                           w-8
@@ -853,7 +810,6 @@ export default function Navbar() {
                       </span>
 
                       {item.label}
-
                     </span>
 
                     <FiArrowUpRight
@@ -900,7 +856,6 @@ export default function Navbar() {
                 "
               >
                 Connect Wallet
-
                 <FiArrowUpRight
                   className="
                     transition-transform
@@ -910,7 +865,6 @@ export default function Navbar() {
                   "
                 />
               </button>
-
             </div>
           </div>
         </div>

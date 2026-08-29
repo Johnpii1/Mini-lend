@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FiArrowRight,
   FiArrowUpRight,
@@ -11,31 +11,121 @@ import {
 export default function Hero() {
   const [modalOpen, setModalOpen] = useState(false);
 
+  // =====================================================
+  // TYPING TEXT
+  // =====================================================
+  const phrases = [
+    "without selling.",
+    "against your crypto.",
+    "while keeping rewards.",
+    "when you need it.",
+    "without middlemen.",
+  ];
+
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [displayText, setDisplayText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentPhrase = phrases[phraseIndex];
+
+    let timeout;
+
+    if (!isDeleting && displayText.length < currentPhrase.length) {
+      timeout = setTimeout(() => {
+        setDisplayText(currentPhrase.substring(0, displayText.length + 1));
+      }, 80);
+    } else if (!isDeleting && displayText.length === currentPhrase.length) {
+      timeout = setTimeout(() => {
+        setIsDeleting(true);
+      }, 2200);
+    } else if (isDeleting && displayText.length > 0) {
+      timeout = setTimeout(() => {
+        setDisplayText(currentPhrase.substring(0, displayText.length - 1));
+      }, 45);
+    } else if (isDeleting && displayText.length === 0) {
+      setIsDeleting(false);
+
+      setPhraseIndex((prev) => (prev + 1) % phrases.length);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting, phraseIndex]);
+
+  // =====================================================
+  // SHINING STARS
+  // =====================================================
+  const stars = [
+    { top: "12%", left: "7%", size: "2px", delay: "0s", duration: "2.8s" },
+    { top: "20%", left: "22%", size: "3px", delay: "1.2s", duration: "3.5s" },
+    { top: "9%", left: "42%", size: "2px", delay: "0.6s", duration: "2.5s" },
+    { top: "28%", left: "53%", size: "2px", delay: "2s", duration: "4s" },
+    { top: "15%", left: "68%", size: "3px", delay: "0.3s", duration: "3.2s" },
+    { top: "34%", left: "88%", size: "2px", delay: "1.7s", duration: "2.7s" },
+    { top: "47%", left: "5%", size: "2px", delay: "2.5s", duration: "3.8s" },
+    { top: "55%", left: "28%", size: "3px", delay: "0.9s", duration: "3s" },
+    { top: "63%", left: "48%", size: "2px", delay: "1.5s", duration: "3.6s" },
+    { top: "72%", left: "76%", size: "3px", delay: "0.2s", duration: "2.9s" },
+    { top: "82%", left: "15%", size: "2px", delay: "2.2s", duration: "3.4s" },
+    { top: "88%", left: "62%", size: "2px", delay: "1s", duration: "2.6s" },
+    { top: "42%", left: "94%", size: "2px", delay: "2.8s", duration: "3.7s" },
+    { top: "76%", left: "38%", size: "2px", delay: "0.5s", duration: "3.1s" },
+    { top: "24%", left: "78%", size: "2px", delay: "1.9s", duration: "4.2s" },
+  ];
+
   return (
     <>
       {/* =====================================================
           HERO SECTION
       ====================================================== */}
       <section className="relative min-h-screen overflow-hidden bg-[#080908] text-white">
-        {/* Background glow */}
+        {/* =====================================================
+            BACKGROUND GLOW
+        ====================================================== */}
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute left-[8%] top-[25%] h-[320px] w-[320px] rounded-full bg-[#6DD054]/10 blur-[120px]" />
+
           <div className="absolute right-[5%] top-[18%] h-[400px] w-[400px] rounded-full bg-[#6DD054]/[0.07] blur-[140px]" />
         </div>
 
-        {/* Subtle grid */}
+        {/* =====================================================
+            SHINING STARS
+        ====================================================== */}
+        <div className="pointer-events-none absolute inset-0 z-[1]">
+          {stars.map((star, index) => (
+            <span
+              key={index}
+              className="absolute rounded-full bg-white animate-[twinkle_ease-in-out_infinite]"
+              style={{
+                top: star.top,
+                left: star.left,
+                width: star.size,
+                height: star.size,
+                animationDelay: star.delay,
+                animationDuration: star.duration,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* =====================================================
+            SUBTLE GRID
+        ====================================================== */}
         <div
           className="
             pointer-events-none
             absolute
             inset-0
+            z-[2]
             opacity-[0.035]
             bg-[linear-gradient(rgba(255,255,255,0.5)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.5)_1px,transparent_1px)]
             bg-[size:55px_55px]
           "
         />
 
-        {/* Main hero */}
+        {/* =====================================================
+            MAIN HERO
+        ====================================================== */}
         <div
           className="
             relative
@@ -60,7 +150,7 @@ export default function Hero() {
               gap-14
               lg:grid-cols-[1fr_0.9fr]
               lg:gap-16
-          "
+            "
           >
             {/* =================================================
                 LEFT CONTENT
@@ -86,17 +176,21 @@ export default function Hero() {
               >
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#6DD054] opacity-60" />
+
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-[#6DD054]" />
                 </span>
-
                 Decentralized Lending Protocol
               </div>
 
-              {/* Heading */}
+              {/* =================================================
+                  HEADING
+              ================================================== */}
               <h1
                 className="
                   text-4xl
                   font-black
+                  text-center
+                  md:text-left
                   leading-[1.05]
                   tracking-[-0.04em]
                   sm:text-5xl
@@ -105,8 +199,22 @@ export default function Hero() {
                 "
               >
                 Unlock liquidity
-                <span className="block text-[#6DD054]">
-                  without selling.
+                <span className="block min-h-[1.1em] text-[#6DD054]">
+                  {displayText}
+
+                  {/* Typing cursor */}
+                  <span
+                    className="
+                      ml-1
+                      inline-block
+                      h-[0.8em]
+                      w-[3px]
+                      translate-y-[2px]
+                      animate-pulse
+                      rounded-full
+                      bg-[#6DD054]
+                    "
+                  />
                 </span>
               </h1>
 
@@ -116,6 +224,8 @@ export default function Hero() {
                   mt-7
                   max-w-xl
                   text-sm
+                  text-center
+                  md:text-left
                   leading-7
                   text-white/50
                   sm:text-base
@@ -127,7 +237,9 @@ export default function Hero() {
                 Just decentralized access to liquidity.
               </p>
 
-              {/* Buttons */}
+              {/* =================================================
+                  BUTTONS
+              ================================================== */}
               <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <button
                   type="button"
@@ -155,7 +267,6 @@ export default function Hero() {
                   "
                 >
                   Get Started
-
                   <FiArrowRight
                     className="
                       transition-transform
@@ -190,7 +301,6 @@ export default function Hero() {
                   "
                 >
                   Learn More
-
                   <FiArrowUpRight
                     className="
                       transition-transform
@@ -202,7 +312,9 @@ export default function Hero() {
                 </a>
               </div>
 
-              {/* Trust points */}
+              {/* =================================================
+                  TRUST POINTS
+              ================================================== */}
               <div className="mt-10 flex flex-wrap gap-x-7 gap-y-3">
                 <div className="flex items-center gap-2 text-xs text-white/40">
                   <FiShield className="text-[#6DD054]" />
@@ -256,6 +368,7 @@ export default function Hero() {
 
                   <div className="flex items-center gap-2 rounded-full border border-[#6DD054]/15 bg-[#6DD054]/[0.06] px-2.5 py-1.5">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#6DD054]" />
+
                     <span className="text-[10px] font-medium text-[#6DD054]">
                       Active
                     </span>
@@ -264,9 +377,7 @@ export default function Hero() {
 
                 {/* Balance */}
                 <div className="py-7">
-                  <p className="text-xs text-white/35">
-                    Available liquidity
-                  </p>
+                  <p className="text-xs text-white/35">Available liquidity</p>
 
                   <div className="mt-2 flex items-end gap-2">
                     <span className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
@@ -288,9 +399,7 @@ export default function Hero() {
                   {/* Collateral */}
                   <div className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-white/35">
-                        Collateral
-                      </span>
+                      <span className="text-xs text-white/35">Collateral</span>
 
                       <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#627EEA]/10 text-xs font-bold text-[#627EEA]">
                         Ξ
@@ -309,9 +418,7 @@ export default function Hero() {
                   {/* Borrowed */}
                   <div className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-white/35">
-                        Borrowed
-                      </span>
+                      <span className="text-xs text-white/35">Borrowed</span>
 
                       <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#6DD054]/10 text-[10px] font-bold text-[#6DD054]">
                         $
@@ -346,6 +453,7 @@ export default function Hero() {
 
                   <div className="mt-2 flex justify-between text-[9px] text-white/25">
                     <span>Safe</span>
+
                     <span>Liquidation</span>
                   </div>
                 </div>
@@ -353,9 +461,7 @@ export default function Hero() {
                 {/* Bottom action */}
                 <div className="mt-4 flex items-center justify-between rounded-2xl bg-[#6DD054]/[0.06] px-4 py-3">
                   <div>
-                    <p className="text-[10px] text-white/30">
-                      Staking rewards
-                    </p>
+                    <p className="text-[10px] text-white/30">Staking rewards</p>
 
                     <p className="mt-0.5 text-xs font-semibold text-[#6DD054]">
                       Continuing to accrue
@@ -431,8 +537,29 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Bottom fade */}
+        {/* =====================================================
+            BOTTOM FADE
+        ====================================================== */}
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#080908] to-transparent" />
+
+        {/* =====================================================
+            STAR ANIMATION KEYFRAMES
+        ====================================================== */}
+        <style>
+          {`
+            @keyframes twinkle {
+              0%, 100% {
+                opacity: 0.15;
+                transform: scale(0.7);
+              }
+
+              50% {
+                opacity: 1;
+                transform: scale(1.5);
+              }
+            }
+          `}
+        </style>
       </section>
 
       {/* =====================================================
@@ -467,10 +594,11 @@ export default function Hero() {
             "
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close */}
+            {/* CLOSE BUTTON */}
             <button
               type="button"
               onClick={() => setModalOpen(false)}
+              aria-label="Close wallet modal"
               className="
                 absolute
                 right-4
@@ -493,24 +621,28 @@ export default function Hero() {
               <FiX />
             </button>
 
-            {/* Icon */}
+            {/* ICON */}
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#6DD054]/10">
               <FiShield className="text-2xl text-[#6DD054]" />
             </div>
 
+            {/* TITLE */}
             <h2 className="mt-5 text-center text-xl font-bold text-white">
               Connect Your Wallet
             </h2>
 
+            {/* DESCRIPTION */}
             <p className="mx-auto mt-2 max-w-sm text-center text-sm leading-6 text-white/40">
-              Connect your wallet to start staking assets and access
-              stablecoin loans through MiniLend.
+              Connect your wallet to start staking assets and access stablecoin
+              loans through MiniLend.
             </p>
 
+            {/* CONNECT WALLET */}
             <button
               type="button"
               id="connectWalletBtn"
               className="
+                group
                 mt-6
                 flex
                 h-12
@@ -523,27 +655,37 @@ export default function Hero() {
                 text-sm
                 font-bold
                 text-[#0b1609]
-                transition
+                transition-all
+                duration-300
                 hover:bg-[#7ae360]
+                hover:-translate-y-0.5
                 active:scale-[0.98]
               "
             >
               Connect Wallet
-              <FiArrowUpRight />
+              <FiArrowUpRight
+                className="
+                  transition-transform
+                  duration-300
+                  group-hover:translate-x-0.5
+                  group-hover:-translate-y-0.5
+                "
+              />
             </button>
 
+            {/* TERMS */}
             <p className="mt-4 text-center text-[10px] leading-5 text-white/25">
               By connecting, you agree to our{" "}
               <a
                 href="#"
-                className="text-white/50 underline underline-offset-2"
+                className="text-white/50 underline underline-offset-2 hover:text-white"
               >
                 Terms of Use
               </a>{" "}
               and{" "}
               <a
                 href="#"
-                className="text-white/50 underline underline-offset-2"
+                className="text-white/50 underline underline-offset-2 hover:text-white"
               >
                 Privacy Policy
               </a>

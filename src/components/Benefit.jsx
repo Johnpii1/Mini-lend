@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import {
   FiArrowRight,
@@ -7,7 +8,8 @@ import {
   FiShield,
   FiX,
 } from "react-icons/fi";
-import benefit from "../assets/benefit.png";
+
+import WalletTransferAnimation from "./WalletTransferAnimation";
 
 export default function Benefits() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -17,7 +19,7 @@ export default function Benefits() {
       {/* =====================================================
           BENEFITS SECTION
       ====================================================== */}
-      <section className="bg-[#080908] py-20">
+      <section className="bg-[#080908] py-20 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
 
           {/* =====================================================
@@ -51,36 +53,25 @@ export default function Benefits() {
           <div className="flex flex-col lg:flex-row items-center justify-between gap-14">
 
             {/* =================================================
-                LEFT
+                LEFT SIDE — WALLET ANIMATION
             ================================================== */}
-            <div className="w-full max-w-md">
+            <div className="w-full lg:w-[52%]">
 
-              <h3 className="logo text-white text-2xl md:text-3xl text-center mb-8">
-                Benefits of choosing us
+              <h3 className="logo text-white text-2xl md:text-3xl text-center font-bold mb-8">
+                Benefits of <span className="text-[#6DD054]">choosing us</span> 
               </h3>
 
-              {/* IMAGE CARD */}
-              <div className="flex items-center justify-center">
+              {/* WALLET TRANSFER ANIMATION */}
 
-              
-
-                  {/* IMAGE RING */}
-                  
-
-                 <img
-  src={benefit}
-  alt="MiniLend crypto lending"
-  className="relative w-60 sm:w-80 h-[200px] md:w-100 object-contain"
-/>
-                </div>
-
-             
+              <div className="w-full flex justify-center">
+                <WalletTransferAnimation />
+              </div>
 
             </div>
 
 
             {/* =================================================
-                RIGHT
+                RIGHT SIDE
             ================================================== */}
             <div className="w-full max-w-lg text-white">
 
@@ -209,6 +200,7 @@ export default function Benefits() {
                       group-hover:translate-x-1
                     "
                   />
+
                 </button>
 
               </div>
@@ -409,32 +401,41 @@ export default function Benefits() {
                   group-hover:-translate-y-0.5
                 "
               />
+
             </button>
 
 
             {/* TERMS */}
             <p className="mt-4 text-center text-[10px] leading-5 text-white/25">
+
               By connecting, you agree to our{" "}
+
               <a
                 href="#"
                 className="text-white/50 underline underline-offset-2 hover:text-white"
               >
                 Terms of Use
-              </a>{" "}
-              and{" "}
+              </a>
+
+              {" "}and{" "}
+
               <a
                 href="#"
                 className="text-white/50 underline underline-offset-2 hover:text-white"
               >
                 Privacy Policy
               </a>
+
               .
+
             </p>
 
           </div>
 
         </div>
       )}
+
     </>
   );
 }
+

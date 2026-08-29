@@ -1,6 +1,6 @@
-
-import { Routes, Route, Navigate } from "react-router-dom";
-
+;
+// import { Routes, Route, Navigate } from "react-router-dom";
+import Landing from "./pages/Landing Page"
 import Dashboard from "./dashboard/Dashboard";
 import Markets from "./markets/Markets";
 import ActivityPage from "./activity/ActivityPage";
@@ -11,51 +11,59 @@ import ContactSupport from "./help/ContactSupport";
 
 function App() {
   return (
-    <Routes>
+  
+    
 
-      {/* DASHBOARD */}
-      <Route
+<div>
+  {/* LANDING PAGE */}
+<Landing />
+
+
+{/* DASHBOARD */}
+      {/* <Route
         path="/dashboard"
         element={<Dashboard />}
-      />
+      /> */}
 
       {/* MARKETS */}
-      <Route
+      {/* <Route
         path="/markets"
         element={<Markets />}
-      />
+      /> */}
 
       {/* ACTIVITY */}
-      <Route
+      {/* <Route
         path="/activity"
         element={<ActivityPage />}
-      />
+      /> */}
 
       {/* HELP CENTER */}
-      <Route
+      {/* <Route
         path="/help"
         element={<HelpCenter />}
-      />
+      /> */}
 
       {/* FAQ */}
-      <Route
+      {/* <Route
         path="/help/faq"
         element={<FAQ />}
-      />
+      /> */}
 
       {/* CONTACT SUPPORT */}
-      <Route
+      {/* <Route
         path="/help/contact"
         element={<ContactSupport />}
-      />
+      /> */}
 
       {/* DEFAULT */}
-      <Route
+      {/* <Route
         path="*"
         element={<Navigate to="/dashboard" replace />}
-      />
+      /> */}
 
-    </Routes>
+</div>
+      
+    
   );
 }
 

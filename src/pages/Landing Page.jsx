@@ -1,3 +1,4 @@
+
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import HowItWorks from "../components/How It Work";
@@ -42,3 +43,4 @@ export default function Landing() {
     </>
   );
 }
+

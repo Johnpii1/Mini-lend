@@ -4,6 +4,9 @@ import {
   FiRefreshCw,
   FiArrowUpRight,
 } from "react-icons/fi";
+import { Link } from "react-router-dom";
+
+
 
 export default function Activity() {
   const activities = [
@@ -60,18 +63,25 @@ export default function Activity() {
             </p>
           </div>
 
-          <button
-            type="button"
-            className="
-              shrink-0
-              text-xs
-              text-[#6DD054]
-              hover:text-white
-              transition
-            "
-          >
-            View all
-          </button>
+          <Link
+  to="/activity"
+  className="
+    shrink-0
+    border-2
+    border-[#6DD054]
+    hover:bg-[#6DD054]
+    rounded-lg
+    px-2
+    py-1
+    text-xs
+    md:text-sm
+    text-[#6DD054]
+    hover:text-white
+    transition
+  "
+>
+  View all
+</Link>
         </div>
       </div>
 
