@@ -245,9 +245,10 @@ export default function Footer() {
                     group-hover:shadow-[0_0_30px_rgba(109,208,84,0.25)]
                   "
                 >
-                  <span className="relative z-10 text-sm font-black text-[#0d1b0a]">
-                    M
-                  </span>
+                  <img
+            className="object-contain w-[50px]"
+             src="./favicon.png" alt="LOGO " />
+
 
                   <div
                     className="

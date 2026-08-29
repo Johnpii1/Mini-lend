@@ -13,28 +13,28 @@ export default function Landing() {
     <>
       <Navbar />
 
-      <main>
+      <main className="space-y-0">
         <section id="home">
           <Hero />
         </section>
 
-        <section id="how-it-works">
+        <section id="how-it-works" className="mt-[-1px]">
           <HowItWorks />
         </section>
 
-        <section id="benefits">
+        <section id="benefits" className="mt-[-1px]">
           <Benefits />
         </section>
 
-        <section id="assets">
+        <section id="assets" className="mt-[-1px]">
           <Assets />
         </section>
 
-        <section id="faq">
+        <section id="faq" className="mt-[-1px]">
           <FAQ />
         </section>
 
-        <section id="contact">
+        <section id="contact" className="mt-[-1px]">
           <ContactUs />
         </section>
       </main>

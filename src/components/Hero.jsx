@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import {
   FiArrowRight,
@@ -33,15 +34,22 @@ export default function Hero() {
 
     if (!isDeleting && displayText.length < currentPhrase.length) {
       timeout = setTimeout(() => {
-        setDisplayText(currentPhrase.substring(0, displayText.length + 1));
+        setDisplayText(
+          currentPhrase.substring(0, displayText.length + 1)
+        );
       }, 80);
-    } else if (!isDeleting && displayText.length === currentPhrase.length) {
+    } else if (
+      !isDeleting &&
+      displayText.length === currentPhrase.length
+    ) {
       timeout = setTimeout(() => {
         setIsDeleting(true);
       }, 2200);
     } else if (isDeleting && displayText.length > 0) {
       timeout = setTimeout(() => {
-        setDisplayText(currentPhrase.substring(0, displayText.length - 1));
+        setDisplayText(
+          currentPhrase.substring(0, displayText.length - 1)
+        );
       }, 45);
     } else if (isDeleting && displayText.length === 0) {
       setIsDeleting(false);
@@ -53,24 +61,153 @@ export default function Hero() {
   }, [displayText, isDeleting, phraseIndex]);
 
   // =====================================================
+  // NUMBER COUNTING ANIMATION
+  // =====================================================
+  const [liquidity, setLiquidity] = useState(0);
+  const [collateral, setCollateral] = useState(0);
+  const [borrowed, setBorrowed] = useState(0);
+  const [health, setHealth] = useState(0);
+
+  useEffect(() => {
+    const duration = 1800;
+    const startTime = performance.now();
+
+    const animateNumbers = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Smooth ease-out animation
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+      setLiquidity(Math.floor(2450 * easedProgress));
+      setCollateral(Number((1.25 * easedProgress).toFixed(2)));
+      setBorrowed(Math.floor(2450 * easedProgress));
+      setHealth(Math.floor(78 * easedProgress));
+
+      if (progress < 1) {
+        requestAnimationFrame(animateNumbers);
+      } else {
+        setLiquidity(2450);
+        setCollateral(1.25);
+        setBorrowed(2450);
+        setHealth(78);
+      }
+    };
+
+    const animationFrame = requestAnimationFrame(animateNumbers);
+
+    return () => cancelAnimationFrame(animationFrame);
+  }, []);
+
+  // =====================================================
   // SHINING STARS
   // =====================================================
   const stars = [
-    { top: "12%", left: "7%", size: "2px", delay: "0s", duration: "2.8s" },
-    { top: "20%", left: "22%", size: "3px", delay: "1.2s", duration: "3.5s" },
-    { top: "9%", left: "42%", size: "2px", delay: "0.6s", duration: "2.5s" },
-    { top: "28%", left: "53%", size: "2px", delay: "2s", duration: "4s" },
-    { top: "15%", left: "68%", size: "3px", delay: "0.3s", duration: "3.2s" },
-    { top: "34%", left: "88%", size: "2px", delay: "1.7s", duration: "2.7s" },
-    { top: "47%", left: "5%", size: "2px", delay: "2.5s", duration: "3.8s" },
-    { top: "55%", left: "28%", size: "3px", delay: "0.9s", duration: "3s" },
-    { top: "63%", left: "48%", size: "2px", delay: "1.5s", duration: "3.6s" },
-    { top: "72%", left: "76%", size: "3px", delay: "0.2s", duration: "2.9s" },
-    { top: "82%", left: "15%", size: "2px", delay: "2.2s", duration: "3.4s" },
-    { top: "88%", left: "62%", size: "2px", delay: "1s", duration: "2.6s" },
-    { top: "42%", left: "94%", size: "2px", delay: "2.8s", duration: "3.7s" },
-    { top: "76%", left: "38%", size: "2px", delay: "0.5s", duration: "3.1s" },
-    { top: "24%", left: "78%", size: "2px", delay: "1.9s", duration: "4.2s" },
+    {
+      top: "12%",
+      left: "7%",
+      size: "2px",
+      delay: "0s",
+      duration: "2.8s",
+    },
+    {
+      top: "20%",
+      left: "22%",
+      size: "3px",
+      delay: "1.2s",
+      duration: "3.5s",
+    },
+    {
+      top: "9%",
+      left: "42%",
+      size: "2px",
+      delay: "0.6s",
+      duration: "2.5s",
+    },
+    {
+      top: "28%",
+      left: "53%",
+      size: "2px",
+      delay: "2s",
+      duration: "4s",
+    },
+    {
+      top: "15%",
+      left: "68%",
+      size: "3px",
+      delay: "0.3s",
+      duration: "3.2s",
+    },
+    {
+      top: "34%",
+      left: "88%",
+      size: "2px",
+      delay: "1.7s",
+      duration: "2.7s",
+    },
+    {
+      top: "47%",
+      left: "5%",
+      size: "2px",
+      delay: "2.5s",
+      duration: "3.8s",
+    },
+    {
+      top: "55%",
+      left: "28%",
+      size: "3px",
+      delay: "0.9s",
+      duration: "3s",
+    },
+    {
+      top: "63%",
+      left: "48%",
+      size: "2px",
+      delay: "1.5s",
+      duration: "3.6s",
+    },
+    {
+      top: "72%",
+      left: "76%",
+      size: "3px",
+      delay: "0.2s",
+      duration: "2.9s",
+    },
+    {
+      top: "82%",
+      left: "15%",
+      size: "2px",
+      delay: "2.2s",
+      duration: "3.4s",
+    },
+    {
+      top: "88%",
+      left: "62%",
+      size: "2px",
+      delay: "1s",
+      duration: "2.6s",
+    },
+    {
+      top: "42%",
+      left: "94%",
+      size: "2px",
+      delay: "2.8s",
+      duration: "3.7s",
+    },
+    {
+      top: "76%",
+      left: "38%",
+      size: "2px",
+      delay: "0.5s",
+      duration: "3.1s",
+    },
+    {
+      top: "24%",
+      left: "78%",
+      size: "2px",
+      delay: "1.9s",
+      duration: "4.2s",
+    },
   ];
 
   return (
@@ -179,6 +316,7 @@ export default function Hero() {
 
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-[#6DD054]" />
                 </span>
+
                 Decentralized Lending Protocol
               </div>
 
@@ -199,6 +337,7 @@ export default function Hero() {
                 "
               >
                 Unlock liquidity
+
                 <span className="block min-h-[1.1em] text-[#6DD054]">
                   {displayText}
 
@@ -267,6 +406,7 @@ export default function Hero() {
                   "
                 >
                   Get Started
+
                   <FiArrowRight
                     className="
                       transition-transform
@@ -301,6 +441,7 @@ export default function Hero() {
                   "
                 >
                   Learn More
+
                   <FiArrowUpRight
                     className="
                       transition-transform
@@ -375,13 +516,17 @@ export default function Hero() {
                   </div>
                 </div>
 
-                {/* Balance */}
+                {/* =================================================
+                    BALANCE
+                ================================================== */}
                 <div className="py-7">
-                  <p className="text-xs text-white/35">Available liquidity</p>
+                  <p className="text-xs text-white/35">
+                    Available liquidity
+                  </p>
 
                   <div className="mt-2 flex items-end gap-2">
-                    <span className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-                      2,450
+                    <span className="text-4xl font-bold tracking-tight text-white sm:text-5xl tabular-nums">
+                      {liquidity.toLocaleString()}
                     </span>
 
                     <span className="mb-1 text-sm font-semibold text-[#6DD054]">
@@ -394,20 +539,24 @@ export default function Hero() {
                   </p>
                 </div>
 
-                {/* Collateral / loan */}
+                {/* =================================================
+                    COLLATERAL / LOAN
+                ================================================== */}
                 <div className="grid gap-3 sm:grid-cols-2">
                   {/* Collateral */}
                   <div className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-white/35">Collateral</span>
+                      <span className="text-xs text-white/35">
+                        Collateral
+                      </span>
 
                       <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#627EEA]/10 text-xs font-bold text-[#627EEA]">
                         Ξ
                       </span>
                     </div>
 
-                    <p className="mt-4 text-lg font-bold text-white">
-                      1.25 ETH
+                    <p className="mt-4 text-lg font-bold text-white tabular-nums">
+                      {collateral.toFixed(2)} ETH
                     </p>
 
                     <p className="mt-1 text-[10px] text-white/30">
@@ -418,15 +567,17 @@ export default function Hero() {
                   {/* Borrowed */}
                   <div className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-white/35">Borrowed</span>
+                      <span className="text-xs text-white/35">
+                        Borrowed
+                      </span>
 
                       <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#6DD054]/10 text-[10px] font-bold text-[#6DD054]">
                         $
                       </span>
                     </div>
 
-                    <p className="mt-4 text-lg font-bold text-white">
-                      2,450 USDT
+                    <p className="mt-4 text-lg font-bold text-white tabular-nums">
+                      {borrowed.toLocaleString()} USDT
                     </p>
 
                     <p className="mt-1 text-[10px] text-white/30">
@@ -435,7 +586,9 @@ export default function Hero() {
                   </div>
                 </div>
 
-                {/* Health bar */}
+                {/* =================================================
+                    HEALTH BAR
+                ================================================== */}
                 <div className="mt-3 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-white/40">
@@ -448,20 +601,31 @@ export default function Hero() {
                   </div>
 
                   <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/[0.07]">
-                    <div className="h-full w-[78%] rounded-full bg-[#6DD054]" />
+                    <div
+                      className="h-full rounded-full bg-[#6DD054] transition-all duration-100"
+                      style={{
+                        width: `${health}%`,
+                      }}
+                    />
                   </div>
 
                   <div className="mt-2 flex justify-between text-[9px] text-white/25">
                     <span>Safe</span>
 
+                    <span>{health}%</span>
+
                     <span>Liquidation</span>
                   </div>
                 </div>
 
-                {/* Bottom action */}
+                {/* =================================================
+                    BOTTOM ACTION
+                ================================================== */}
                 <div className="mt-4 flex items-center justify-between rounded-2xl bg-[#6DD054]/[0.06] px-4 py-3">
                   <div>
-                    <p className="text-[10px] text-white/30">Staking rewards</p>
+                    <p className="text-[10px] text-white/30">
+                      Staking rewards
+                    </p>
 
                     <p className="mt-0.5 text-xs font-semibold text-[#6DD054]">
                       Continuing to accrue
@@ -472,7 +636,9 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* Floating card */}
+              {/* =================================================
+                  FLOATING CARD
+              ================================================== */}
               <div
                 className="
                   absolute
@@ -507,7 +673,9 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* Floating status */}
+              {/* =================================================
+                  FLOATING STATUS
+              ================================================== */}
               <div
                 className="
                   absolute
@@ -657,12 +825,13 @@ export default function Hero() {
                 text-[#0b1609]
                 transition-all
                 duration-300
-                hover:bg-[#7ae360]
                 hover:-translate-y-0.5
+                hover:bg-[#7ae360]
                 active:scale-[0.98]
               "
             >
               Connect Wallet
+
               <FiArrowUpRight
                 className="
                   transition-transform
@@ -697,3 +866,4 @@ export default function Hero() {
     </>
   );
 }
+

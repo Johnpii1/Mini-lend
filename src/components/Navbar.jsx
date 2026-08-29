@@ -321,12 +321,10 @@ export default function Navbar() {
           onClick={() => scrollToSection("home")}
           className="group flex items-center gap-2.5 shrink-0"
         >
-          <div
-            className=""
-          >
+          <div>
             <img
             className="object-contain w-[50px]"
-             src="./favicon.png" alt="" />
+             src="./favicon.png" alt="LOGO " />
 
             <div
               className="
