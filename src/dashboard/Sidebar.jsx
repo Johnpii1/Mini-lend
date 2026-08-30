@@ -5,7 +5,6 @@ import {
   FiGrid,
   FiTrendingUp,
   FiActivity,
-  FiSettings,
   FiHelpCircle,
   FiLogOut,
   FiX,
@@ -34,11 +33,6 @@ export default function Sidebar({ mobileOpen, setMobileOpen }) {
   ];
 
   const bottomItems = [
-    {
-      name: "Settings",
-      path: "/settings",
-      icon: FiSettings,
-    },
     {
       name: "Help Center",
       path: "/help",

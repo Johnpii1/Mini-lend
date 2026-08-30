@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import {
   FiArrowUpRight,
@@ -7,37 +8,131 @@ import {
   FiShield,
   FiX,
 } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function Footer() {
   const [modalOpen, setModalOpen] = useState(false);
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // ============================================================
+  // PRODUCT LINKS
+  // ============================================================
+
   const productLinks = [
-    { label: "How It Works", to: "/how-it-works" },
-    { label: "Benefits", to: "/benefits" },
-    { label: "Supported Assets", to: "/assets" },
-    { label: "FAQ", to: "/faq" },
+    {
+      label: "How It Works",
+      id: "how-it-works",
+    },
+    {
+      label: "Benefits",
+      id: "benefits",
+    },
+    {
+      label: "Supported Assets",
+      id: "assets",
+    },
+    {
+      label: "FAQ",
+      id: "faq",
+    },
   ];
+
+  // ============================================================
+  // RESOURCE LINKS
+  // ============================================================
 
   const resourceLinks = [
-    { label: "White Paper", to: "/white-paper" },
-    { label: "Documentation", to: "/docs" },
-    { label: "Contact Us", to: "/contact" },
+    {
+      label: "White Paper",
+      to: "/white-paper",
+      page: true,
+    },
+    {
+      label: "Documentation",
+      to: "/docs",
+      page: true,
+    },
+    {
+      label: "Contact Us",
+      id: "contact",
+    },
   ];
 
+  // ============================================================
+  // LEGAL LINKS
+  // ============================================================
+
   const legalLinks = [
-    { label: "Privacy Policy", to: "/privacy" },
-    { label: "Terms of Use", to: "/terms" },
-    { label: "Risk Disclosure", to: "/risk-disclosure" },
+    {
+      label: "Privacy Policy",
+      to: "/privacy",
+      page: true,
+    },
+    {
+      label: "Terms of Use",
+      to: "/terms",
+      page: true,
+    },
+    {
+      label: "Risk Disclosure",
+      to: "/risk-disclosure",
+      page: true,
+    },
   ];
+
+  // ============================================================
+  // SCROLL TO LANDING PAGE SECTION
+  // ============================================================
+
+  const scrollToSection = (id) => {
+    setModalOpen(false);
+
+    // If we are not on the landing page,
+    // go there first with the hash.
+    if (location.pathname !== "/") {
+      navigate(`/#${id}`);
+      return;
+    }
+
+    const section = document.getElementById(id);
+
+    if (!section) {
+      return;
+    }
+
+    const navbarOffset = 110;
+
+    const position =
+      section.getBoundingClientRect().top +
+      window.scrollY -
+      navbarOffset;
+
+    window.history.replaceState(
+      null,
+      "",
+      `/#${id}`
+    );
+
+    window.scrollTo({
+      top: position,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <>
+      {/* =====================================================
+          FOOTER
+      ====================================================== */}
+
       <footer className="bg-[#080908] text-white">
 
         {/* =====================================================
             CTA SECTION
         ====================================================== */}
+
         <section className="px-5 sm:px-8 lg:px-10 pt-20 pb-12">
 
           <div
@@ -57,7 +152,8 @@ export default function Footer() {
             "
           >
 
-            {/* Background glow */}
+            {/* BACKGROUND GLOW */}
+
             <div
               className="
                 pointer-events-none
@@ -100,6 +196,7 @@ export default function Footer() {
             >
 
               {/* LEFT */}
+
               <div className="max-w-2xl">
 
                 <div className="flex items-center gap-2 mb-4">
@@ -120,7 +217,7 @@ export default function Footer() {
                     <FiShield className="text-[#6DD054] text-sm" />
                   </span>
 
-                  <span className="logo text-xs uppercase tracking-[0.2em] text-[#6DD054]">
+                  <span className="text-xs uppercase tracking-[0.2em] text-[#6DD054]">
                     Decentralized Lending
                   </span>
 
@@ -128,7 +225,6 @@ export default function Footer() {
 
                 <h2
                   className="
-                    logo
                     text-2xl
                     sm:text-3xl
                     md:text-4xl
@@ -142,15 +238,15 @@ export default function Footer() {
                   </span>
                 </h2>
 
-                <p className="logo mt-4 max-w-xl text-sm leading-7 text-white/45">
+                <p className="mt-4 max-w-xl text-sm leading-7 text-white/45">
                   Access decentralized liquidity, keep control of your
                   assets, and manage your lending position through MiniLend.
                 </p>
 
               </div>
 
-
               {/* CTA BUTTON */}
+
               <div className="shrink-0">
 
                 <button
@@ -187,6 +283,7 @@ export default function Footer() {
                       group-hover:-translate-y-0.5
                     "
                   />
+
                 </button>
 
               </div>
@@ -201,6 +298,7 @@ export default function Footer() {
         {/* =====================================================
             MAIN FOOTER
         ====================================================== */}
+
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
 
           <div
@@ -219,12 +317,30 @@ export default function Footer() {
             {/* =================================================
                 BRAND
             ================================================= */}
+
             <div className="max-w-sm">
 
               {/* LOGO */}
-              <Link
-                to="/"
-                className="inline-flex items-center gap-2.5 group"
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (location.pathname !== "/") {
+                    navigate("/");
+                    setTimeout(() => {
+                      window.scrollTo({
+                        top: 0,
+                        behavior: "smooth",
+                      });
+                    }, 100);
+                  } else {
+                    window.scrollTo({
+                      top: 0,
+                      behavior: "smooth",
+                    });
+                  }
+                }}
+                className="inline-flex items-center gap-2.5 group text-left"
               >
 
                 <div
@@ -245,10 +361,12 @@ export default function Footer() {
                     group-hover:shadow-[0_0_30px_rgba(109,208,84,0.25)]
                   "
                 >
-                  <img
-            className="object-contain w-[50px]"
-             src="./favicon.png" alt="LOGO " />
 
+                  <img
+                    className="object-contain w-[50px]"
+                    src="./favicon.png"
+                    alt="MiniLend Logo"
+                  />
 
                   <div
                     className="
@@ -262,8 +380,8 @@ export default function Footer() {
                       blur-md
                     "
                   />
-                </div>
 
+                </div>
 
                 <div className="leading-none">
 
@@ -277,11 +395,12 @@ export default function Footer() {
 
                 </div>
 
-              </Link>
+              </button>
 
 
               {/* DESCRIPTION */}
-              <p className="logo mt-6 text-sm leading-7 text-white/40">
+
+              <p className="mt-6 text-sm leading-7 text-white/40">
                 A decentralized lending protocol designed to give
                 users simple and transparent access to crypto-backed
                 liquidity.
@@ -289,6 +408,7 @@ export default function Footer() {
 
 
               {/* NETWORK */}
+
               <div className="mt-6 inline-flex items-center gap-2 rounded-xl border border-[#6DD054]/10 bg-[#6DD054]/[0.04] px-3 py-2">
 
                 <span className="relative flex h-2 w-2">
@@ -307,6 +427,7 @@ export default function Footer() {
 
 
               {/* SOCIALS */}
+
               <div className="flex items-center gap-2 mt-6">
 
                 <a
@@ -389,9 +510,10 @@ export default function Footer() {
             {/* =================================================
                 PRODUCT
             ================================================= */}
+
             <div>
 
-              <h3 className="logo text-xs font-semibold uppercase tracking-[0.18em] text-white">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-white">
                 Product
               </h3>
 
@@ -399,9 +521,10 @@ export default function Footer() {
 
                 {productLinks.map((item) => (
 
-                  <Link
-                    key={item.to}
-                    to={item.to}
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => scrollToSection(item.id)}
                     className="
                       group
                       flex
@@ -426,7 +549,8 @@ export default function Footer() {
                         group-hover:opacity-100
                       "
                     />
-                  </Link>
+
+                  </button>
 
                 ))}
 
@@ -438,46 +562,86 @@ export default function Footer() {
             {/* =================================================
                 RESOURCES
             ================================================= */}
+
             <div>
 
-              <h3 className="logo text-xs font-semibold uppercase tracking-[0.18em] text-white">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-white">
                 Resources
               </h3>
 
               <div className="mt-5 space-y-3">
 
-                {resourceLinks.map((item) => (
+                {resourceLinks.map((item) => {
 
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    className="
-                      group
-                      flex
-                      items-center
-                      gap-2
-                      text-sm
-                      text-white/40
-                      transition-colors
-                      hover:text-[#6DD054]
-                    "
-                  >
-                    {item.label}
+                  // LANDING PAGE SECTION
+                  if (item.id) {
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => scrollToSection(item.id)}
+                        className="
+                          group
+                          flex
+                          items-center
+                          gap-2
+                          text-sm
+                          text-white/40
+                          transition-colors
+                          hover:text-[#6DD054]
+                        "
+                      >
+                        {item.label}
 
-                    <FiArrowUpRight
+                        <FiArrowUpRight
+                          className="
+                            text-xs
+                            opacity-0
+                            transition-all
+                            duration-200
+                            group-hover:translate-x-0.5
+                            group-hover:-translate-y-0.5
+                            group-hover:opacity-100
+                          "
+                        />
+
+                      </button>
+                    );
+                  }
+
+                  // NORMAL PAGE
+                  return (
+                    <Link
+                      key={item.to}
+                      to={item.to}
                       className="
-                        text-xs
-                        opacity-0
-                        transition-all
-                        duration-200
-                        group-hover:translate-x-0.5
-                        group-hover:-translate-y-0.5
-                        group-hover:opacity-100
+                        group
+                        flex
+                        items-center
+                        gap-2
+                        text-sm
+                        text-white/40
+                        transition-colors
+                        hover:text-[#6DD054]
                       "
-                    />
-                  </Link>
+                    >
+                      {item.label}
 
-                ))}
+                      <FiArrowUpRight
+                        className="
+                          text-xs
+                          opacity-0
+                          transition-all
+                          duration-200
+                          group-hover:translate-x-0.5
+                          group-hover:-translate-y-0.5
+                          group-hover:opacity-100
+                        "
+                      />
+
+                    </Link>
+                  );
+                })}
 
               </div>
 
@@ -487,9 +651,10 @@ export default function Footer() {
             {/* =================================================
                 LEGAL
             ================================================= */}
+
             <div>
 
-              <h3 className="logo text-xs font-semibold uppercase tracking-[0.18em] text-white">
+              <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-white">
                 Legal
               </h3>
 
@@ -524,6 +689,7 @@ export default function Footer() {
                         group-hover:opacity-100
                       "
                     />
+
                   </Link>
 
                 ))}
@@ -538,6 +704,7 @@ export default function Footer() {
           {/* =====================================================
               BOTTOM FOOTER
           ====================================================== */}
+
           <div
             className="
               flex
@@ -551,12 +718,14 @@ export default function Footer() {
           >
 
             {/* COPYRIGHT */}
-            <p className="logo text-[11px] text-white/30">
+
+            <p className="text-[11px] text-white/30">
               © 2026 MiniLend.eth. All rights reserved.
             </p>
 
 
             {/* STATUS */}
+
             <div className="flex items-center gap-2">
 
               <span className="relative flex h-2 w-2">
@@ -567,7 +736,7 @@ export default function Footer() {
 
               </span>
 
-              <span className="logo text-[11px] text-white/30">
+              <span className="text-[11px] text-white/30">
                 Built for decentralized finance
               </span>
 
@@ -575,6 +744,7 @@ export default function Footer() {
 
 
             {/* BACK TO TOP */}
+
             <button
               type="button"
               onClick={() =>
@@ -626,7 +796,9 @@ export default function Footer() {
       {/* =====================================================
           CONNECT WALLET MODAL
       ====================================================== */}
+
       {modalOpen && (
+
         <div
           className="
             fixed
@@ -657,7 +829,8 @@ export default function Footer() {
             onClick={(e) => e.stopPropagation()}
           >
 
-            {/* CLOSE BUTTON */}
+            {/* CLOSE */}
+
             <button
               type="button"
               onClick={() => setModalOpen(false)}
@@ -686,25 +859,29 @@ export default function Footer() {
 
 
             {/* ICON */}
+
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#6DD054]/10">
               <FiShield className="text-2xl text-[#6DD054]" />
             </div>
 
 
             {/* TITLE */}
+
             <h2 className="mt-5 text-center text-xl font-bold text-white">
               Connect Your Wallet
             </h2>
 
 
             {/* DESCRIPTION */}
+
             <p className="mx-auto mt-2 max-w-sm text-center text-sm leading-6 text-white/40">
               Connect your wallet to start staking assets and access
               stablecoin loans through MiniLend.
             </p>
 
 
-            {/* CONNECT BUTTON */}
+            {/* CONNECT */}
+
             <button
               type="button"
               id="footerConnectWalletBtn"
@@ -729,20 +906,26 @@ export default function Footer() {
               Connect Wallet
 
               <FiArrowUpRight />
+
             </button>
 
 
             {/* TERMS */}
+
             <p className="mt-4 text-center text-[10px] leading-5 text-white/25">
+
               By connecting, you agree to our{" "}
+
               <Link
                 to="/terms"
                 onClick={() => setModalOpen(false)}
                 className="text-white/50 underline underline-offset-2 hover:text-white"
               >
                 Terms of Use
-              </Link>{" "}
-              and{" "}
+              </Link>
+
+              {" "}and{" "}
+
               <Link
                 to="/privacy"
                 onClick={() => setModalOpen(false)}
@@ -750,13 +933,18 @@ export default function Footer() {
               >
                 Privacy Policy
               </Link>
+
               .
+
             </p>
 
           </div>
 
         </div>
+
       )}
+
     </>
   );
 }
+

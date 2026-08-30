@@ -1,6 +1,7 @@
-;
-// import { Routes, Route, Navigate } from "react-router-dom";
-import Landing from "./pages/Landing Page"
+
+import { useState } from "react";
+
+import Landing from "./pages/Landing Page";
 import Dashboard from "./dashboard/Dashboard";
 import Markets from "./markets/Markets";
 import ActivityPage from "./activity/ActivityPage";
@@ -9,61 +10,37 @@ import HelpCenter from "./help/HelpCenter";
 import FAQ from "./help/FAQ";
 import ContactSupport from "./help/ContactSupport";
 
+import LoadingScreen from "./components/LoadingScreen";
+
 function App() {
+  const [loading, setLoading] = useState(true);
+
   return (
-  
-    
+    <>
+      {/* =====================================================
+          LOADING SCREEN
+      ====================================================== */}
 
-<div>
-  {/* LANDING PAGE */}
-<Landing />
+      {loading && (
+        <LoadingScreen
+          onComplete={() => setLoading(false)}
+        />
+      )}
 
+      {/* =====================================================
+          LANDING PAGE
+      ====================================================== */}
 
-{/* DASHBOARD */}
-      {/* <Route
-        path="/dashboard"
-        element={<Dashboard />}
-      /> */}
-
-      {/* MARKETS */}
-      {/* <Route
-        path="/markets"
-        element={<Markets />}
-      /> */}
-
-      {/* ACTIVITY */}
-      {/* <Route
-        path="/activity"
-        element={<ActivityPage />}
-      /> */}
-
-      {/* HELP CENTER */}
-      {/* <Route
-        path="/help"
-        element={<HelpCenter />}
-      /> */}
-
-      {/* FAQ */}
-      {/* <Route
-        path="/help/faq"
-        element={<FAQ />}
-      /> */}
-
-      {/* CONTACT SUPPORT */}
-      {/* <Route
-        path="/help/contact"
-        element={<ContactSupport />}
-      /> */}
-
-      {/* DEFAULT */}
-      {/* <Route
-        path="*"
-        element={<Navigate to="/dashboard" replace />}
-      /> */}
-
-</div>
-      
-    
+      <div
+        className={`
+          transition-opacity
+          duration-500
+          ${loading ? "opacity-0" : "opacity-100"}
+        `}
+      >
+        <Landing />
+      </div>
+    </>
   );
 }
 

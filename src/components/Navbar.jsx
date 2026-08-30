@@ -1,18 +1,13 @@
+
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import {
-  FiHelpCircle,
-  FiFileText,
   FiArrowUpRight,
   FiMenu,
   FiX,
-  FiHome,
-  FiInfo,
   FiCircle,
-  FiAward,
-  FiGrid,
-  FiMail,
+  FiFileText,
 } from "react-icons/fi";
 
 export default function Navbar() {
@@ -23,56 +18,24 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  /*
-  ============================================================
-  NAVIGATION ITEMS
-  ============================================================
-  */
+  // ============================================================
+  // CENTER NAVIGATION
+  // ============================================================
 
   const navItems = [
     {
-      label: "Home",
-      id: "home",
-      icon: FiHome,
-    },
-    {
       label: "How It Works",
       id: "how-it-works",
-      icon: FiInfo,
-    },
-    {
-      label: "Benefits",
-      id: "benefits",
-      icon: FiAward,
-    },
-    {
-      label: "Assets",
-      id: "assets",
-      icon: FiGrid,
     },
     {
       label: "FAQ",
       id: "faq",
-      icon: FiHelpCircle,
-    },
-    {
-      label: "White Paper",
-      to: "/white-paper",
-      icon: FiFileText,
-      externalPage: true,
-    },
-    {
-      label: "Contact Us",
-      id: "contact",
-      icon: FiMail,
     },
   ];
 
-  /*
-  ============================================================
-  SCROLL BACKGROUND
-  ============================================================
-  */
+  // ============================================================
+  // SCROLL BACKGROUND
+  // ============================================================
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,40 +51,27 @@ export default function Navbar() {
     };
   }, []);
 
-  /*
-  ============================================================
-  FIND ACTIVE SECTION
-  ============================================================
-  */
+  // ============================================================
+  // ACTIVE SECTION
+  // ============================================================
 
   useEffect(() => {
-    if (location.pathname !== "/") {
-      return;
-    }
+    if (location.pathname !== "/") return;
 
     const updateActiveSection = () => {
       const sections = navItems
-        .filter((item) => !item.externalPage)
         .map((item) => ({
           id: item.id,
           element: document.getElementById(item.id),
         }))
         .filter((item) => item.element);
 
-      /*
-        The navbar is fixed, so we use a position near
-        the top of the viewport to determine which section
-        the user is currently inside.
-      */
-
       const scrollPosition = window.scrollY + 140;
 
       let currentSection = "home";
 
       for (const section of sections) {
-        const sectionTop = section.element.offsetTop;
-
-        if (scrollPosition >= sectionTop) {
+        if (scrollPosition >= section.element.offsetTop) {
           currentSection = section.id;
         }
       }
@@ -129,76 +79,65 @@ export default function Navbar() {
       setActiveSection(currentSection);
     };
 
-    // Run immediately on page load / refresh
     updateActiveSection();
 
-    // Run whenever the user scrolls
     window.addEventListener("scroll", updateActiveSection);
-
-    // Run again after everything has rendered
-    const timeout = setTimeout(() => {
-      updateActiveSection();
-    }, 100);
 
     return () => {
       window.removeEventListener("scroll", updateActiveSection);
-      clearTimeout(timeout);
     };
   }, [location.pathname]);
 
-  /*
-  ============================================================
-  HANDLE PAGE HASH AFTER NAVIGATION
-  ============================================================
-  */
+  // ============================================================
+  // HASH NAVIGATION
+  // ============================================================
 
   useEffect(() => {
-    if (location.pathname !== "/") {
-      return;
-    }
+    if (location.pathname !== "/") return;
 
     const hash = window.location.hash;
 
-    if (!hash) {
-      return;
-    }
+    if (!hash) return;
 
     const id = hash.replace("#", "");
 
     const timeout = setTimeout(() => {
       const section = document.getElementById(id);
 
-      if (section) {
-        const navbarOffset = 110;
+      if (!section) return;
 
-        const position =
-          section.getBoundingClientRect().top + window.scrollY - navbarOffset;
+      const navbarOffset = 110;
 
-        window.scrollTo({
-          top: position,
-          behavior: "smooth",
-        });
+      const position =
+        section.getBoundingClientRect().top +
+        window.scrollY -
+        navbarOffset;
 
-        setActiveSection(id);
-      }
+      window.scrollTo({
+        top: position,
+        behavior: "smooth",
+      });
+
+      setActiveSection(id);
     }, 100);
 
     return () => clearTimeout(timeout);
   }, [location.pathname]);
 
-  /*
-  ============================================================
-  SCROLL TO SECTION
-  ============================================================
-  */
+  // ============================================================
+  // CLOSE MOBILE MENU
+  // ============================================================
+
+  const closeMobileMenu = () => {
+    setMobileOpen(false);
+  };
+
+  // ============================================================
+  // SCROLL TO SECTION
+  // ============================================================
 
   const scrollToSection = (id) => {
     closeMobileMenu();
-
-    /*
-      If we are on another page, go back to landing page
-      and include the section hash.
-    */
 
     if (location.pathname !== "/") {
       navigate(`/#${id}`);
@@ -207,52 +146,32 @@ export default function Navbar() {
 
     const section = document.getElementById(id);
 
-    if (!section) {
-      return;
-    }
+    if (!section) return;
 
     const navbarOffset = 110;
 
-    const sectionPosition =
-      section.getBoundingClientRect().top + window.scrollY - navbarOffset;
-
-    /*
-      Immediately mark this section as active.
-    */
+    const position =
+      section.getBoundingClientRect().top +
+      window.scrollY -
+      navbarOffset;
 
     setActiveSection(id);
 
-    /*
-      Update URL without refreshing the page.
-    */
-
-    window.history.replaceState(null, "", id === "home" ? "/" : `/#${id}`);
-
-    /*
-      Smooth scroll.
-    */
+    window.history.replaceState(
+      null,
+      "",
+      id === "home" ? "/" : `/#${id}`
+    );
 
     window.scrollTo({
-      top: sectionPosition,
+      top: position,
       behavior: "smooth",
     });
   };
 
-  /*
-  ============================================================
-  CLOSE MOBILE MENU
-  ============================================================
-  */
-
-  const closeMobileMenu = () => {
-    setMobileOpen(false);
-  };
-
-  /*
-  ============================================================
-  RESIZE
-  ============================================================
-  */
+  // ============================================================
+  // RESIZE
+  // ============================================================
 
   useEffect(() => {
     const handleResize = () => {
@@ -268,11 +187,9 @@ export default function Navbar() {
     };
   }, []);
 
-  /*
-  ============================================================
-  NAVBAR
-  ============================================================
-  */
+  // ============================================================
+  // NAVBAR
+  // ============================================================
 
   return (
     <header
@@ -294,52 +211,62 @@ export default function Navbar() {
         ${
           scrolled
             ? `
-              bg-[#0d0d0d]/95
-              border-[#6DD054]/35
+              bg-[#0c0c0c]/95
+              border-white/[0.10]
               backdrop-blur-2xl
-              shadow-[0_20px_60px_rgba(0,0,0,0.45)]
+              shadow-[0_18px_50px_rgba(0,0,0,0.45)]
             `
             : `
-              bg-[#111111]/80
-              border-white/10
+              bg-[#101010]/90
+              border-white/[0.08]
               backdrop-blur-xl
             `
         }
       `}
     >
       {/* =====================================================
-          TOP NAVBAR
+          MAIN NAVBAR
       ====================================================== */}
 
-      <div className="h-[64px] px-4 sm:px-6 lg:px-7 flex items-center justify-between">
-        {/* =====================================================
-            LOGO
-        ====================================================== */}
+      <div className="relative h-[64px] px-4 sm:px-6 lg:px-7 flex items-center">
+
+        {/* =================================================
+            LOGO - LEFT
+        ================================================== */}
 
         <button
           type="button"
           onClick={() => scrollToSection("home")}
-          className="group flex items-center gap-2.5 shrink-0"
+          className="
+            group
+            flex
+            items-center
+            gap-2.5
+            shrink-0
+          "
         >
-          <div>
+          <div className="relative">
             <img
-            className="object-contain w-[50px]"
-             src="./favicon.png" alt="LOGO " />
+              src="./favicon.png"
+              alt="MiniLend Logo"
+              className="w-[46px] h-[46px] object-contain"
+            />
 
             <div
               className="
                 absolute
-                -top-5
-                -right-5
-                w-10
-                h-10
+                -top-4
+                -right-4
+                w-8
+                h-8
                 rounded-full
-                bg-white/20
+                bg-white/15
                 blur-md
+                opacity-70
+                group-hover:translate-x-2
+                group-hover:translate-y-2
                 transition-transform
                 duration-500
-                group-hover:translate-x-3
-                group-hover:translate-y-3
               "
             />
           </div>
@@ -355,82 +282,22 @@ export default function Navbar() {
           </div>
         </button>
 
-        {/* =====================================================
-            DESKTOP NAVIGATION
-        ====================================================== */}
+        {/* =================================================
+            CENTER MENU
+        ================================================== */}
 
-        <nav className="hidden md:flex items-center gap-1">
+        <nav
+          className="
+            hidden
+            md:flex
+            absolute
+            left-1/2
+            -translate-x-1/2
+            items-center
+            gap-1
+          "
+        >
           {navItems.map((item) => {
-            const Icon = item.icon;
-
-            /*
-            ====================================================
-            WHITE PAPER
-            ====================================================
-            */
-
-            if (item.externalPage) {
-              return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className="
-                    group
-                    relative
-                    flex
-                    items-center
-                    gap-2
-                    px-2.5
-                    lg:px-3
-                    py-2.5
-                    rounded-xl
-                    text-xs
-                    lg:text-sm
-                    font-medium
-                    text-white/60
-                    hover:text-white
-                    hover:bg-white/[0.04]
-                    transition-all
-                    duration-200
-                  "
-                >
-                  <Icon
-                    className="
-                      text-base
-                      text-white/40
-                      transition-colors
-                      duration-200
-                      group-hover:text-[#6DD054]
-                    "
-                  />
-
-                  <span>{item.label}</span>
-
-                  <span
-                    className="
-                      absolute
-                      bottom-1.5
-                      left-4
-                      right-4
-                      h-px
-                      bg-[#6DD054]
-                      scale-x-0
-                      origin-left
-                      group-hover:scale-x-100
-                      transition-transform
-                      duration-300
-                    "
-                  />
-                </Link>
-              );
-            }
-
-            /*
-            ====================================================
-            ACTIVE SECTION
-            ====================================================
-            */
-
             const isActive = activeSection === item.id;
 
             return (
@@ -443,49 +310,46 @@ export default function Navbar() {
                   relative
                   flex
                   items-center
-                  gap-2
-                  px-2.5
-                  lg:px-3
+                  justify-center
+                  px-4
                   py-2.5
                   rounded-xl
-                  text-xs
-                  lg:text-sm
+                  border
+                  text-sm
                   font-medium
                   transition-all
                   duration-200
 
                   ${
                     isActive
-                      ? "text-white bg-[#6DD054]/[0.08]"
-                      : "text-white/60 hover:text-white hover:bg-white/[0.04]"
+                      ? `
+                        text-white
+                        bg-[#6DD054]/[0.08]
+                        border-[#6DD054]/10
+                      `
+                      : `
+                        text-white/55
+                        border-transparent
+                        hover:text-white
+                        hover:bg-white/[0.05]
+                        hover:border-white/[0.07]
+                      `
                   }
                 `}
               >
-                <Icon
-                  className={`
-                    text-base
-                    transition-colors
-                    duration-200
+                {item.label}
 
-                    ${
-                      isActive
-                        ? "text-[#6DD054]"
-                        : "text-white/40 group-hover:text-[#6DD054]"
-                    }
-                  `}
-                />
-
-                <span>{item.label}</span>
+                {/* ACTIVE / HOVER LINE */}
 
                 <span
                   className={`
                     absolute
-                    bottom-1.5
+                    bottom-1
                     left-4
                     right-4
                     h-px
                     bg-[#6DD054]
-                    origin-left
+                    origin-center
                     transition-transform
                     duration-300
 
@@ -501,40 +365,93 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* =====================================================
+        {/* =================================================
             RIGHT SIDE
-        ====================================================== */}
+        ================================================== */}
 
-        <div className="flex items-center gap-2.5">
-          {/* NETWORK */}
+        <div className="ml-auto flex items-center gap-1.5">
+
+          {/* =================================================
+              WHITE PAPER
+          ================================================== */}
+
+          <Link
+            to="/white-paper"
+            className="
+              hidden
+              lg:flex
+              group
+              items-center
+              gap-1.5
+              px-3
+              py-2.5
+              rounded-xl
+              border
+              border-transparent
+              text-xs
+              font-medium
+              text-white/55
+              hover:text-white
+              hover:bg-white/[0.05]
+              hover:border-white/[0.07]
+              transition-all
+              duration-200
+            "
+          >
+            <FiFileText
+              className="
+                text-white/35
+                group-hover:text-[#6DD054]
+                transition-colors
+              "
+            />
+
+            White Paper
+
+            <FiArrowUpRight
+              className="
+                text-white/20
+                group-hover:text-[#6DD054]
+                transition-all
+                duration-200
+                group-hover:translate-x-0.5
+                group-hover:-translate-y-0.5
+              "
+            />
+          </Link>
+
+          {/* =================================================
+              ANVIL
+          ================================================== */}
 
           <div
             className="
               hidden
-              lg:flex
+              sm:flex
               items-center
-              gap-2
+              gap-1.5
+              px-2.5
               h-9
-              px-3
               rounded-xl
-              border
-              border-[#6DD054]/15
-              bg-[#6DD054]/[0.05]
+              text-xs
+              text-white/45
             "
           >
             <FiCircle
               className="
-                text-[9px]
+                text-[7px]
                 fill-[#6DD054]
                 text-[#6DD054]
                 animate-pulse
               "
             />
 
-            <span className="text-xs font-medium text-white/55">Anvil</span>
+            <span>Anvil</span>
           </div>
 
-          {/* CONNECT WALLET */}
+          {/* =================================================
+              CONNECT WALLET
+          ================================================== */}
 
           <button
             id="headerConnect"
@@ -546,14 +463,14 @@ export default function Navbar() {
               relative
               items-center
               justify-center
-              gap-2
+              gap-1.5
               h-10
               px-4
               lg:px-5
               rounded-xl
               overflow-hidden
               bg-[#6DD054]
-             text-[#0b1609]
+              text-[#0b1609]
               font-semibold
               text-xs
               lg:text-sm
@@ -561,12 +478,13 @@ export default function Navbar() {
               duration-300
               hover:bg-[#cae8d3]
               hover:-translate-y-0.5
-              hover:shadow-[0_8px_25px_rgba(215,203,177,0.18)]
               active:translate-y-0
               active:scale-[0.98]
             "
           >
-            <span className="relative z-10">Connect Wallet</span>
+            <span className="relative z-10">
+              Connect Wallet
+            </span>
 
             <FiArrowUpRight
               className="
@@ -579,6 +497,8 @@ export default function Navbar() {
                 group-hover:-translate-y-0.5
               "
             />
+
+            {/* BUTTON SHINE */}
 
             <span
               className="
@@ -597,12 +517,18 @@ export default function Navbar() {
             />
           </button>
 
-          {/* MOBILE MENU */}
+          {/* =================================================
+              MOBILE MENU BUTTON
+          ================================================== */}
 
           <button
             type="button"
             onClick={() => setMobileOpen((prev) => !prev)}
-            aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+            aria-label={
+              mobileOpen
+                ? "Close navigation"
+                : "Open navigation"
+            }
             aria-expanded={mobileOpen}
             className="
               md:hidden
@@ -620,7 +546,6 @@ export default function Navbar() {
               hover:bg-[#6DD054]/10
               hover:text-[#6DD054]
               transition-all
-              duration-200
             "
           >
             {mobileOpen ? (
@@ -653,8 +578,129 @@ export default function Navbar() {
       >
         <div className="overflow-hidden">
           <div className="px-4 pb-4">
-            <div className="border-t border-white/[0.08] pt-3 space-y-1">
-              {/* NETWORK */}
+            <div className="border-t border-white/[0.07] pt-3">
+
+              {/* =================================================
+                  MOBILE NAVIGATION
+              ================================================== */}
+
+              <div className="space-y-1">
+
+                {/* HOW IT WORKS + FAQ */}
+
+                {navItems.map((item) => {
+                  const isActive =
+                    activeSection === item.id;
+
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() =>
+                        scrollToSection(item.id)
+                      }
+                      className={`
+                        group
+                        flex
+                        items-center
+                        justify-between
+                        w-full
+                        px-3
+                        py-3
+                        rounded-xl
+                        border
+                        text-sm
+                        font-medium
+                        text-left
+                        transition-all
+                        duration-200
+
+                        ${
+                          isActive
+                            ? `
+                              text-white
+                              bg-[#6DD054]/[0.08]
+                              border-[#6DD054]/10
+                            `
+                            : `
+                              text-white/60
+                              border-transparent
+                              hover:text-white
+                              hover:bg-white/[0.05]
+                              hover:border-white/[0.07]
+                            `
+                        }
+                      `}
+                    >
+                      {item.label}
+
+                      <FiArrowUpRight
+                        className={`
+                          transition-all
+                          duration-200
+
+                          ${
+                            isActive
+                              ? "text-[#6DD054]"
+                              : "text-white/20 group-hover:text-[#6DD054]"
+                          }
+                        `}
+                      />
+                    </button>
+                  );
+                })}
+
+                {/* =================================================
+                    WHITE PAPER
+                ================================================== */}
+
+                <Link
+                  to="/white-paper"
+                  onClick={closeMobileMenu}
+                  className="
+                    group
+                    flex
+                    items-center
+                    justify-between
+                    w-full
+                    px-3
+                    py-3
+                    rounded-xl
+                    border
+                    border-transparent
+                    text-sm
+                    font-medium
+                    text-white/60
+                    hover:text-white
+                    hover:bg-white/[0.05]
+                    hover:border-white/[0.07]
+                    transition-all
+                  "
+                >
+                  <span className="flex items-center gap-3">
+                    <FiFileText
+                      className="
+                        text-[#6DD054]
+                        group-hover:text-[#6DD054]
+                      "
+                    />
+
+                    White Paper
+                  </span>
+
+                  <FiArrowUpRight
+                    className="
+                      text-white/20
+                      group-hover:text-[#6DD054]
+                      transition-all
+                    "
+                  />
+                </Link>
+              </div>
+
+              {/* =================================================
+                  MOBILE NETWORK
+              ================================================== */}
 
               <div
                 className="
@@ -663,171 +709,32 @@ export default function Navbar() {
                   justify-between
                   px-3
                   py-3
-                  mb-1
+                  mt-3
                   rounded-xl
-                  bg-[#6DD054]/[0.05]
-                  border
-                  border-[#6DD054]/10
+                  bg-white/[0.025]
                 "
               >
-                <span className="text-xs text-white/45">Network</span>
+                <span className="text-xs text-white/35">
+                  Network
+                </span>
 
-                <span className="flex items-center gap-2 text-xs font-medium text-[#6DD054]">
+                <span className="flex items-center gap-2 text-xs text-[#6DD054]">
                   <FiCircle
                     className="
-                      text-[8px]
+                      text-[7px]
                       fill-[#6DD054]
+                      text-[#6DD054]
                       animate-pulse
                     "
                   />
+
                   Anvil
                 </span>
               </div>
 
-              {/* MOBILE NAV ITEMS */}
-
-              {navItems.map((item) => {
-                const Icon = item.icon;
-
-                /*
-                =================================================
-                WHITE PAPER
-                =================================================
-                */
-
-                if (item.externalPage) {
-                  return (
-                    <Link
-                      key={item.to}
-                      to={item.to}
-                      onClick={closeMobileMenu}
-                      className="
-                        group
-                        flex
-                        items-center
-                        justify-between
-                        px-3
-                        py-3.5
-                        rounded-xl
-                        text-sm
-                        font-medium
-                        text-white/65
-                        hover:text-white
-                        hover:bg-white/[0.04]
-                        transition-all
-                        duration-200
-                      "
-                    >
-                      <span className="flex items-center gap-3">
-                        <span
-                          className="
-                            w-8
-                            h-8
-                            rounded-lg
-                            bg-white/[0.05]
-                            flex
-                            items-center
-                            justify-center
-                            group-hover:bg-[#6DD054]/10
-                            transition-colors
-                          "
-                        >
-                          <Icon className="text-[#6DD054]" />
-                        </span>
-
-                        {item.label}
-                      </span>
-
-                      <FiArrowUpRight
-                        className="
-                          text-white/30
-                          transition-all
-                          group-hover:text-[#6DD054]
-                          group-hover:translate-x-0.5
-                          group-hover:-translate-y-0.5
-                        "
-                      />
-                    </Link>
-                  );
-                }
-
-                /*
-                =================================================
-                ACTIVE MOBILE SECTION
-                =================================================
-                */
-
-                const isActive = activeSection === item.id;
-
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => scrollToSection(item.id)}
-                    className={`
-                      group
-                      w-full
-                      flex
-                      items-center
-                      justify-between
-                      px-3
-                      py-3.5
-                      rounded-xl
-                      text-sm
-                      font-medium
-                      transition-all
-                      duration-200
-                      text-left
-
-                      ${
-                        isActive
-                          ? "text-white bg-[#6DD054]/[0.08]"
-                          : "text-white/65 hover:text-white hover:bg-white/[0.04]"
-                      }
-                    `}
-                  >
-                    <span className="flex items-center gap-3">
-                      <span
-                        className={`
-                          w-8
-                          h-8
-                          rounded-lg
-                          flex
-                          items-center
-                          justify-center
-                          transition-colors
-
-                          ${
-                            isActive
-                              ? "bg-[#6DD054]/15"
-                              : "bg-white/[0.05] group-hover:bg-[#6DD054]/10"
-                          }
-                        `}
-                      >
-                        <Icon className="text-[#6DD054]" />
-                      </span>
-
-                      {item.label}
-                    </span>
-
-                    <FiArrowUpRight
-                      className={`
-                        transition-all
-                        group-hover:translate-x-0.5
-                        group-hover:-translate-y-0.5
-
-                        ${
-                          isActive
-                            ? "text-[#6DD054]"
-                            : "text-white/30 group-hover:text-[#6DD054]"
-                        }
-                      `}
-                    />
-                  </button>
-                );
-              })}
-
-              {/* CONNECT */}
+              {/* =================================================
+                  MOBILE CONNECT WALLET
+              ================================================== */}
 
               <button
                 id="mobileConnect"
@@ -836,11 +743,11 @@ export default function Navbar() {
                 className="
                   group
                   w-full
-                  mt-2
+                  mt-3
                   h-12
                   rounded-xl
-                   bg-[#6DD054]
-             text-[#0b1609]
+                  bg-[#6DD054]
+                  text-[#0b1609]
                   font-semibold
                   text-sm
                   flex
@@ -854,6 +761,7 @@ export default function Navbar() {
                 "
               >
                 Connect Wallet
+
                 <FiArrowUpRight
                   className="
                     transition-transform
@@ -870,3 +778,4 @@ export default function Navbar() {
     </header>
   );
 }
+

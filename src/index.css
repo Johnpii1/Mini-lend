@@ -1,8 +1,11 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+
 @import "tailwindcss";
 
 :root {
   font-family:
-    Inter,
+    "Space Grotesk",
     ui-sans-serif,
     system-ui,
     -apple-system,
@@ -19,6 +22,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ============================================================
+   GLOBAL RESET
+============================================================ */
+
 * {
   box-sizing: border-box;
 }
@@ -28,12 +35,98 @@ html {
 }
 
 body {
+  position: relative;
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+
   background: #090909;
   color: #ffffff;
+
+  font-family: "Space Grotesk", sans-serif;
 }
+
+/* ============================================================
+   LANDING PAGE GRID
+============================================================ */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  pointer-events: none;
+  z-index: 0;
+
+  background-image:
+    linear-gradient(
+      to right,
+      rgba(109, 208, 84, 0.055) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(109, 208, 84, 0.055) 1px,
+      transparent 1px
+    );
+
+  background-size: 55px 55px;
+
+  /* Fade the grid around the edges */
+  mask-image:
+    radial-gradient(
+      ellipse at center,
+      black 0%,
+      rgba(0, 0, 0, 0.8) 45%,
+      transparent 100%
+    );
+
+  -webkit-mask-image:
+    radial-gradient(
+      ellipse at center,
+      black 0%,
+      rgba(0, 0, 0, 0.8) 45%,
+      transparent 100%
+    );
+}
+
+/* ============================================================
+   SUBTLE GRID GLOW
+============================================================ */
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+
+  pointer-events: none;
+  z-index: 0;
+
+  background:
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(109, 208, 84, 0.045),
+      transparent 35%
+    );
+
+  opacity: 0.8;
+}
+
+/* ============================================================
+   KEEP APP CONTENT ABOVE GRID
+============================================================ */
+
+#root {
+  position: relative;
+  z-index: 1;
+
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ============================================================
+   FORM ELEMENTS
+============================================================ */
 
 button,
 input,
@@ -51,13 +144,13 @@ a {
   text-decoration: none;
 }
 
+/* ============================================================
+   MEDIA
+============================================================ */
+
 img,
 svg {
   display: block;
   max-width: 100%;
 }
 
-#root {
-  min-height: 100vh;
-  width: 100%;
-}
