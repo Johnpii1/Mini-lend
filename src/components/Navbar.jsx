@@ -122,7 +122,7 @@ export default function Navbar() {
     }, 100);
 
     return () => clearTimeout(timeout);
-  }, [location.pathname]);
+  }, [location.pathname, location.hash]);
 
   // ============================================================
   // CLOSE MOBILE MENU
@@ -139,6 +139,8 @@ export default function Navbar() {
   const scrollToSection = (id) => {
     closeMobileMenu();
 
+    // If user is not on Landing page,
+    // navigate to Landing first.
     if (location.pathname !== "/") {
       navigate(`/#${id}`);
       return;
@@ -228,10 +230,10 @@ export default function Navbar() {
           MAIN NAVBAR
       ====================================================== */}
 
-      <div className="relative h-[64px] px-4 sm:px-6 lg:px-7 flex items-center">
+      <div className="relative flex h-[64px] items-center px-4 sm:px-6 lg:px-7">
 
         {/* =================================================
-            LOGO - LEFT
+            LOGO
         ================================================== */}
 
         <button
@@ -240,47 +242,52 @@ export default function Navbar() {
           className="
             group
             flex
+            shrink-0
             items-center
             gap-2.5
-            shrink-0
           "
         >
           <div className="relative">
+
             <img
-              src="./favicon.png"
+              src="/favicon.png"
               alt="MiniLend Logo"
-              className="w-[46px] h-[46px] object-contain"
+              className="h-[46px] w-[46px] object-contain"
             />
 
             <div
               className="
                 absolute
-                -top-4
                 -right-4
-                w-8
+                -top-4
                 h-8
+                w-8
                 rounded-full
                 bg-white/15
                 blur-md
                 opacity-70
-                group-hover:translate-x-2
-                group-hover:translate-y-2
                 transition-transform
                 duration-500
+                group-hover:translate-x-2
+                group-hover:translate-y-2
               "
             />
+
           </div>
 
           <div className="leading-none text-left">
-            <span className="block text-white font-bold tracking-[0.12em] text-sm">
+
+            <span className="block text-sm font-bold tracking-[0.12em] text-white">
               MINI
             </span>
 
-            <span className="block text-[#6DD054] font-bold tracking-[0.12em] text-sm">
+            <span className="block text-sm font-bold tracking-[0.12em] text-[#6DD054]">
               LEND
             </span>
+
           </div>
         </button>
+
 
         {/* =================================================
             CENTER MENU
@@ -288,13 +295,13 @@ export default function Navbar() {
 
         <nav
           className="
-            hidden
-            md:flex
             absolute
             left-1/2
+            hidden
             -translate-x-1/2
             items-center
             gap-1
+            md:flex
           "
         >
           {navItems.map((item) => {
@@ -311,10 +318,10 @@ export default function Navbar() {
                   flex
                   items-center
                   justify-center
-                  px-4
-                  py-2.5
                   rounded-xl
                   border
+                  px-4
+                  py-2.5
                   text-sm
                   font-medium
                   transition-all
@@ -323,23 +330,21 @@ export default function Navbar() {
                   ${
                     isActive
                       ? `
-                        text-white
-                        bg-[#6DD054]/[0.08]
                         border-[#6DD054]/10
+                        bg-[#6DD054]/[0.08]
+                        text-white
                       `
                       : `
-                        text-white/55
                         border-transparent
-                        hover:text-white
-                        hover:bg-white/[0.05]
+                        text-white/55
                         hover:border-white/[0.07]
+                        hover:bg-white/[0.05]
+                        hover:text-white
                       `
                   }
                 `}
               >
                 {item.label}
-
-                {/* ACTIVE / HOVER LINE */}
 
                 <span
                   className={`
@@ -348,8 +353,8 @@ export default function Navbar() {
                     left-4
                     right-4
                     h-px
-                    bg-[#6DD054]
                     origin-center
+                    bg-[#6DD054]
                     transition-transform
                     duration-300
 
@@ -365,6 +370,7 @@ export default function Navbar() {
           })}
         </nav>
 
+
         {/* =================================================
             RIGHT SIDE
         ================================================== */}
@@ -372,37 +378,37 @@ export default function Navbar() {
         <div className="ml-auto flex items-center gap-1.5">
 
           {/* =================================================
-              WHITE PAPER
+              WHITE PAPER - DESKTOP
           ================================================== */}
 
           <Link
-            to="/white-paper"
+            to="/whitepaper"
             className="
-              hidden
-              lg:flex
               group
+              hidden
               items-center
               gap-1.5
-              px-3
-              py-2.5
               rounded-xl
               border
               border-transparent
+              px-3
+              py-2.5
               text-xs
               font-medium
               text-white/55
-              hover:text-white
-              hover:bg-white/[0.05]
-              hover:border-white/[0.07]
               transition-all
               duration-200
+              hover:border-white/[0.07]
+              hover:bg-white/[0.05]
+              hover:text-white
+              lg:flex
             "
           >
             <FiFileText
               className="
                 text-white/35
-                group-hover:text-[#6DD054]
                 transition-colors
+                group-hover:text-[#6DD054]
               "
             />
 
@@ -411,14 +417,15 @@ export default function Navbar() {
             <FiArrowUpRight
               className="
                 text-white/20
-                group-hover:text-[#6DD054]
                 transition-all
                 duration-200
-                group-hover:translate-x-0.5
                 group-hover:-translate-y-0.5
+                group-hover:translate-x-0.5
+                group-hover:text-[#6DD054]
               "
             />
           </Link>
+
 
           {/* =================================================
               ANVIL
@@ -427,27 +434,28 @@ export default function Navbar() {
           <div
             className="
               hidden
-              sm:flex
+              h-9
               items-center
               gap-1.5
-              px-2.5
-              h-9
               rounded-xl
+              px-2.5
               text-xs
               text-white/45
+              sm:flex
             "
           >
             <FiCircle
               className="
-                text-[7px]
-                fill-[#6DD054]
-                text-[#6DD054]
                 animate-pulse
+                text-[7px]
+                text-[#6DD054]
               "
+              fill="#6DD054"
             />
 
             <span>Anvil</span>
           </div>
+
 
           {/* =================================================
               CONNECT WALLET
@@ -457,29 +465,29 @@ export default function Navbar() {
             id="headerConnect"
             type="button"
             className="
-              hidden
-              sm:flex
               group
               relative
+              hidden
+              h-10
               items-center
               justify-center
               gap-1.5
-              h-10
-              px-4
-              lg:px-5
-              rounded-xl
               overflow-hidden
+              rounded-xl
               bg-[#6DD054]
-              text-[#0b1609]
-              font-semibold
+              px-4
               text-xs
-              lg:text-sm
+              font-semibold
+              text-[#0b1609]
               transition-all
               duration-300
-              hover:bg-[#cae8d3]
               hover:-translate-y-0.5
+              hover:bg-[#cae8d3]
               active:translate-y-0
               active:scale-[0.98]
+              sm:flex
+              lg:px-5
+              lg:text-sm
             "
           >
             <span className="relative z-10">
@@ -493,29 +501,28 @@ export default function Navbar() {
                 text-base
                 transition-transform
                 duration-300
-                group-hover:translate-x-0.5
                 group-hover:-translate-y-0.5
+                group-hover:translate-x-0.5
               "
             />
-
-            {/* BUTTON SHINE */}
 
             <span
               className="
                 absolute
                 inset-0
                 -translate-x-full
+                skew-x-12
                 bg-gradient-to-r
                 from-transparent
                 via-white/30
                 to-transparent
-                skew-x-12
-                group-hover:translate-x-full
                 transition-transform
                 duration-700
+                group-hover:translate-x-full
               "
             />
           </button>
+
 
           {/* =================================================
               MOBILE MENU BUTTON
@@ -531,21 +538,21 @@ export default function Navbar() {
             }
             aria-expanded={mobileOpen}
             className="
-              md:hidden
-              w-10
+              flex
               h-10
+              w-10
+              items-center
+              justify-center
               rounded-xl
               border
               border-white/10
               bg-white/[0.04]
-              flex
-              items-center
-              justify-center
               text-white
+              transition-all
               hover:border-[#6DD054]/30
               hover:bg-[#6DD054]/10
               hover:text-[#6DD054]
-              transition-all
+              md:hidden
             "
           >
             {mobileOpen ? (
@@ -554,8 +561,10 @@ export default function Navbar() {
               <FiMenu className="text-xl" />
             )}
           </button>
+
         </div>
       </div>
+
 
       {/* =====================================================
           MOBILE MENU
@@ -563,11 +572,11 @@ export default function Navbar() {
 
       <div
         className={`
-          md:hidden
           grid
           transition-all
           duration-300
           ease-out
+          md:hidden
 
           ${
             mobileOpen
@@ -577,16 +586,14 @@ export default function Navbar() {
         `}
       >
         <div className="overflow-hidden">
+
           <div className="px-4 pb-4">
+
             <div className="border-t border-white/[0.07] pt-3">
 
-              {/* =================================================
-                  MOBILE NAVIGATION
-              ================================================== */}
+              {/* MOBILE NAVIGATION */}
 
               <div className="space-y-1">
-
-                {/* HOW IT WORKS + FAQ */}
 
                 {navItems.map((item) => {
                   const isActive =
@@ -602,32 +609,32 @@ export default function Navbar() {
                       className={`
                         group
                         flex
+                        w-full
                         items-center
                         justify-between
-                        w-full
-                        px-3
-                        py-3
                         rounded-xl
                         border
+                        px-3
+                        py-3
+                        text-left
                         text-sm
                         font-medium
-                        text-left
                         transition-all
                         duration-200
 
                         ${
                           isActive
                             ? `
-                              text-white
-                              bg-[#6DD054]/[0.08]
                               border-[#6DD054]/10
+                              bg-[#6DD054]/[0.08]
+                              text-white
                             `
                             : `
-                              text-white/60
                               border-transparent
-                              hover:text-white
-                              hover:bg-white/[0.05]
+                              text-white/60
                               hover:border-white/[0.07]
+                              hover:bg-white/[0.05]
+                              hover:text-white
                             `
                         }
                       `}
@@ -650,68 +657,71 @@ export default function Navbar() {
                   );
                 })}
 
+
                 {/* =================================================
-                    WHITE PAPER
+                    WHITE PAPER - MOBILE
                 ================================================== */}
 
                 <Link
-                  to="/white-paper"
+                  to="/whitepaper"
                   onClick={closeMobileMenu}
                   className="
                     group
                     flex
+                    w-full
                     items-center
                     justify-between
-                    w-full
-                    px-3
-                    py-3
                     rounded-xl
                     border
                     border-transparent
+                    px-3
+                    py-3
                     text-sm
                     font-medium
                     text-white/60
-                    hover:text-white
-                    hover:bg-white/[0.05]
-                    hover:border-white/[0.07]
                     transition-all
+                    hover:border-white/[0.07]
+                    hover:bg-white/[0.05]
+                    hover:text-white
                   "
                 >
                   <span className="flex items-center gap-3">
+
                     <FiFileText
                       className="
                         text-[#6DD054]
-                        group-hover:text-[#6DD054]
                       "
                     />
 
                     White Paper
+
                   </span>
 
                   <FiArrowUpRight
                     className="
                       text-white/20
-                      group-hover:text-[#6DD054]
                       transition-all
+                      group-hover:text-[#6DD054]
                     "
                   />
+
                 </Link>
+
               </div>
 
-              {/* =================================================
-                  MOBILE NETWORK
-              ================================================== */}
+
+              {/* MOBILE NETWORK */}
 
               <div
                 className="
+                  mt-3
                   flex
                   items-center
                   justify-between
-                  px-3
-                  py-3
-                  mt-3
                   rounded-xl
                   bg-white/[0.025]
+                  px-3
+                  py-3
                 "
               >
                 <span className="text-xs text-white/35">
@@ -719,22 +729,23 @@ export default function Navbar() {
                 </span>
 
                 <span className="flex items-center gap-2 text-xs text-[#6DD054]">
+
                   <FiCircle
                     className="
-                      text-[7px]
-                      fill-[#6DD054]
-                      text-[#6DD054]
                       animate-pulse
+                      text-[7px]
+                      text-[#6DD054]
                     "
+                    fill="#6DD054"
                   />
 
                   Anvil
+
                 </span>
               </div>
 
-              {/* =================================================
-                  MOBILE CONNECT WALLET
-              ================================================== */}
+
+              {/* MOBILE CONNECT WALLET */}
 
               <button
                 id="mobileConnect"
@@ -742,18 +753,18 @@ export default function Navbar() {
                 onClick={closeMobileMenu}
                 className="
                   group
-                  w-full
                   mt-3
-                  h-12
-                  rounded-xl
-                  bg-[#6DD054]
-                  text-[#0b1609]
-                  font-semibold
-                  text-sm
                   flex
+                  h-12
+                  w-full
                   items-center
                   justify-center
                   gap-2
+                  rounded-xl
+                  bg-[#6DD054]
+                  text-sm
+                  font-semibold
+                  text-[#0b1609]
                   transition-all
                   duration-200
                   hover:bg-[#cae8d0]
@@ -766,16 +777,22 @@ export default function Navbar() {
                   className="
                     transition-transform
                     duration-200
-                    group-hover:translate-x-0.5
                     group-hover:-translate-y-0.5
+                    group-hover:translate-x-0.5
                   "
                 />
               </button>
+
             </div>
+
           </div>
+
         </div>
       </div>
+
     </header>
   );
 }
+
+
 

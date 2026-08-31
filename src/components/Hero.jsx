@@ -29,7 +29,6 @@ export default function Hero() {
 
   useEffect(() => {
     const currentPhrase = phrases[phraseIndex];
-
     let timeout;
 
     if (!isDeleting && displayText.length < currentPhrase.length) {
@@ -53,7 +52,6 @@ export default function Hero() {
       }, 45);
     } else if (isDeleting && displayText.length === 0) {
       setIsDeleting(false);
-
       setPhraseIndex((prev) => (prev + 1) % phrases.length);
     }
 
@@ -67,25 +65,50 @@ export default function Hero() {
   const [collateral, setCollateral] = useState(0);
   const [borrowed, setBorrowed] = useState(0);
   const [health, setHealth] = useState(0);
+  const [numbersStarted, setNumbersStarted] = useState(false);
 
   useEffect(() => {
-    const duration = 1800;
+    // Small delay so the Hero visual appears first
+    const startTimer = setTimeout(() => {
+      setNumbersStarted(true);
+    }, 450);
+
+    return () => clearTimeout(startTimer);
+  }, []);
+
+  useEffect(() => {
+    if (!numbersStarted) return;
+
+    const duration = 2200;
     const startTime = performance.now();
+
+    let animationFrame;
 
     const animateNumbers = (currentTime) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
 
-      // Smooth ease-out animation
-      const easedProgress = 1 - Math.pow(1 - progress, 3);
+      // Smooth ease-out
+      const easedProgress =
+        1 - Math.pow(1 - progress, 3);
 
       setLiquidity(Math.floor(2450 * easedProgress));
-      setCollateral(Number((1.25 * easedProgress).toFixed(2)));
-      setBorrowed(Math.floor(2450 * easedProgress));
-      setHealth(Math.floor(78 * easedProgress));
+
+      setCollateral(
+        Number((1.25 * easedProgress).toFixed(2))
+      );
+
+      setBorrowed(
+        Math.floor(2450 * easedProgress)
+      );
+
+      setHealth(
+        Math.floor(78 * easedProgress)
+      );
 
       if (progress < 1) {
-        requestAnimationFrame(animateNumbers);
+        animationFrame =
+          requestAnimationFrame(animateNumbers);
       } else {
         setLiquidity(2450);
         setCollateral(1.25);
@@ -94,10 +117,13 @@ export default function Hero() {
       }
     };
 
-    const animationFrame = requestAnimationFrame(animateNumbers);
+    animationFrame =
+      requestAnimationFrame(animateNumbers);
 
-    return () => cancelAnimationFrame(animationFrame);
-  }, []);
+    return () => {
+      cancelAnimationFrame(animationFrame);
+    };
+  }, [numbersStarted]);
 
   // =====================================================
   // SHINING STARS
@@ -216,6 +242,7 @@ export default function Hero() {
           HERO SECTION
       ====================================================== */}
       <section className="relative min-h-screen overflow-hidden bg-[#080908] text-white">
+
         {/* =====================================================
             BACKGROUND GLOW
         ====================================================== */}
@@ -289,11 +316,13 @@ export default function Hero() {
               lg:gap-16
             "
           >
+
             {/* =================================================
                 LEFT CONTENT
             ================================================== */}
             <div className="max-w-2xl">
-              {/* Status badge */}
+
+              {/* STATUS BADGE */}
               <div
                 className="
                   mb-7
@@ -320,9 +349,7 @@ export default function Hero() {
                 Decentralized Lending Protocol
               </div>
 
-              {/* =================================================
-                  HEADING
-              ================================================== */}
+              {/* HEADING */}
               <h1
                 className="
                   text-4xl
@@ -341,7 +368,6 @@ export default function Hero() {
                 <span className="block min-h-[1.1em] text-[#6DD054]">
                   {displayText}
 
-                  {/* Typing cursor */}
                   <span
                     className="
                       ml-1
@@ -357,7 +383,7 @@ export default function Hero() {
                 </span>
               </h1>
 
-              {/* Description */}
+              {/* DESCRIPTION */}
               <p
                 className="
                   mt-7
@@ -371,15 +397,15 @@ export default function Hero() {
                   sm:leading-8
                 "
               >
-                MiniLend lets you stake your digital assets, borrow stablecoins,
-                and keep your staking rewards. No credit checks. No middlemen.
-                Just decentralized access to liquidity.
+                MiniLend lets you stake your digital assets, borrow
+                stablecoins, and keep your staking rewards. No credit
+                checks. No middlemen. Just decentralized access to
+                liquidity.
               </p>
 
-              {/* =================================================
-                  BUTTONS
-              ================================================== */}
+              {/* BUTTONS */}
               <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+
                 <button
                   type="button"
                   onClick={() => setModalOpen(true)}
@@ -451,12 +477,12 @@ export default function Hero() {
                     "
                   />
                 </a>
+
               </div>
 
-              {/* =================================================
-                  TRUST POINTS
-              ================================================== */}
+              {/* TRUST POINTS */}
               <div className="mt-10 flex flex-wrap gap-x-7 gap-y-3">
+
                 <div className="flex items-center gap-2 text-xs text-white/40">
                   <FiShield className="text-[#6DD054]" />
                   Non-custodial
@@ -471,17 +497,35 @@ export default function Hero() {
                   <FiTrendingUp className="text-[#6DD054]" />
                   Keep staking rewards
                 </div>
+
               </div>
+
             </div>
 
             {/* =================================================
                 RIGHT PRODUCT VISUAL
             ================================================== */}
             <div className="relative mx-auto w-full max-w-[520px]">
-              {/* Outer glow */}
-              <div className="absolute left-1/2 top-1/2 h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#6DD054]/10 blur-[100px]" />
 
-              {/* Main card */}
+              {/* OUTER GLOW */}
+              <div
+                className="
+                  absolute
+                  left-1/2
+                  top-1/2
+                  h-[280px]
+                  w-[280px]
+                  -translate-x-1/2
+                  -translate-y-1/2
+                  rounded-full
+                  bg-[#6DD054]/10
+                  blur-[100px]
+                "
+              />
+
+              {/* =================================================
+                  MAIN CARD
+              ================================================== */}
               <div
                 className="
                   relative
@@ -495,8 +539,10 @@ export default function Hero() {
                   sm:p-5
                 "
               >
-                {/* Card top */}
+
+                {/* CARD TOP */}
                 <div className="flex items-center justify-between border-b border-white/[0.07] pb-4">
+
                   <div>
                     <p className="text-[10px] uppercase tracking-[0.18em] text-white/30">
                       MiniLend
@@ -508,44 +554,65 @@ export default function Hero() {
                   </div>
 
                   <div className="flex items-center gap-2 rounded-full border border-[#6DD054]/15 bg-[#6DD054]/[0.06] px-2.5 py-1.5">
+
                     <span className="h-1.5 w-1.5 rounded-full bg-[#6DD054]" />
 
                     <span className="text-[10px] font-medium text-[#6DD054]">
                       Active
                     </span>
+
                   </div>
+
                 </div>
 
                 {/* =================================================
                     BALANCE
                 ================================================== */}
                 <div className="py-7">
+
                   <p className="text-xs text-white/35">
                     Available liquidity
                   </p>
 
                   <div className="mt-2 flex items-end gap-2">
-                    <span className="text-4xl font-bold tracking-tight text-white sm:text-5xl tabular-nums">
+
+                    <span
+                      className="
+                        text-4xl
+                        font-bold
+                        tracking-tight
+                        text-white
+                        sm:text-5xl
+                        tabular-nums
+                        transition-all
+                        duration-300
+                      "
+                    >
                       {liquidity.toLocaleString()}
                     </span>
 
                     <span className="mb-1 text-sm font-semibold text-[#6DD054]">
                       USDT
                     </span>
+
                   </div>
 
                   <p className="mt-2 text-xs text-white/30">
                     Borrow against your staked assets
                   </p>
+
                 </div>
 
                 {/* =================================================
                     COLLATERAL / LOAN
                 ================================================== */}
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {/* Collateral */}
+
+                  {/* COLLATERAL */}
                   <div className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4">
+
                     <div className="flex items-center justify-between">
+
                       <span className="text-xs text-white/35">
                         Collateral
                       </span>
@@ -553,6 +620,7 @@ export default function Hero() {
                       <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#627EEA]/10 text-xs font-bold text-[#627EEA]">
                         Ξ
                       </span>
+
                     </div>
 
                     <p className="mt-4 text-lg font-bold text-white tabular-nums">
@@ -562,11 +630,14 @@ export default function Hero() {
                     <p className="mt-1 text-[10px] text-white/30">
                       Staked asset
                     </p>
+
                   </div>
 
-                  {/* Borrowed */}
+                  {/* BORROWED */}
                   <div className="rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4">
+
                     <div className="flex items-center justify-between">
+
                       <span className="text-xs text-white/35">
                         Borrowed
                       </span>
@@ -574,6 +645,7 @@ export default function Hero() {
                       <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#6DD054]/10 text-[10px] font-bold text-[#6DD054]">
                         $
                       </span>
+
                     </div>
 
                     <p className="mt-4 text-lg font-bold text-white tabular-nums">
@@ -583,14 +655,18 @@ export default function Hero() {
                     <p className="mt-1 text-[10px] text-white/30">
                       Stablecoin loan
                     </p>
+
                   </div>
+
                 </div>
 
                 {/* =================================================
                     HEALTH BAR
                 ================================================== */}
                 <div className="mt-3 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4">
+
                   <div className="flex items-center justify-between">
+
                     <span className="text-xs text-white/40">
                       Position health
                     </span>
@@ -598,31 +674,46 @@ export default function Hero() {
                     <span className="text-xs font-semibold text-[#6DD054]">
                       Healthy
                     </span>
+
                   </div>
 
                   <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/[0.07]">
+
                     <div
-                      className="h-full rounded-full bg-[#6DD054] transition-all duration-100"
+                      className="
+                        h-full
+                        rounded-full
+                        bg-[#6DD054]
+                        shadow-[0_0_12px_rgba(109,208,84,0.45)]
+                        transition-all
+                        duration-100
+                      "
                       style={{
                         width: `${health}%`,
                       }}
                     />
+
                   </div>
 
                   <div className="mt-2 flex justify-between text-[9px] text-white/25">
+
                     <span>Safe</span>
 
                     <span>{health}%</span>
 
                     <span>Liquidation</span>
+
                   </div>
+
                 </div>
 
                 {/* =================================================
                     BOTTOM ACTION
                 ================================================== */}
                 <div className="mt-4 flex items-center justify-between rounded-2xl bg-[#6DD054]/[0.06] px-4 py-3">
+
                   <div>
+
                     <p className="text-[10px] text-white/30">
                       Staking rewards
                     </p>
@@ -630,10 +721,13 @@ export default function Hero() {
                     <p className="mt-0.5 text-xs font-semibold text-[#6DD054]">
                       Continuing to accrue
                     </p>
+
                   </div>
 
                   <FiTrendingUp className="text-[#6DD054]" />
+
                 </div>
+
               </div>
 
               {/* =================================================
@@ -656,12 +750,15 @@ export default function Hero() {
                   sm:block
                 "
               >
+
                 <div className="flex items-center gap-3">
+
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#6DD054]/10">
                     <FiShield className="text-[#6DD054]" />
                   </div>
 
                   <div>
+
                     <p className="text-[9px] uppercase tracking-wider text-white/25">
                       Protocol
                     </p>
@@ -669,8 +766,11 @@ export default function Hero() {
                     <p className="text-xs font-semibold text-white">
                       Non-custodial
                     </p>
+
                   </div>
+
                 </div>
+
               </div>
 
               {/* =================================================
@@ -693,15 +793,21 @@ export default function Hero() {
                   sm:block
                 "
               >
+
                 <div className="flex items-center gap-2">
+
                   <span className="h-2 w-2 animate-pulse rounded-full bg-[#6DD054]" />
 
                   <span className="text-xs font-medium text-white/60">
                     Lending live
                   </span>
+
                 </div>
+
               </div>
+
             </div>
+
           </div>
         </div>
 
@@ -711,7 +817,7 @@ export default function Hero() {
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#080908] to-transparent" />
 
         {/* =====================================================
-            STAR ANIMATION KEYFRAMES
+            ANIMATIONS
         ====================================================== */}
         <style>
           {`
@@ -728,6 +834,7 @@ export default function Hero() {
             }
           `}
         </style>
+
       </section>
 
       {/* =====================================================
@@ -748,6 +855,7 @@ export default function Hero() {
           "
           onClick={() => setModalOpen(false)}
         >
+
           <div
             className="
               relative
@@ -762,7 +870,8 @@ export default function Hero() {
             "
             onClick={(e) => e.stopPropagation()}
           >
-            {/* CLOSE BUTTON */}
+
+            {/* CLOSE */}
             <button
               type="button"
               onClick={() => setModalOpen(false)}
@@ -801,11 +910,11 @@ export default function Hero() {
 
             {/* DESCRIPTION */}
             <p className="mx-auto mt-2 max-w-sm text-center text-sm leading-6 text-white/40">
-              Connect your wallet to start staking assets and access stablecoin
-              loans through MiniLend.
+              Connect your wallet to start staking assets and access
+              stablecoin loans through MiniLend.
             </p>
 
-            {/* CONNECT WALLET */}
+            {/* CONNECT */}
             <button
               type="button"
               id="connectWalletBtn"
@@ -844,23 +953,31 @@ export default function Hero() {
 
             {/* TERMS */}
             <p className="mt-4 text-center text-[10px] leading-5 text-white/25">
+
               By connecting, you agree to our{" "}
+
               <a
                 href="#"
                 className="text-white/50 underline underline-offset-2 hover:text-white"
               >
                 Terms of Use
-              </a>{" "}
-              and{" "}
+              </a>
+
+              {" "}and{" "}
+
               <a
                 href="#"
                 className="text-white/50 underline underline-offset-2 hover:text-white"
               >
                 Privacy Policy
               </a>
+
               .
+
             </p>
+
           </div>
+
         </div>
       )}
     </>

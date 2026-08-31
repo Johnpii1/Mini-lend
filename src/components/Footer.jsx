@@ -46,7 +46,7 @@ export default function Footer() {
   const resourceLinks = [
     {
       label: "White Paper",
-      to: "/white-paper",
+      to: "/whitepaper",
       page: true,
     },
     {
@@ -133,13 +133,13 @@ export default function Footer() {
             CTA SECTION
         ====================================================== */}
 
-        <section className="px-5 sm:px-8 lg:px-10 pt-20 pb-12">
+        <section className="px-5 pt-20 pb-12 sm:px-8 lg:px-10">
 
           <div
             className="
               relative
-              max-w-7xl
               mx-auto
+              max-w-7xl
               overflow-hidden
               rounded-3xl
               border
@@ -172,8 +172,8 @@ export default function Footer() {
               className="
                 pointer-events-none
                 absolute
-                -left-24
                 -bottom-24
+                -left-24
                 h-64
                 w-64
                 rounded-full
@@ -188,10 +188,10 @@ export default function Footer() {
                 z-10
                 flex
                 flex-col
+                gap-8
                 lg:flex-row
                 lg:items-center
                 lg:justify-between
-                gap-8
               "
             >
 
@@ -199,7 +199,7 @@ export default function Footer() {
 
               <div className="max-w-2xl">
 
-                <div className="flex items-center gap-2 mb-4">
+                <div className="mb-4 flex items-center gap-2">
 
                   <span
                     className="
@@ -209,12 +209,12 @@ export default function Footer() {
                       items-center
                       justify-center
                       rounded-lg
-                      bg-[#6DD054]/10
                       border
                       border-[#6DD054]/15
+                      bg-[#6DD054]/10
                     "
                   >
-                    <FiShield className="text-[#6DD054] text-sm" />
+                    <FiShield className="text-sm text-[#6DD054]" />
                   </span>
 
                   <span className="text-xs uppercase tracking-[0.2em] text-[#6DD054]">
@@ -226,10 +226,10 @@ export default function Footer() {
                 <h2
                   className="
                     text-2xl
-                    sm:text-3xl
-                    md:text-4xl
                     font-semibold
                     leading-tight
+                    sm:text-3xl
+                    md:text-4xl
                   "
                 >
                   Put your crypto to work
@@ -299,18 +299,18 @@ export default function Footer() {
             MAIN FOOTER
         ====================================================== */}
 
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
 
           <div
             className="
               grid
               grid-cols-1
-              sm:grid-cols-2
-              lg:grid-cols-[1.5fr_1fr_1fr_1fr]
               gap-12
-              py-14
               border-b
               border-white/[0.07]
+              py-14
+              sm:grid-cols-2
+              lg:grid-cols-[1.5fr_1fr_1fr_1fr]
             "
           >
 
@@ -327,6 +327,7 @@ export default function Footer() {
                 onClick={() => {
                   if (location.pathname !== "/") {
                     navigate("/");
+
                     setTimeout(() => {
                       window.scrollTo({
                         top: 0,
@@ -340,7 +341,7 @@ export default function Footer() {
                     });
                   }
                 }}
-                className="inline-flex items-center gap-2.5 group text-left"
+                className="group inline-flex items-center gap-2.5 text-left"
               >
 
                 <div
@@ -363,8 +364,8 @@ export default function Footer() {
                 >
 
                   <img
-                    className="object-contain w-[50px]"
-                    src="./favicon.png"
+                    className="w-[50px] object-contain"
+                    src="/favicon.png"
                     alt="MiniLend Logo"
                   />
 
@@ -428,7 +429,7 @@ export default function Footer() {
 
               {/* SOCIALS */}
 
-              <div className="flex items-center gap-2 mt-6">
+              <div className="mt-6 flex items-center gap-2">
 
                 <a
                   href="#"
@@ -544,8 +545,8 @@ export default function Footer() {
                         opacity-0
                         transition-all
                         duration-200
-                        group-hover:translate-x-0.5
                         group-hover:-translate-y-0.5
+                        group-hover:translate-x-0.5
                         group-hover:opacity-100
                       "
                     />
@@ -599,8 +600,8 @@ export default function Footer() {
                             opacity-0
                             transition-all
                             duration-200
-                            group-hover:translate-x-0.5
                             group-hover:-translate-y-0.5
+                            group-hover:translate-x-0.5
                             group-hover:opacity-100
                           "
                         />
@@ -633,8 +634,8 @@ export default function Footer() {
                           opacity-0
                           transition-all
                           duration-200
-                          group-hover:translate-x-0.5
                           group-hover:-translate-y-0.5
+                          group-hover:translate-x-0.5
                           group-hover:opacity-100
                         "
                       />
@@ -684,8 +685,8 @@ export default function Footer() {
                         opacity-0
                         transition-all
                         duration-200
-                        group-hover:translate-x-0.5
                         group-hover:-translate-y-0.5
+                        group-hover:translate-x-0.5
                         group-hover:opacity-100
                       "
                     />
@@ -947,4 +948,3 @@ export default function Footer() {
     </>
   );
 }
-
